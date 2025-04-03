@@ -32,9 +32,9 @@ import { Progress } from "@/components/ui/progress"
 
 import { formatPrice } from "@/lib/formatPrice"
 
-import { TableIntegrationsProps } from "./TableIntegrations.types"
+import { MachinesTableProps } from "./MachinesTable.type"
 
-const data: TableIntegrationsProps[] = [
+const data: MachinesTableProps[] = [
     {
         app: "Stripe",
         icon: "/images/stripe.png",
@@ -59,7 +59,7 @@ const data: TableIntegrationsProps[] = [
 
 ]
 
-export const columns: ColumnDef<TableIntegrationsProps>[] = [
+export const columns: ColumnDef<MachinesTableProps>[] = [
     {
         accessorKey: "icon",
         header: "LOGO",
@@ -113,7 +113,7 @@ export const columns: ColumnDef<TableIntegrationsProps>[] = [
 ]
 
 
-export function TableIntegrations() {
+export function MachinesTable() {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []

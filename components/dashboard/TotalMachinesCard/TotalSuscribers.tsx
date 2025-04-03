@@ -10,9 +10,9 @@ import {
 } from 'recharts'
 
 import { CustomIcon } from "@/components/CustomIcon"
-import { dataTotalSuscribers } from "./TotalSuscribers.data"
+import { dataTotalMachines } from "./TotalMachines.data"
 
-export function TotalSuscribers() {
+export function TotalMachines() {
     return (
         <div className="w-full p-5 mb-4 transition rounded-lg shadow-sm lg:mb-0 bg-background xl:w-96 hover:shadow-lg">
             <div className="flex items-center mb-4 gap-x-2">
@@ -24,7 +24,7 @@ export function TotalSuscribers() {
                     <PieChart>
                         <Pie
                             dataKey="value"
-                            data={dataTotalSuscribers}
+                            data={dataTotalMachines}
                             outerRadius={80}
                             labelLine={false}
                         />

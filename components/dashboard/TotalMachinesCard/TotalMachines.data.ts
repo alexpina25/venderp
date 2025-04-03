@@ -1,4 +1,4 @@
-export const dataTotalSuscribers = [
+export const dataTotalMachines = [
   {
     name: "Website",
     value: 456,

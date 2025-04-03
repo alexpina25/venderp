@@ -1,9 +1,9 @@
 import { Building } from "lucide-react";
 
 import { CustomIcon } from "@/components/CustomIcon";
-import { CustomersTable } from "../CustomersTable";
+import { ClientsTable } from "../ClientsTable";
 
-export function LastCustomers() {
+export function RecentLocations() {
     return (
         <div className="p-5 rounded-lg shadow-sm bg-background">
             <div className="flex items-center gap-x-2">
@@ -11,7 +11,7 @@ export function LastCustomers() {
                 <p className="text-xl">Last customers</p>
             </div>
             <div>
-                <CustomersTable />
+                <ClientsTable />
             </div>
         </div>
     )

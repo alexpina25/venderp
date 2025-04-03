@@ -1,68 +1,140 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Company {
-  id           String  @id @default(uuid())
-  userId       String
-  name         String  @db.Text
-  description  String? @db.Text
-  profileImage String  @db.Text
-  cif          String  @db.Text
-  phone        String  @db.Text
-  country      String  @db.Text
-  website      String  @db.Text
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(OPERATOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  contacts Contact[]
+  routes      Route[]
+  maintenance MaintenanceLog[]
+}
 
-  events Event[]
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+model CustomerLocation {
+  id           String    @id @default(uuid())
+  name         String
+  address      String
+  contactName  String
+  contactPhone String
+  machines     Machine[]
+  createdAt    DateTime  @default(now())
+}
+
+model Machine {
+  id             String           @id @default(uuid())
+  code           String           @unique
+  locationId     String
+  location       CustomerLocation @relation(fields: [locationId], references: [id])
+  type           MachineType
+  model          String?
+  status         MachineStatus    @default(ACTIVE)
+  lastCheck      DateTime?
+  products       MachineProduct[]
+  maintenanceLog MaintenanceLog[]
+  replenishments Replenishment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Contact {
-  id String @id @default(uuid())
-
-  companyId String? @db.Text
-
-  name  String @db.Text
-  role  String @db.Text
-  email String @db.Text
-  phone String @db.Text
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@index([companyId])
+enum MachineType {
+  SNACK
+  DRINK
+  COMBO
 }
 
-model Event {
+enum MachineStatus {
+  ACTIVE
+  OUT_OF_SERVICE
+  RETIRED
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  category  String
+  price     Float
+  unit      String
+  createdAt DateTime @default(now())
+
+  machineStocks      MachineProduct[]
+  replenishmentItems ReplenishmentItem[]
+}
+
+model MachineProduct {
+  id           String @id @default(uuid())
+  machineId    String
+  productId    String
+  currentStock Int
+  maxCapacity  Int
+  minThreshold Int
+
+  machine Machine @relation(fields: [machineId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Route {
   id         String   @id @default(uuid())
-  companyId  String
-  title      String
-  start      DateTime
-  allDay     Boolean
-  timeFormat String
+  date       DateTime
+  operatorId String
+  operator   User     @relation(fields: [operatorId], references: [id])
+  notes      String?
 
-  company Company @relation(fields: [companyId], references: [id])
+  replenishments Replenishment[]
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Replenishment {
+  id        String   @id @default(uuid())
+  machineId String
+  routeId   String
+  date      DateTime @default(now())
+  notes     String?
 
-  @@index([companyId])
+  machine Machine @relation(fields: [machineId], references: [id])
+  route   Route   @relation(fields: [routeId], references: [id])
+
+  items ReplenishmentItem[]
+}
+
+model ReplenishmentItem {
+  id              String @id @default(uuid())
+  replenishmentId String
+  productId       String
+  quantityAdded   Int
+  stockBefore     Int
+  stockAfter      Int
+
+  replenishment Replenishment @relation(fields: [replenishmentId], references: [id])
+  product       Product       @relation(fields: [productId], references: [id])
+}
+
+model MaintenanceLog {
+  id          String          @id @default(uuid())
+  machineId   String
+  operatorId  String
+  date        DateTime        @default(now())
+  type        MaintenanceType
+  description String
+
+  machine  Machine @relation(fields: [machineId], references: [id])
+  operator User    @relation(fields: [operatorId], references: [id])
+}
+
+enum MaintenanceType {
+  PREVENTIVE
+  CORRECTIVE
 }

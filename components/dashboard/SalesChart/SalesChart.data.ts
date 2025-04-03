@@ -1,4 +1,4 @@
-export const dataGraphics = [
+export const dataSales = [
   {
     year: "2016",
     newCustomers: 4000,

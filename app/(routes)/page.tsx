@@ -1,13 +1,15 @@
+import { RecentLocations } from "@/components/dashboard/RecentLocations";
+import { StatCard } from "@/components/dashboard/StatCard";
+
 import { Button } from "@/components/ui/button"
 import { UserButton } from "@clerk/nextjs";
-import { CardSummary } from "./components/CardSummary";
 import { BookOpenCheck, UsersRound, Waypoints } from "lucide-react";
-import { LastCustomers } from "./components/LastCustomers";
-import { Salesdistributor } from "./components/Salesdistributors";
-import { TotalSuscribers } from "./components/TotalSuscribers";
-import { ListIntegrations } from "./components/ListItengrations";
+import { RefillStats } from "../../components/dashboard/RefillStats";
+import { MachineConnections } from "@/components/dashboard/MachineConecctions";
+import { TotalMachines } from "../../components/dashboard/TotalMachinesCard";
 
-const dataCardsSummary = [
+
+const dataCardsStats = [
   {
     icon: UsersRound,
     total: "12.450",
@@ -36,8 +38,8 @@ export default function Home() {
     <div>
       <h2 className="mb-4 text-2xl">Dashboard</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-20">
-        {dataCardsSummary.map(({ icon, total, average, title, tooltipText }) => (
-          <CardSummary
+        {dataCardsStats.map(({ icon, total, average, title, tooltipText }) => (
+          <StatCard
             key={title}
             icon={icon}
             total={total}
@@ -48,12 +50,12 @@ export default function Home() {
         ))}
       </div>
       <div className="grid grid-cols-1 mt-12 xl:grid-cols-2 md:gap-x-10">
-        <LastCustomers />
-        <Salesdistributor />
+        <RecentLocations />
+        <RefillStats />
       </div>
       <div className="flex-col justify-center mt-12 md:gap-x-10 xl:flex xl:flex-row gap-y-4 md:gap-y-0 md:mb-10">
-        <TotalSuscribers />
-        <ListIntegrations />
+        <TotalMachines />
+        <MachineConnections />
       </div>
     </div>
   );

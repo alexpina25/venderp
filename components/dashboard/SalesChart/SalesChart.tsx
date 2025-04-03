@@ -4,10 +4,10 @@ import { TrendingUp } from "lucide-react"
 import {
     Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts'
-import { dataGraphics } from "./GraphicSuscribers.data"
+import { dataSales } from "./SalesChart.data"
 
 
-export function GraphicSuscribers() {
+export function SalesChart() {
     return (
         <div className="mt-5">
             <p className="text-3xl mb-3">24.479</p>
@@ -23,7 +23,7 @@ export function GraphicSuscribers() {
                     <AreaChart
                         width={730}
                         height={250}
-                        data={dataGraphics}
+                        data={dataSales}
                         margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                     >
                         <defs>

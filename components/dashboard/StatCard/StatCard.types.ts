@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react";
 
-export type CardSummaryProps = {
+export type StatCardProps = {
   icon: LucideIcon;
   total: string;
   average: number;
