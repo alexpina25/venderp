@@ -1,6 +1,6 @@
-import { CustomIcon } from "@/components/CustomIcon";
+import { CustomIcon } from "@/components/ui/CustomIcon";
 import { StatCardProps } from "./StatCard.types";
-import { CustomTooltip } from "@/components/CustomTooltip";
+import { CustomTooltip } from "@/components/ui/CustomTooltip";
 import { cn } from "@/lib/utils";
 import { MoveDownRight, MoveUpRight, TrendingUp } from "lucide-react";
 

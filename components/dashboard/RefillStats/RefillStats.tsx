@@ -1,4 +1,4 @@
-import { CustomIcon } from "@/components/CustomIcon"
+import { CustomIcon } from "@/components/ui/CustomIcon"
 import { BarChart } from "lucide-react"
 import { SalesChart } from "../SalesChart"
 

@@ -1,1 +1,1 @@
-export * from "./TotalSuscribers";
+export * from "./TotalMachines";

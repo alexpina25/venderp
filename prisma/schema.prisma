@@ -7,46 +7,89 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// IMPORTS desde /models
+// 👇 Copiar manualmente el contenido de los archivos dentro de prisma/models en este orden:
+
+// 1. user.prisma
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
   role      Role     @default(OPERATOR)
+  avatarUrl String? // Foto de perfil (útil para UI)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  routes      Route[]
-  maintenance MaintenanceLog[]
+  // 🔐 Relación con la organización (empresa a la que pertenece)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  // 📦 Relación con sus tareas o rutas
+  routes       Route[]
+  maintenance  MaintenanceLog[]
+  activityLogs ActivityLog[] // Historial de acciones realizadas
+}
+
+model Organization {
+  id    String @id @default(uuid())
+  name  String
+  users User[]
 }
 
 enum Role {
-  ADMIN
-  OPERATOR
+  ADMIN // Puede gestionar todo: usuarios, facturación, configuración
+  OPERATOR // Reponedor, técnico, etc. Solo accede a tareas asignadas
 }
 
-model CustomerLocation {
-  id           String    @id @default(uuid())
+// 2. client.prisma
+model Client {
+  id           String   @id @default(uuid())
   name         String
   address      String
+  city         String
+  postalCode   String?
+  province     String?
+  country      String?  @default("España")
   contactName  String
   contactPhone String
-  machines     Machine[]
-  createdAt    DateTime  @default(now())
+  contactEmail String?
+  notes        String? // Comentarios internos sobre el cliente
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // 🧃 Relación con las máquinas instaladas en esta ubicación
+  machines Machine[]
+
+  // 💸 Facturación asociada
+  invoices Invoice[]
 }
 
+// 3. machine.prisma
 model Machine {
-  id             String           @id @default(uuid())
-  code           String           @unique
-  locationId     String
-  location       CustomerLocation @relation(fields: [locationId], references: [id])
-  type           MachineType
-  model          String?
-  status         MachineStatus    @default(ACTIVE)
-  lastCheck      DateTime?
-  products       MachineProduct[]
+  id           String        @id @default(uuid())
+  code         String        @unique // Identificador interno o etiqueta física
+  model        String? // Nombre del modelo (ej. Zebra Max 3000)
+  serialNumber String? // Número de serie físico, si aplica
+  type         MachineType
+  status       MachineStatus @default(ACTIVE)
+  lastCheck    DateTime? // Última revisión o visita
+  installedAt  DateTime? // Fecha de instalación
+
+  // 📍 Ubicación
+  locationId String
+  location   Client @relation(fields: [locationId], references: [id])
+
+  // 📦 Productos que contiene
+  products MachineProduct[]
+
+  // 🔧 Mantenimiento y eventos
   maintenanceLog MaintenanceLog[]
+
+  // 🚚 Reposiciones realizadas a esta máquina
   replenishments Replenishment[]
 
+  // 🕒 Timestamps
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -55,6 +98,7 @@ enum MachineType {
   SNACK
   DRINK
   COMBO
+  OTHER
 }
 
 enum MachineStatus {
@@ -63,16 +107,30 @@ enum MachineStatus {
   RETIRED
 }
 
+// 4. product.prisma
 model Product {
-  id        String   @id @default(uuid())
+  id        String          @id @default(uuid())
   name      String
-  category  String
-  price     Float
-  unit      String
-  createdAt DateTime @default(now())
+  category  ProductCategory
+  price     Float // Precio de venta
+  cost      Float? // Costo interno (para calcular margen)
+  unit      String // Unidad (ej. botella, lata, unidad)
+  imageUrl  String? // Imagen opcional para UI
+  stockMin  Int? // Stock mínimo sugerido por defecto
+  active    Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 
+  // 📦 Asociaciones
   machineStocks      MachineProduct[]
   replenishmentItems ReplenishmentItem[]
+}
+
+enum ProductCategory {
+  SNACK
+  DRINK
+  COMBO
+  OTHER
 }
 
 model MachineProduct {
@@ -87,14 +145,39 @@ model MachineProduct {
   product Product @relation(fields: [productId], references: [id])
 }
 
+// 5. invoice.prisma
+model Invoice {
+  id       String        @id @default(uuid())
+  clientId String
+  client   Client        @relation(fields: [clientId], references: [id])
+  issuedAt DateTime      @default(now()) // Fecha de emisión
+  dueDate  DateTime? // Fecha de vencimiento
+  amount   Float // Total a pagar
+  currency String        @default("EUR") // ISO currency code
+  status   InvoiceStatus @default(PENDING) // Estado de la factura
+  concept  String? // Descripción del periodo o motivo
+  notes    String? // Detalles o condiciones adicionales
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  CANCELLED
+  OVERDUE
+}
+
+// 6. route.prisma
 model Route {
   id         String   @id @default(uuid())
-  date       DateTime
+  date       DateTime // Fecha de ejecución o planificación
   operatorId String
   operator   User     @relation(fields: [operatorId], references: [id])
-  notes      String?
+  notes      String? // Comentarios generales de la ruta
 
-  replenishments Replenishment[]
+  replenishments Replenishment[] // Acciones concretas hechas en máquinas
 }
 
 model Replenishment {
@@ -102,12 +185,12 @@ model Replenishment {
   machineId String
   routeId   String
   date      DateTime @default(now())
-  notes     String?
+  notes     String? // Observaciones del operador (falta producto, máquina rota, etc.)
 
   machine Machine @relation(fields: [machineId], references: [id])
   route   Route   @relation(fields: [routeId], references: [id])
 
-  items ReplenishmentItem[]
+  items ReplenishmentItem[] // Productos recargados
 }
 
 model ReplenishmentItem {
@@ -122,19 +205,38 @@ model ReplenishmentItem {
   product       Product       @relation(fields: [productId], references: [id])
 }
 
+// 7. maintenance.prisma
 model MaintenanceLog {
   id          String          @id @default(uuid())
   machineId   String
   operatorId  String
   date        DateTime        @default(now())
   type        MaintenanceType
-  description String
+  description String // Qué se hizo o se detectó
+  cost        Float? // Costo asociado a la reparación
+  durationMin Int? // Tiempo estimado/requerido
+  resolved    Boolean         @default(false) // Si se resolvió o no
 
   machine  Machine @relation(fields: [machineId], references: [id])
   operator User    @relation(fields: [operatorId], references: [id])
 }
 
 enum MaintenanceType {
-  PREVENTIVE
-  CORRECTIVE
+  PREVENTIVE // Mantenimiento regular programado
+  CORRECTIVE // Reparaciones por fallos
+  INSPECTION // Revisiones sin intervención directa
+}
+
+// 8. activity.prisma
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String // Verbo de acción: "CREATE", "UPDATE", "DELETE", etc.
+  entity    String // Entidad afectada: "Machine", "Product", etc.
+  entityId  String // ID del elemento afectado
+  changes   Json? // Detalles de los cambios (antes/después, si querés)
+  context   String? // Info adicional: IP, user agent, módulo, etc.
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }

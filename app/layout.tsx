@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Display } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/layout/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 
 import "./globals.css";

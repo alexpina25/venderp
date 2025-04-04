@@ -1,62 +1,68 @@
-import { RecentLocations } from "@/components/dashboard/RecentLocations";
+// app/dashboard/page.tsx
 import { StatCard } from "@/components/dashboard/StatCard";
+import { RecentLocations } from "@/components/dashboard/RecentLocations";
+import { RefillStats } from "@/components/dashboard/RefillStats";
+import { TotalMachines } from "@/components/dashboard/TotalMachinesCard";
+import { MachineConnections } from "@/components/dashboard/MachineConnections";
 
-import { Button } from "@/components/ui/button"
-import { UserButton } from "@clerk/nextjs";
-import { BookOpenCheck, UsersRound, Waypoints } from "lucide-react";
-import { RefillStats } from "../../components/dashboard/RefillStats";
-import { MachineConnections } from "@/components/dashboard/MachineConecctions";
-import { TotalMachines } from "../../components/dashboard/TotalMachinesCard";
+import { UsersRound, Waypoints, BookOpenCheck } from "lucide-react";
 
-
-const dataCardsStats = [
+const stats = [
   {
     icon: UsersRound,
     total: "12.450",
     average: 15,
-    title: "Companies created",
-    tooltipText: "See all of the companies created"
+    title: "Empresas creadas",
+    tooltipText: "Total de empresas registradas en el sistema",
   },
   {
     icon: Waypoints,
     total: "86.5%",
     average: 80,
-    title: "Total Revenue",
-    tooltipText: "See all of the summary"
+    title: "Tasa de visitas cumplidas",
+    tooltipText: "Porcentaje de rutas completadas exitosamente",
   },
   {
     icon: BookOpenCheck,
     total: "363,95€",
     average: 30,
-    title: "Bounce Rate",
-    tooltipText: "See all of the bounce rate"
+    title: "Ingresos últimos 7 días",
+    tooltipText: "Ventas totales aproximadas por máquinas",
   },
-]
+];
 
-export default function Home() {
+export default function DashboardPage() {
   return (
-    <div>
-      <h2 className="mb-4 text-2xl">Dashboard</h2>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-20">
-        {dataCardsStats.map(({ icon, total, average, title, tooltipText }) => (
-          <StatCard
-            key={title}
-            icon={icon}
-            total={total}
-            average={average}
-            title={title}
-            tooltipText={tooltipText}
-          />
-        ))}
-      </div>
-      <div className="grid grid-cols-1 mt-12 xl:grid-cols-2 md:gap-x-10">
+    <div className="space-y-10">
+      <h2 className="text-3xl font-semibold">Dashboard</h2>
+
+      {/* Resumen de métricas */}
+      <section>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {stats.map(({ icon, total, average, title, tooltipText }) => (
+            <StatCard
+              key={title}
+              icon={icon}
+              total={total}
+              average={average}
+              title={title}
+              tooltipText={tooltipText}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Actividad reciente y estadísticas */}
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <RecentLocations />
         <RefillStats />
-      </div>
-      <div className="flex-col justify-center mt-12 md:gap-x-10 xl:flex xl:flex-row gap-y-4 md:gap-y-0 md:mb-10">
-        <TotalMachines />
-        <MachineConnections />
-      </div>
+      </section>
+
+      {/* Estado de máquinas y conexiones */}
+      <section className="flex flex-col gap-6 xl:flex-row">
+        <TotalMachines className="flex-1" />
+        <MachineConnections className="flex-1" />
+      </section>
     </div>
   );
 }
