@@ -1,15 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Machine, MachineStatus, MachineType, Client } from "@prisma/client";
+import { Client, Machine, MachineStatus, MachineType } from "@prisma/client";
 import { updateMachine } from "@/app/actions/updateMachine";
 
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -18,22 +18,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useEffect, useState } from "react";
+
 const formSchema = z.object({
   id: z.string(),
   code: z.string().min(2),
   model: z.string().optional(),
+  serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
   locationId: z.string(),
+  installedAt: z.string().optional(),
 });
 
 interface Props {
   machine: Machine;
-  clients: Client[];
+  onSuccess?: () => void;
 }
 
-export function EditMachineForm({ machine, clients }: Props) {
+export function EditMachineForm({ machine, onSuccess }: Props) {
   const router = useRouter();
+  const [clients, setClients] = useState<Client[]>([]);
 
   const {
     register,
@@ -45,16 +50,27 @@ export function EditMachineForm({ machine, clients }: Props) {
     defaultValues: {
       id: machine.id,
       code: machine.code,
-      model: machine.model ?? undefined,
+      model: machine.model ?? "",
+      serialNumber: machine.serialNumber ?? "",
       type: machine.type,
       status: machine.status,
       locationId: machine.locationId,
+      installedAt: machine.installedAt
+        ? new Date(machine.installedAt).toISOString().split("T")[0]
+        : "",
     },
   });
 
+  useEffect(() => {
+    fetch("/api/clients")
+      .then((res) => res.json())
+      .then(setClients);
+  }, []);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await updateMachine(values);
-    router.push("/machines");
+    router.refresh();
+    onSuccess?.();
   };
 
   return (
@@ -75,18 +91,24 @@ export function EditMachineForm({ machine, clients }: Props) {
       </div>
 
       <div>
+        <Label htmlFor="serialNumber">Número de serie</Label>
+        <Input id="serialNumber" {...register("serialNumber")} />
+      </div>
+
+      <div>
         <Label>Tipo</Label>
         <Select
           defaultValue={machine.type}
-          onValueChange={(v: string) => setValue("type", v as MachineType)}
+          onValueChange={(v) => setValue("type", v as MachineType)}
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="Selecciona tipo" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="SNACK">Snack</SelectItem>
             <SelectItem value="DRINK">Bebida</SelectItem>
             <SelectItem value="COMBO">Combo</SelectItem>
+            <SelectItem value="OTHER">Otro</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -95,10 +117,10 @@ export function EditMachineForm({ machine, clients }: Props) {
         <Label>Estado</Label>
         <Select
           defaultValue={machine.status}
-          onValueChange={(v: string) => setValue("status", v as MachineStatus)}
+          onValueChange={(v) => setValue("status", v as MachineStatus)}
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="Selecciona estado" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ACTIVE">Activa</SelectItem>
@@ -109,13 +131,13 @@ export function EditMachineForm({ machine, clients }: Props) {
       </div>
 
       <div>
-        <Label>Ubicación</Label>
+        <Label htmlFor="locationId">Ubicación / Cliente</Label>
         <Select
           defaultValue={machine.locationId}
-          onValueChange={(v: string) => setValue("locationId", v)}
+          onValueChange={(v) => setValue("locationId", v)}
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="Selecciona ubicación" />
           </SelectTrigger>
           <SelectContent>
             {clients.map((client) => (
@@ -125,6 +147,11 @@ export function EditMachineForm({ machine, clients }: Props) {
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div>
+        <Label htmlFor="installedAt">Fecha de instalación</Label>
+        <Input id="installedAt" type="date" {...register("installedAt")} />
       </div>
 
       <Button type="submit" disabled={isSubmitting}>

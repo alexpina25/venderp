@@ -3,24 +3,30 @@
 
 import { db } from "@/lib/db";
 import { z } from "zod";
-import { MachineType, MachineStatus } from "@prisma/client";
+import { MachineStatus, MachineType } from "@prisma/client";
 
-const machineSchema = z.object({
+const schema = z.object({
   code: z.string().min(2),
   model: z.string().optional(),
+  serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
   locationId: z.string(),
+  installedAt: z.string().optional(), // viene como string del input type="date"
 });
 
-export async function createMachine(input: z.infer<typeof machineSchema>) {
-  const data = machineSchema.parse(input);
+export async function createMachine(input: z.infer<typeof schema>) {
+  const data = schema.parse(input);
 
-  const machine = await db.machine.create({
+  await db.machine.create({
     data: {
-      ...data,
+      code: data.code,
+      model: data.model || null,
+      serialNumber: data.serialNumber || null,
+      type: data.type,
+      status: data.status,
+      locationId: data.locationId,
+      installedAt: data.installedAt ? new Date(data.installedAt) : null,
     },
   });
-
-  return machine;
 }

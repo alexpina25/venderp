@@ -5,6 +5,9 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MachineType, MachineStatus, Client } from "@prisma/client";
+import { useEffect, useState } from "react";
+
+import { createMachine } from "@/app/actions/createMachine";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,15 +20,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { createMachine } from "@/app/actions/createMachine";
-import { useEffect, useState } from "react";
-
 const formSchema = z.object({
   code: z.string().min(2),
   model: z.string().optional(),
+  serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
   locationId: z.string(),
+  installedAt: z.string().optional(),
 });
 
 export function NewMachineForm() {
@@ -41,6 +43,7 @@ export function NewMachineForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       status: "ACTIVE",
+      type: "SNACK",
     },
   });
 
@@ -52,8 +55,7 @@ export function NewMachineForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await createMachine(values);
-    router.refresh(); // actualiza la tabla
-    router.push("/machines"); // opcional: redirige
+    router.refresh();
   };
 
   return (
@@ -72,8 +74,16 @@ export function NewMachineForm() {
       </div>
 
       <div>
+        <Label htmlFor="serialNumber">Número de serie</Label>
+        <Input id="serialNumber" {...register("serialNumber")} />
+      </div>
+
+      <div>
         <Label>Tipo</Label>
-        <Select onValueChange={(v) => setValue("type", v as MachineType)}>
+        <Select
+          onValueChange={(v) => setValue("type", v as MachineType)}
+          defaultValue="SNACK"
+        >
           <SelectTrigger>
             <SelectValue placeholder="Selecciona tipo" />
           </SelectTrigger>
@@ -81,6 +91,7 @@ export function NewMachineForm() {
             <SelectItem value="SNACK">Snack</SelectItem>
             <SelectItem value="DRINK">Bebida</SelectItem>
             <SelectItem value="COMBO">Combo</SelectItem>
+            <SelectItem value="OTHER">Otro</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -109,17 +120,22 @@ export function NewMachineForm() {
             <SelectValue placeholder="Selecciona ubicación" />
           </SelectTrigger>
           <SelectContent>
-            {clients.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.name}
+            {clients.map((client) => (
+              <SelectItem key={client.id} value={client.id}>
+                {client.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
+      <div>
+        <Label htmlFor="installedAt">Fecha de instalación</Label>
+        <Input id="installedAt" type="date" {...register("installedAt")} />
+      </div>
+
       <Button type="submit" disabled={isSubmitting}>
-        Guardar máquina
+        Crear máquina
       </Button>
     </form>
   );
