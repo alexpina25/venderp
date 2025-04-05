@@ -1,53 +1,38 @@
 import {
-  BarChart4,
-  Building2,
-  PanelsTopLeft,
+  LayoutDashboard,
+  Cpu,
+  Package,
+  MapPin,
+  Route,
+  Wrench,
+  FileText,
   Settings,
-  ShieldCheck,
-  CircleHelpIcon,
-  Calendar,
+  Activity,
 } from "lucide-react";
 
-export const dataGeneralSidebar = [
+export const sidebarSections = [
   {
-    icon: PanelsTopLeft,
-    label: "Dashboard",
-    href: "/",
+    title: "General",
+    items: [
+      { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { label: "Clientes", href: "/clients", icon: MapPin },
+      { label: "Máquinas", href: "/machines", icon: Cpu },
+      { label: "Productos", href: "/products", icon: Package },
+    ],
   },
   {
-    icon: Building2,
-    label: "Companies",
-    href: "/companies",
+    title: "Operaciones",
+    items: [
+      { label: "Rutas", href: "/routes", icon: Route },
+      { label: "Mantenimiento", href: "/maintenance", icon: Wrench },
+    ],
   },
   {
-    icon: Calendar,
-    label: "Calendar",
-    href: "/tasks",
-  },
-];
-
-export const dataToolsSidebar = [
-  {
-    icon: CircleHelpIcon,
-    label: "Faqs",
-    href: "/faqs",
-  },
-  {
-    icon: BarChart4,
-    label: "Analytics",
-    href: "/analytics",
-  },
-];
-
-export const dataSupportSidebar = [
-  {
-    icon: Settings,
-    label: "Setting",
-    href: "/setting",
-  },
-  {
-    icon: ShieldCheck,
-    label: "Security",
-    href: "/security",
+    title: "Administración",
+    items: [
+      { label: "Facturación", href: "/invoices", icon: FileText },
+      { label: "Actividad", href: "/activity", icon: Activity },
+      { label: "Configuración", href: "/settings", icon: Settings },
+    ],
   },
 ];
