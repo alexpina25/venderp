@@ -1,7 +1,6 @@
 // app/(routes)/machines/page.tsx
 import { db } from "@/lib/db";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { NewMachineModal } from "@/components/machines/NewMachineModal";
 
 export default async function MachinesPage() {
   const machines = await db.machine.findMany({
@@ -15,9 +14,7 @@ export default async function MachinesPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Máquinas</h2>
-        <Button asChild>
-          <Link href="/machines/new">+ Nueva máquina</Link>
-        </Button>
+        <NewMachineModal />
       </div>
 
       <div className="border rounded-lg p-4 bg-background shadow">
