@@ -10,11 +10,22 @@ import { EditMachineModal } from "./EditMachineModal";
 
 export const columns: ColumnDef<Machine & { location: { name: string } }>[] = [
   {
-    accessorKey: "code",
-    header: "Código",
-    cell: ({ row }) => (
-      <span className="font-medium">{row.getValue("code")}</span>
-    ),
+    accessorKey: "code", // Columna de código
+    header: "Máquina",
+    cell: ({ row }) => {
+      const machine = row.original;
+      return (
+        <div className="flex items-center gap-2 justify-between">
+          
+          <span className="font-medium">{row.getValue("code")}</span>
+          <Link href={`/machines/${machine.id}`}>
+            <Button variant="ghost" size="icon">
+              <Eye className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "model",
@@ -67,22 +78,5 @@ export const columns: ColumnDef<Machine & { location: { name: string } }>[] = [
       row.original.location?.name ?? (
         <span className="text-muted-foreground italic">Sin asignar</span>
       ),
-  },
-  {
-    id: "acciones",
-    header: "",
-    cell: ({ row }) => {
-      const machine = row.original;
-      return (
-        <div className="flex gap-2">
-          <Link href={`/machines/${machine.id}`}>
-            <Button variant="ghost" size="icon">
-              <Eye className="w-4 h-4" />
-            </Button>
-          </Link>
-          <EditMachineModal machine={machine} />
-        </div>
-      );
-    },
   },
 ];

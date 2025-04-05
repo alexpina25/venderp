@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
@@ -15,25 +13,20 @@ import { Machine } from "@prisma/client";
 
 interface Props {
   machine: Machine & { location: { name: string } };
+  open: boolean;
+  onClose: () => void;
 }
 
-export function EditMachineModal({ machine }: Props) {
-  const [open, setOpen] = useState(false);
-
+export function EditMachineModal({ machine, open, onClose }: Props) {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Pencil className="w-4 h-4" />
-        </Button>
-      </DialogTrigger>
-
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>Editar máquina</DialogTitle>
         </DialogHeader>
 
-        <EditMachineForm machine={machine} onSuccess={() => setOpen(false)} />
+        {/* Formulario de edición */}
+        <EditMachineForm machine={machine} onSuccess={onClose} />
       </DialogContent>
     </Dialog>
   );
