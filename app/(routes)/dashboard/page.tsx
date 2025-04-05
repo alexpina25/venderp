@@ -60,8 +60,8 @@ export default function DashboardPage() {
 
       {/* Estado de máquinas y conexiones */}
       <section className="flex flex-col gap-6 xl:flex-row">
-        <TotalMachines className="flex-1" />
-        <MachineConnections className="flex-1" />
+        <TotalMachines />
+        <MachineConnections />
       </section>
     </div>
   );
