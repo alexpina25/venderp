@@ -3,6 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Machine } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { Eye, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { EditMachineModal } from "./EditMachineModal";
 
 export const columns: ColumnDef<Machine & { location: { name: string } }>[] = [
@@ -70,7 +73,16 @@ export const columns: ColumnDef<Machine & { location: { name: string } }>[] = [
     header: "",
     cell: ({ row }) => {
       const machine = row.original;
-      return <EditMachineModal machine={machine} />;
+      return (
+        <div className="flex gap-2">
+          <Link href={`/machines/${machine.id}`}>
+            <Button variant="ghost" size="icon">
+              <Eye className="w-4 h-4" />
+            </Button>
+          </Link>
+          <EditMachineModal machine={machine} />
+        </div>
+      );
     },
   },
 ];

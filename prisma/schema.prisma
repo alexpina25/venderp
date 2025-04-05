@@ -145,6 +145,31 @@ model MachineProduct {
   product Product @relation(fields: [productId], references: [id])
 }
 
+model Replenishment {
+  id        String   @id @default(uuid())
+  machineId String
+  routeId   String
+  date      DateTime @default(now())
+  notes     String? // Observaciones del operador (falta producto, máquina rota, etc.)
+
+  machine Machine @relation(fields: [machineId], references: [id])
+  route   Route   @relation(fields: [routeId], references: [id])
+
+  items ReplenishmentItem[] // Productos recargados
+}
+
+model ReplenishmentItem {
+  id              String @id @default(uuid())
+  replenishmentId String
+  productId       String
+  quantityAdded   Int
+  stockBefore     Int
+  stockAfter      Int
+
+  replenishment Replenishment @relation(fields: [replenishmentId], references: [id])
+  product       Product       @relation(fields: [productId], references: [id])
+}
+
 // 5. invoice.prisma
 model Invoice {
   id       String        @id @default(uuid())
@@ -178,31 +203,6 @@ model Route {
   notes      String? // Comentarios generales de la ruta
 
   replenishments Replenishment[] // Acciones concretas hechas en máquinas
-}
-
-model Replenishment {
-  id        String   @id @default(uuid())
-  machineId String
-  routeId   String
-  date      DateTime @default(now())
-  notes     String? // Observaciones del operador (falta producto, máquina rota, etc.)
-
-  machine Machine @relation(fields: [machineId], references: [id])
-  route   Route   @relation(fields: [routeId], references: [id])
-
-  items ReplenishmentItem[] // Productos recargados
-}
-
-model ReplenishmentItem {
-  id              String @id @default(uuid())
-  replenishmentId String
-  productId       String
-  quantityAdded   Int
-  stockBefore     Int
-  stockAfter      Int
-
-  replenishment Replenishment @relation(fields: [replenishmentId], references: [id])
-  product       Product       @relation(fields: [productId], references: [id])
 }
 
 // 7. maintenance.prisma
