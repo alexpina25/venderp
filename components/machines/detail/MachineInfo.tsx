@@ -1,11 +1,15 @@
 import { Machine, Client, MachineStatus, MachineType } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
+import { EditMachineModal } from "@/components/machines/EditMachineModal";
 
 interface Props {
   machine: Machine & { location: Client };
+  onEdit: (machine: Machine) => void; // Función para abrir el modal
 }
 
-export function MachineInfo({ machine }: Props) {
+export function MachineInfo({ machine, onEdit }: Props) {
   return (
     <div className="grid md:grid-cols-2 gap-6 bg-background rounded-lg p-4 border">
       <div>
@@ -66,6 +70,18 @@ export function MachineInfo({ machine }: Props) {
             ? new Date(machine.lastCheck).toLocaleDateString()
             : "–"}
         </p>
+      </div>
+
+      {/* Botón de Editar */}
+      <div className="col-span-2 mt-4 flex justify-end">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onEdit(machine)} // Llama a la función para abrir el modal
+        >
+          <Pencil className="w-4 h-4 mr-2" />
+          Editar
+        </Button>
       </div>
     </div>
   );
