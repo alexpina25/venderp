@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { MachineInfo } from "@/components/machines/detail/MachineInfo";
-import { MachineStockTable } from "@/components/machines/detail/MachineStockTable";
 import { EditMachineModal } from "@/components/machines/EditMachineModal";
+import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs"; // Importamos el nuevo componente
 
 async function fetchMachineData(id: string) {
   const response = await fetch(`/api/machines/${id}`);
@@ -76,18 +76,17 @@ export default function MachineDetailPage({
 
       {selectedMachine && (
         <>
+          {/* Información básica de la máquina */}
           <MachineInfo machine={selectedMachine} onEdit={openEditModal} />
 
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Stock actual</h3>
-            <MachineStockTable stock={selectedMachine.products} />
-          </div>
+          {/* Tablas de contenido adicional (Stock, Mantenimiento, Ventas, etc.) */}
+          <MachineDetailsTabs machine={selectedMachine} />
 
           {/* Modal de edición */}
           <EditMachineModal
             machine={selectedMachine}
             open={isModalOpen}
-            onClose={handleCancel} // Cambié aquí a handleCancel para que se refresquen los datos al cerrar
+            onClose={handleCancel}
             onSuccess={handleEditSuccess}
           />
         </>
