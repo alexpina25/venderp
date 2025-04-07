@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MachineWithProducts } from "./MachineDetailsTabs";
+import { MachineWithProducts } from "../MachineDetailsTabs";
 import {
   Table,
   TableBody,
@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AddProductModal } from "@/components/machines/detail/AddProductModal";
-import { AdjustStockModal } from "@/components/machines/detail/AdjustStockModal";
+import { AddProductModal } from "@/components/machines/detail/stock/AddProductModal";
+import { AdjustStockModal } from "@/components/machines/detail/stock/AdjustStockModal";
 
 interface Props {
   machine: MachineWithProducts;
