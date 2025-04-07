@@ -140,6 +140,8 @@ model MachineProduct {
   currentStock Int
   maxCapacity  Int
   minThreshold Int
+  line         String // Número de línea (1, 2, 3, ...)
+  selection    String // Número de selección (A1, B1, 1, 2, etc.)
 
   machine Machine @relation(fields: [machineId], references: [id])
   product Product @relation(fields: [productId], references: [id])

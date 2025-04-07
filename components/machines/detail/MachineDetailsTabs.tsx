@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Machine } from "@prisma/client";
+import { Machine, MachineProduct, Product } from "@prisma/client";
 import { MachineStockTable } from "@/components/machines/detail/MachineStockTable"; // Stock
 import { MaintenanceHistoryTable } from "@/components/machines/detail/MaintenanceHistoryTable"; // Mantenimiento
 import { Button } from "@/components/ui/button";
+import { Client } from "@clerk/nextjs/server";
+
+// Extiende el tipo de máquina para incluir productosinterface MachineWithProducts extends Machine {
+
+export interface MachineWithProducts extends Machine {
+  location: Client;
+  products: (MachineProduct & { product: Product })[];
+}
 
 interface Props {
-  machine: Machine & { location: { name: string } };
+  machine: MachineWithProducts;
 }
 
 export function MachineDetailsTabs({ machine }: Props) {
@@ -17,7 +25,8 @@ export function MachineDetailsTabs({ machine }: Props) {
   const renderTabContent = () => {
     switch (activeTab) {
       case "stock":
-        return <MachineStockTable stock={machine.products} />;
+        // Pasa los productos a la tabla de stock
+        return <MachineStockTable machine={machine} />;
       case "maintenance":
         return <MaintenanceHistoryTable machineId={machine.id} />;
       case "sales":
@@ -30,7 +39,7 @@ export function MachineDetailsTabs({ machine }: Props) {
   return (
     <div className="space-y-4">
       {/* Pestañas de navegación */}
-      <div className="flex border-b border-gray-300">
+      <div className="flex border-b border-gray-300 gap-1">
         <Button
           onClick={() => setActiveTab("stock")}
           variant={activeTab === "stock" ? "default" : "outline"}

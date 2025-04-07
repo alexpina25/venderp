@@ -1,0 +1,155 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Product, Machine } from "@prisma/client";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+// ✅ Nueva Interface recibiendo máquina completa
+interface AddProductModalProps {
+  machine: Machine;
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+export function AddProductModal({
+  machine,
+  open,
+  onClose,
+  onSuccess,
+}: AddProductModalProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [line, setLine] = useState("");
+  const [selection, setSelection] = useState("");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await fetch("/api/products?active=true");
+      const data = await response.json();
+      setProducts(data);
+    };
+
+    if (open) {
+      fetchProducts();
+    }
+  }, [open]);
+
+  const handleProductSelect = (productId: string) => {
+    const product = products.find((p) => p.id === productId);
+    setSelectedProduct(product || null);
+    setPrice(product?.price || 0);
+  };
+
+  const handleAddProduct = async () => {
+    if (!selectedProduct || quantity <= 0 || !line || !selection) return;
+
+    const response = await fetch(`/api/machines/${machine.id}/add-product`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: selectedProduct.id,
+        quantity,
+        price,
+        line,
+        selection,
+      }),
+    });
+
+    if (response.ok) {
+      onSuccess();
+      onClose();
+    } else {
+      console.error("Error al añadir el producto a la máquina");
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>Añadir producto a la máquina {machine.code}</DialogTitle>
+        </DialogHeader>
+
+        {/* Selección de producto */}
+        <Select onValueChange={handleProductSelect}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona un producto" />
+          </SelectTrigger>
+          <SelectContent>
+            {products.map((product) => (
+              <SelectItem key={product.id} value={product.id}>
+                {product.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Línea */}
+        <Input
+          className="mt-4"
+          value={line}
+          onChange={(e) => setLine(e.target.value)}
+          placeholder="Número de línea (Ej: 1, 2, 3)"
+        />
+
+        {/* Selección */}
+        <Input
+          className="mt-4"
+          value={selection}
+          onChange={(e) => setSelection(e.target.value)}
+          placeholder="Número de selección (Ej: A1, B1, etc.)"
+        />
+
+        {/* Precio del producto seleccionado */}
+        {selectedProduct && (
+          <div className="mt-4 text-sm text-muted-foreground">
+            Precio actual: {price.toFixed(2)}€
+          </div>
+        )}
+
+        {/* Cantidad */}
+        <Input
+          className="mt-4"
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          placeholder="Cantidad a añadir"
+        />
+
+        {/* Footer con botones */}
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button
+            variant="default"
+            onClick={handleAddProduct}
+            disabled={!selectedProduct || quantity <= 0 || !line || !selection}
+          >
+            Añadir
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
