@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { MachineTable } from "@/components/machines/MachineTable";
-import { NewMachineModal } from "@/components/machines/NewMachineModal";
+import { NewMachineModal } from "@/components/machines/forms/NewMachineModal";
 
 export default async function MachinesPage() {
   const machines = await db.machine.findMany({

@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MachineType, MachineStatus, Client } from "@prisma/client";
+import { MachineType, MachineStatus } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 import { createMachine } from "@/app/actions/createMachine";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,24 +19,40 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+type LocationWithClient = {
+  id: string;
+  name: string;
+  clientId: string;
+};
+
+type ClientBasic = {
+  id: string;
+  name: string;
+};
+
 const formSchema = z.object({
   code: z.string().min(2),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
+  clientId: z.string(),
   locationId: z.string(),
   installedAt: z.string().optional(),
+  customId: z.coerce.number().optional(),
 });
 
 export function NewMachineForm() {
   const router = useRouter();
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<ClientBasic[]>([]);
+  const [locations, setLocations] = useState<LocationWithClient[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,11 +62,23 @@ export function NewMachineForm() {
     },
   });
 
+  // Cargar clientes
   useEffect(() => {
     fetch("/api/clients")
       .then((res) => res.json())
       .then(setClients);
   }, []);
+
+  // Cargar ubicaciones
+  useEffect(() => {
+    fetch("/api/locations")
+      .then((res) => res.json())
+      .then(setLocations);
+  }, []);
+
+  const filteredLocations = locations.filter(
+    (loc) => loc.clientId === selectedClientId
+  );
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     await createMachine(values);
@@ -66,6 +93,11 @@ export function NewMachineForm() {
         {errors.code && (
           <p className="text-xs text-red-500">{errors.code.message}</p>
         )}
+      </div>
+
+      <div>
+        <Label htmlFor="customId">ID</Label>
+        <Input id="customId" type="number" {...register("customId")} />
       </div>
 
       <div>
@@ -114,10 +146,16 @@ export function NewMachineForm() {
       </div>
 
       <div>
-        <Label>Ubicación / Cliente</Label>
-        <Select onValueChange={(v) => setValue("locationId", v)}>
+        <Label>Cliente</Label>
+        <Select
+          onValueChange={(v) => {
+            setValue("clientId", v);
+            setSelectedClientId(v);
+            setValue("locationId", ""); // Reset location
+          }}
+        >
           <SelectTrigger>
-            <SelectValue placeholder="Selecciona ubicación" />
+            <SelectValue placeholder="Selecciona cliente" />
           </SelectTrigger>
           <SelectContent>
             {clients.map((client) => (
@@ -127,7 +165,31 @@ export function NewMachineForm() {
             ))}
           </SelectContent>
         </Select>
+        {errors.clientId && (
+          <p className="text-xs text-red-500">{errors.clientId.message}</p>
+        )}
       </div>
+
+      {selectedClientId && (
+        <div>
+          <Label>Ubicación</Label>
+          <Select onValueChange={(v) => setValue("locationId", v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecciona ubicación" />
+            </SelectTrigger>
+            <SelectContent>
+              {filteredLocations.map((location) => (
+                <SelectItem key={location.id} value={location.id}>
+                  {location.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.locationId && (
+            <p className="text-xs text-red-500">{errors.locationId.message}</p>
+          )}
+        </div>
+      )}
 
       <div>
         <Label htmlFor="installedAt">Fecha de instalación</Label>

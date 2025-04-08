@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { MachineInfo } from "@/components/machines/detail/MachineInfo";
-import { EditMachineModal } from "@/components/machines/EditMachineModal";
+import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs"; // Importamos el nuevo componente
 
 async function fetchMachineData(id: string) {

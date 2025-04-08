@@ -47,6 +47,7 @@ enum Role {
 
 model Client {
   id           String   @id @default(uuid())
+  customId     Int?     @unique // 🆔 Código visual para el cliente
   name         String
   address      String
   city         String
@@ -71,8 +72,9 @@ model Client {
 
 model Location {
   id           String   @id @default(uuid())
+  customId     Int?     @unique // 🆔 Código visual de la ubicación
   clientId     String
-  name         String // Ej: "Barcelona Sur", "Colegio Zaragoza"
+  name         String
   address      String
   city         String
   postalCode   String?
@@ -96,9 +98,10 @@ model Location {
 
 model Machine {
   id           String        @id @default(uuid())
+  customId     Int?          @unique // 🆔 Código visual de la máquina
   code         String        @unique
   model        String?
-  serialNumber String?
+  serialNumber String?       @unique
   type         MachineType
   status       MachineStatus @default(ACTIVE)
   lastCheck    DateTime?
@@ -128,6 +131,7 @@ enum MachineType {
   SNACK
   DRINK
   COMBO
+  CAFE
   OTHER
 }
 
@@ -139,6 +143,7 @@ enum MachineStatus {
 
 model Product {
   id        String          @id @default(uuid())
+  customId  Int?            @unique // 🆔 Código visual del producto
   name      String
   category  ProductCategory
   price     Float
@@ -168,9 +173,9 @@ model MachineProduct {
   currentStock Int
   maxCapacity  Int
   minThreshold Int
-  price        Float // Precio actual en esta máquina
-  line         String // Línea: 1, 2, 3...
-  selection    String // Selección: A1, B2, 12...
+  price        Float
+  line         String
+  selection    String
 
   machine Machine @relation(fields: [machineId], references: [id])
   product Product @relation(fields: [productId], references: [id])

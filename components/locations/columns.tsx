@@ -1,11 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Client } from "@prisma/client";
+import { Location } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
-import { EditClientModal } from "./forms/EditClientModal";
+import { EditLocationModal } from "./forms/EditLocationModal";
+import { LocationWithClient } from "@/types";
 
-export const columns: ColumnDef<Client>[] = [
+export const columns: ColumnDef<LocationWithClient>[] = [
   {
     accessorKey: "name",
     header: "Nombre",
@@ -18,12 +19,12 @@ export const columns: ColumnDef<Client>[] = [
     header: "Ciudad",
   },
   {
-    accessorKey: "contactName",
-    header: "Contacto",
+    accessorKey: "address",
+    header: "Dirección",
   },
   {
-    accessorKey: "contactEmail",
-    header: "Email",
+    accessorKey: "contactName",
+    header: "Contacto",
   },
   {
     accessorKey: "contactPhone",
@@ -36,7 +37,7 @@ export const columns: ColumnDef<Client>[] = [
       const isActive = row.getValue("active");
       return (
         <Badge variant={isActive ? "default" : "destructive"}>
-          {isActive ? "Activo" : "Inactivo"}
+          {isActive ? "Activa" : "Inactiva"}
         </Badge>
       );
     },
@@ -53,8 +54,8 @@ export const columns: ColumnDef<Client>[] = [
     id: "acciones",
     header: "",
     cell: ({ row }) => {
-      const client = row.original;
-      return <EditClientModal client={client} />;
+      const location = row.original;
+      return <EditLocationModal location={location} />;
     },
   },
 ];

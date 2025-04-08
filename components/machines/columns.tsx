@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Eye, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EditMachineModal } from "./EditMachineModal";
+import { EditMachineModal } from "./forms/EditMachineModal";
 
 export const columns: ColumnDef<Machine & { location: { name: string } }>[] = [
   {

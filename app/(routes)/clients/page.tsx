@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { ClientTable } from "@/components/clients/ClientTable";
-import { NewClientModal } from "@/components/clients/NewClientModal";
+import { NewClientModal } from "@/components/clients/forms/NewClientModal";
 
 export default async function ClientsPage() {
   const clients = await db.client.findMany({

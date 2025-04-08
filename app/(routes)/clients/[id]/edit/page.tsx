@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
-import { EditClientForm } from "@/components/clients/EditClientForm";
+import { EditClientForm } from "@/components/clients/forms/EditClientForm";
 
 interface EditPageProps {
   params: { id: string };

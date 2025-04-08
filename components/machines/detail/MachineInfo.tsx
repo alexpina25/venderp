@@ -2,7 +2,7 @@ import { Machine, Client, MachineStatus, MachineType } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
-import { EditMachineModal } from "@/components/machines/EditMachineModal";
+import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 
 interface Props {
   machine: Machine & { location: Client };

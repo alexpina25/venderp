@@ -8,6 +8,7 @@ import {
   FileText,
   Settings,
   Activity,
+  Building2,
 } from "lucide-react";
 
 export const sidebarSections = [
@@ -15,7 +16,8 @@ export const sidebarSections = [
     title: "General",
     items: [
       { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { label: "Clientes", href: "/clients", icon: MapPin },
+      { label: "Clientes", href: "/clients", icon: Building2 },
+      { label: "Ubicaciones", href: "/locations", icon: MapPin },
       { label: "Máquinas", href: "/machines", icon: Cpu },
       { label: "Productos", href: "/products", icon: Package },
     ],
