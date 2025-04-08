@@ -9,6 +9,7 @@ export async function GET(
       where: { id: params.id },
       include: {
         location: true,
+        client: true, // ✅ Ahora ya es válido
         products: {
           include: {
             product: true,
