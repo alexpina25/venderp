@@ -30,6 +30,7 @@ export async function POST(
             minThreshold: 1,
             line,
             selection,
+            price
           },
         },
       },
