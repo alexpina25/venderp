@@ -7,7 +7,7 @@ export default function LayoutAuth({ children }: { children: React.ReactNode }) 
             <h1 className="text-3xl my-2">
                 Welcome to my Dashboard!
             </h1>
-            <h2 className="text-2xl mb-3">TarreDashboard</h2>
+            <h2 className="text-2xl mb-3">Venderp</h2>
             {children}
         </div>
     )
