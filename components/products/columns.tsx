@@ -43,20 +43,32 @@ export const columns: ColumnDef<Product>[] = [
       ),
   },
   {
-    id: "margin",
-    header: "Margen (€)",
-    cell: ({ row }) => {
-      const price = row.original.price;
-      const cost = row.original.cost;
-      return cost !== null ? (
-        <span className="text-green-600 font-medium">
-          {(price - cost).toFixed(2)}
-        </span>
-      ) : (
-        <span className="text-muted-foreground italic">–</span>
-      );
-    },
+  id: "margin",
+  header: "Margen (€)",
+  cell: ({ row }) => {
+    const price = row.original.price;
+    const cost = row.original.cost;
+
+    if (cost === null) {
+      return <span className="text-muted-foreground italic">–</span>;
+    }
+
+    const margin = price - cost;
+    let colorClass = "";
+
+    if (margin > 0) {
+      colorClass = "text-green-600 font-medium";
+    } else if (margin < 0) {
+      colorClass = "text-red-600 font-medium";
+    }
+
+    return (
+      <span className={colorClass}>
+        {margin.toFixed(2)}
+      </span>
+    );
   },
+},
   {
     accessorKey: "unit",
     header: "Unidad",

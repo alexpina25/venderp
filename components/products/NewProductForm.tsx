@@ -99,10 +99,10 @@ export function NewProductForm() {
         <Input {...register("unit")} />
       </div>
 
-      <div>
+      {/* <div>
         <Label>URL de imagen (opcional)</Label>
         <Input {...register("imageUrl")} />
-      </div>
+      </div> */}
 
       <div>
         <Label>Stock mínimo sugerido</Label>

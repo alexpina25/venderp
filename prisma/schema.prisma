@@ -28,6 +28,9 @@ model User {
   routes       Route[]
   maintenance  MaintenanceLog[]
   activityLogs ActivityLog[]
+
+   // 🎛️ Preferencias de Dashboard
+  dashboardWidgets String[] @default([])
 }
 
 model Organization {

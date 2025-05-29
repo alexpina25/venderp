@@ -10,9 +10,9 @@ import { UsersRound, Waypoints, BookOpenCheck } from "lucide-react";
 const stats = [
   {
     icon: UsersRound,
-    total: "12.450",
+    total: "58",
     average: 15,
-    title: "Empresas creadas",
+    title: "Máquinas activas",
     tooltipText: "Total de empresas registradas en el sistema",
   },
   {
