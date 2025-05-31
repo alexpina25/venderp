@@ -8,100 +8,92 @@ datasource db {
 }
 
 //
-// ─── 1. AUTH / ORGANIZACIÓN ──────────────────────────────────────────────
+// ─── 1. AUTH / ORGANIZATION ─────────────────────────────────────────────
 //
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  role      Role     @default(OPERATOR)
-  avatarUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // 🔐 Relación con organización
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-
-  // 📦 Relaciones
-  routes       Route[]
-  maintenance  MaintenanceLog[]
-  activityLogs ActivityLog[]
-
-   // 🎛️ Preferencias de Dashboard
+  id               String   @id @default(cuid())
+  email            String   @unique
+  name             String
+  password         String
+  role             Role
+  avatarUrl        String?
+  tenantId         String?
+  tenant           Tenant? @relation(fields: [tenantId], references: [id])
   dashboardWidgets String[] @default([])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  routes         Route[]
+  maintenance    MaintenanceLog[]
+  activityLogs   ActivityLog[]
+  centers        CenterUser[]
+  pofs           POFUser[]
 }
 
-model Organization {
-  id    String @id @default(uuid())
-  name  String
-  users User[]
+model Tenant {
+  id      String @id @default(uuid())
+  name    String
+  users   User[]
+  centers Center[]
+}
+
+model CenterUser {
+  id        String @id @default(uuid())
+  userId    String
+  centerId  String
+  user      User   @relation(fields: [userId], references: [id])
+  center    Center @relation(fields: [centerId], references: [id])
+}
+
+model POFUser {
+  id      String @id @default(uuid())
+  userId  String
+  pofId   String
+  user    User @relation(fields: [userId], references: [id])
+  pof     POF  @relation(fields: [pofId], references: [id])
 }
 
 enum Role {
-  ADMIN
-  OPERATOR
+  SUPERADMIN
+  TENANT_ADMIN
+  TENANT_USER
+  CENTER_MANAGER
+  CENTER_USER
+  POF_USER
 }
 
 //
-// ─── 2. CLIENTES Y UBICACIONES ───────────────────────────────────────────
+// ─── 2. CENTERS AND POINTS OF SALE ──────────────────────────────────────
 //
 
-model Client {
-  id           String   @id @default(uuid())
-  customId     Int?     @unique // 🆔 Código visual para el cliente
-  name         String
-  address      String
-  city         String
-  postalCode   String?
-  province     String?
-  country      String?  @default("España")
-  contactName  String
-  contactPhone String
-  contactEmail String?
-  notes        String?
-  active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // 🔗 Ubicaciones asociadas
-  locations Location[]
-
-  // 💸 Facturación
-  invoices Invoice[]
-  Machine  Machine[]
+model Center {
+  id         String       @id @default(uuid())
+  name       String
+  tenantId   String
+  tenant     Tenant       @relation(fields: [tenantId], references: [id])
+  pofs       POF[]
+  invoices   Invoice[]
+  users      CenterUser[]
 }
 
-model Location {
-  id           String   @id @default(uuid())
-  customId     Int?     @unique // 🆔 Código visual de la ubicación
-  clientId     String
-  name         String
-  address      String
-  city         String
-  postalCode   String?
-  province     String?
-  country      String?  @default("España")
-  contactName  String?
-  contactPhone String?
-  contactEmail String?
-  notes        String?
-  active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  client   Client    @relation(fields: [clientId], references: [id])
-  machines Machine[]
+model POF {
+  id        String     @id @default(uuid())
+  name      String
+  address   String
+  centerId  String
+  center    Center     @relation(fields: [centerId], references: [id])
+  machine   Machine?
+  users     POFUser[]
 }
 
 //
-// ─── 3. MAQUINARIA Y PRODUCTOS ──────────────────────────────────────────
+// ─── 3. MACHINES AND PRODUCTS ───────────────────────────────────────────
 //
 
 model Machine {
   id           String        @id @default(uuid())
-  customId     Int?          @unique // 🆔 Código visual de la máquina
+  customId     Int?          @unique
   code         String        @unique
   model        String?
   serialNumber String?       @unique
@@ -110,20 +102,11 @@ model Machine {
   lastCheck    DateTime?
   installedAt  DateTime?
 
-  // 🧾 Relación directa con cliente
-  clientId   String
-  client     Client   @relation(fields: [clientId], references: [id])
-  // 📍 Relación con ubicación (actualizada)
-  locationId String
-  location   Location @relation(fields: [locationId], references: [id])
+  pofId        String? @unique
+  pof          POF?    @relation(fields: [pofId], references: [id])
 
-  // 📦 Productos instalados
-  products MachineProduct[]
-
-  // 🔧 Mantenimiento
+  products       MachineProduct[]
   maintenanceLog MaintenanceLog[]
-
-  // 🚚 Reposiciones
   replenishments Replenishment[]
 
   createdAt DateTime @default(now())
@@ -146,7 +129,7 @@ enum MachineStatus {
 
 model Product {
   id        String          @id @default(uuid())
-  customId  Int?            @unique // 🆔 Código visual del producto
+  customId  Int?            @unique
   name      String
   category  ProductCategory
   price     Float
@@ -185,7 +168,7 @@ model MachineProduct {
 }
 
 //
-// ─── 4. REPOSICIONES Y MANTENIMIENTO ─────────────────────────────────────
+// ─── 4. REPLENISHMENT AND MAINTENANCE ───────────────────────────────────
 //
 
 model Replenishment {
@@ -195,10 +178,9 @@ model Replenishment {
   date      DateTime @default(now())
   notes     String?
 
-  machine Machine @relation(fields: [machineId], references: [id])
-  route   Route   @relation(fields: [routeId], references: [id])
-
-  items ReplenishmentItem[]
+  machine Machine            @relation(fields: [machineId], references: [id])
+  route   Route              @relation(fields: [routeId], references: [id])
+  items   ReplenishmentItem[]
 }
 
 model ReplenishmentItem {
@@ -235,33 +217,33 @@ enum MaintenanceType {
 }
 
 //
-// ─── 5. RUTAS Y FACTURAS ────────────────────────────────────────────────
+// ─── 5. ROUTES AND INVOICES ─────────────────────────────────────────────
 //
 
 model Route {
   id         String   @id @default(uuid())
   date       DateTime
   operatorId String
-  operator   User     @relation(fields: [operatorId], references: [id])
   notes      String?
 
+  operator       User           @relation(fields: [operatorId], references: [id])
   replenishments Replenishment[]
 }
 
 model Invoice {
-  id       String        @id @default(uuid())
-  clientId String
-  client   Client        @relation(fields: [clientId], references: [id])
-  issuedAt DateTime      @default(now())
-  dueDate  DateTime?
-  amount   Float
-  currency String        @default("EUR")
-  status   InvoiceStatus @default(PENDING)
-  concept  String?
-  notes    String?
+  id        String        @id @default(uuid())
+  centerId  String
+  issuedAt  DateTime      @default(now())
+  dueDate   DateTime?
+  amount    Float
+  currency  String        @default("EUR")
+  status    InvoiceStatus @default(PENDING)
+  concept   String?
+  notes     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  center Center @relation(fields: [centerId], references: [id])
 }
 
 enum InvoiceStatus {
@@ -272,7 +254,7 @@ enum InvoiceStatus {
 }
 
 //
-// ─── 6. AUDITORÍA / ACTIVITY LOG ─────────────────────────────────────────
+// ─── 6. AUDIT LOGS ──────────────────────────────────────────────────────
 //
 
 model ActivityLog {
