@@ -11,8 +11,8 @@ const schema = z.object({
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  locationId: z.string(),
-  clientId: z.string(), 
+  pofId: z.string(),
+  centerId: z.string(),
   installedAt: z.string().optional(), // viene como string del input type="date"
 });
 
@@ -26,8 +26,8 @@ export async function createMachine(input: z.infer<typeof schema>) {
       serialNumber: data.serialNumber || null,
       type: data.type,
       status: data.status,
-      locationId: data.locationId,
-      clientId: data.clientId,
+      pofId: data.pofId,
+      centerId: data.centerId,
       installedAt: data.installedAt ? new Date(data.installedAt) : null,
     },
   });
