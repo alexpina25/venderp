@@ -16,8 +16,8 @@ export const sidebarSections = [
     title: "General",
     items: [
       { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { label: "Clientes", href: "/clients", icon: Building2 },
-      { label: "Ubicaciones", href: "/locations", icon: MapPin },
+      { label: "Centros", href: "/centers", icon: Building2 },
+      { label: "POF", href: "/pofs", icon: MapPin },
       { label: "Máquinas", href: "/machines", icon: Cpu },
       { label: "Productos", href: "/products", icon: Package },
     ],

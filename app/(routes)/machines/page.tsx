@@ -5,7 +5,7 @@ import { NewMachineModal } from "@/components/machines/forms/NewMachineModal";
 export default async function MachinesPage() {
   const machines = await db.machine.findMany({
     include: {
-      location: {
+      pof: {
         select: {
           name: true,
         },
