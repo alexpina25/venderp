@@ -4,7 +4,7 @@ import { NewCenterModal } from "@/components/centers/forms/NewCenterModal";
 
 export default async function CentersPage() {
   const centers = await db.center.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: { name: "desc" },
   });
 
   return (

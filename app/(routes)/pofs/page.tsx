@@ -3,7 +3,7 @@ import { PofTable } from "@/components/pofs/PofTable";
 import { NewPofModal } from "@/components/pofs/forms/NewPofModal";
 
 export default async function PofsPage() {
-  const pofs = await db.pof.findMany({
+  const pofs = await db.pOF.findMany({
     orderBy: { createdAt: "desc" },
     include: {
       center: true, // Para poder ver a qué centro pertenece cada POF
