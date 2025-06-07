@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Display } from "next/font/google";
-import { ThemeProvider } from "@/components/layout/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/layout/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { SessionProvider } from "next-auth/react";
 
 import "./globals.css";
 
@@ -18,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    
+    <SessionProvider>
       <html lang="en">
         <body className={noto.className}>
           <ThemeProvider
@@ -31,6 +32,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-  
+    </SessionProvider>
   );
 }

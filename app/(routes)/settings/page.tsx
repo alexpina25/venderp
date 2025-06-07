@@ -1,10 +1,12 @@
 // app/(routes)/settings/page.tsx
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
+import { getServerAuthSession } from "@/lib/auth";
 import { Badge } from "@/components/ui/badge";
 
 export default async function SettingsPage() {
-  const { userId } = auth();
+
+  const session = await getServerAuthSession();
+  const userId = session?.user?.id;
 
   const user = await db.user.findUnique({
     where: { id: userId || undefined },
