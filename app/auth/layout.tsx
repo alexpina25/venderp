@@ -1,14 +1,15 @@
 import { Logo } from "@/components/layout/Logo";
 
 export default function LayoutAuth({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="flex flex-col justify-center h-full items-center">
-            <Logo />
-            <h1 className="text-3xl my-2">
-                Welcome to my Dashboard!
-            </h1>
-            <h2 className="text-2xl mb-3">Venderp</h2>
-            {children}
-        </div>
-    )
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
+      <div className="w-full max-w-sm text-center space-y-6">
+        <Logo />
+        <h1 className="text-2xl font-semibold text-foreground">
+          Welcome to VendCore!
+        </h1>
+        {children}
+      </div>
+    </div>
+  );
 }

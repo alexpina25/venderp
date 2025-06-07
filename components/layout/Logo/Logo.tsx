@@ -11,7 +11,7 @@ export function Logo() {
             onClick={() => router.push("/")}
         >
             <Image src="/logo.svg" alt="Logo" width={30} height={30} priority />
-            <h1 className="text-xl font-bold">Vendi-ERP</h1>
+            <h1 className="text-xl font-bold">VendCore</h1>
         </div>
     )
 }
