@@ -11,7 +11,7 @@ export default async function SettingsPage() {
   const user = await db.user.findUnique({
     where: { id: userId || undefined },
     include: {
-      organization: true,
+      tenant: true,
     },
   });
 
@@ -24,7 +24,7 @@ export default async function SettingsPage() {
 
         <div className="text-sm space-y-1">
           <p>
-            <strong>Nombre:</strong> {user?.organization?.name ?? "Sin asignar"}
+            <strong>Nombre:</strong> {user?.tenant?.name ?? "Sin asignar"}
           </p>
           <p>
             <strong>Usuario actual:</strong> {user?.email}
