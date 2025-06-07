@@ -19,13 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type LocationWithClient = {
+type PofWithCenter = {
   id: string;
   name: string;
-  clientId: string;
+  centerId: string;
 };
 
-type ClientBasic = {
+type CenterBasic = {
   id: string;
   name: string;
 };
@@ -36,17 +36,17 @@ const formSchema = z.object({
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  clientId: z.string(),
-  locationId: z.string(),
+  centerId: z.string(),
+  pofId: z.string(),
   installedAt: z.string().optional(),
   customId: z.coerce.number().optional(),
 });
 
 export function NewMachineForm() {
   const router = useRouter();
-  const [clients, setClients] = useState<ClientBasic[]>([]);
-  const [locations, setLocations] = useState<LocationWithClient[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
+  const [centers, setCenters] = useState<CenterBasic[]>([]);
+  const [pofs, setPofs] = useState<PofWithCenter[]>([]);
+  const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
 
   const {
     register,
@@ -62,22 +62,22 @@ export function NewMachineForm() {
     },
   });
 
-  // Cargar clientes
+  // Cargar centros
   useEffect(() => {
-    fetch("/api/clients")
+    fetch("/api/centers")
       .then((res) => res.json())
-      .then(setClients);
+      .then(setCenters);
   }, []);
 
-  // Cargar ubicaciones
+  // Cargar POF
   useEffect(() => {
-    fetch("/api/locations")
+    fetch("/api/pofs")
       .then((res) => res.json())
-      .then(setLocations);
+      .then(setPofs);
   }, []);
 
-  const filteredLocations = locations.filter(
-    (loc) => loc.clientId === selectedClientId
+  const filteredPofs = pofs.filter(
+    (loc) => loc.centerId === selectedCenterId
   );
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -146,47 +146,47 @@ export function NewMachineForm() {
       </div>
 
       <div>
-        <Label>Cliente</Label>
+        <Label>Centro</Label>
         <Select
           onValueChange={(v) => {
-            setValue("clientId", v);
-            setSelectedClientId(v);
-            setValue("locationId", ""); // Reset location
+            setValue("centerId", v);
+            setSelectedCenterId(v);
+            setValue("pofId", ""); // Reset POF
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecciona cliente" />
+            <SelectValue placeholder="Selecciona centro" />
           </SelectTrigger>
           <SelectContent>
-            {clients.map((client) => (
-              <SelectItem key={client.id} value={client.id}>
-                {client.name}
+            {centers.map((center) => (
+              <SelectItem key={center.id} value={center.id}>
+                {center.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        {errors.clientId && (
-          <p className="text-xs text-red-500">{errors.clientId.message}</p>
+        {errors.centerId && (
+          <p className="text-xs text-red-500">{errors.centerId.message}</p>
         )}
       </div>
 
-      {selectedClientId && (
+      {selectedCenterId && (
         <div>
-          <Label>Ubicación</Label>
-          <Select onValueChange={(v) => setValue("locationId", v)}>
+          <Label>POF</Label>
+          <Select onValueChange={(v) => setValue("pofId", v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecciona ubicación" />
+              <SelectValue placeholder="Selecciona POF" />
             </SelectTrigger>
             <SelectContent>
-              {filteredLocations.map((location) => (
-                <SelectItem key={location.id} value={location.id}>
-                  {location.name}
+              {filteredPofs.map((pof) => (
+                <SelectItem key={pof.id} value={pof.id}>
+                  {pof.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.locationId && (
-            <p className="text-xs text-red-500">{errors.locationId.message}</p>
+          {errors.pofId && (
+            <p className="text-xs text-red-500">{errors.pofId.message}</p>
           )}
         </div>
       )}

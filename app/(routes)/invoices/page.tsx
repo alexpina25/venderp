@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default async function InvoicesPage() {
   const invoices = await db.invoice.findMany({
-    include: { client: true },
+    include: { center: true },
     orderBy: { issuedAt: "desc" },
   });
 
@@ -23,7 +23,7 @@ export default async function InvoicesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left border-b">
-                <th className="py-2">Cliente</th>
+                <th className="py-2">Centro</th>
                 <th className="py-2">Fecha</th>
                 <th className="py-2">Estado</th>
                 <th className="py-2">Importe</th>
@@ -35,7 +35,7 @@ export default async function InvoicesPage() {
                   key={invoice.id}
                   className="border-b hover:bg-muted transition"
                 >
-                  <td className="py-2">{invoice.client?.name ?? "N/A"}</td>
+                  <td className="py-2">{invoice.center?.name ?? "N/A"}</td>
                   <td className="py-2">
                     {format(new Date(invoice.issuedAt), "PPP", { locale: es })}
                   </td>

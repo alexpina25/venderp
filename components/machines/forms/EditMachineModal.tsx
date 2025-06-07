@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Client, Machine, MachineStatus, MachineType } from "@prisma/client";
+import { Center, Machine, MachineStatus, MachineType } from "@prisma/client";
 import { updateMachine } from "@/app/actions/updateMachine";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,19 +30,19 @@ const formSchema = z.object({
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  locationId: z.string(),
+  pofId: z.string(),
   installedAt: z.string().optional(),
 });
 
 interface Props {
-  machine: Machine & { location: { name: string } };
+  machine: Machine & { pof: { name: string } | null };
   open: boolean;
   onClose: () => void; // Función para cerrar el modal
   onSuccess: () => void; // Callback for successful edit
 }
 
 export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [centers, setCenters] = useState<Center[]>([]);
 
   const {
     register,
@@ -58,7 +58,7 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
       serialNumber: machine.serialNumber ?? "",
       type: machine.type,
       status: machine.status,
-      locationId: machine.locationId,
+      pofId: machine.pofId ?? "",
       installedAt: machine.installedAt
         ? new Date(machine.installedAt).toISOString().split("T")[0]
         : "",
@@ -66,9 +66,9 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
   });
 
   useEffect(() => {
-    fetch("/api/clients")
+    fetch("/api/centers")
       .then((res) => res.json())
-      .then(setClients);
+      .then(setCenters);
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -149,18 +149,18 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
           </div>
 
           <div>
-            <Label htmlFor="locationId">Ubicación / Cliente</Label>
-            <Select
-              defaultValue={machine.locationId}
-              onValueChange={(v) => setValue("locationId", v)}
+          <Label htmlFor="pofId">POF / Centro</Label>
+          <Select
+              defaultValue={machine.pofId ?? undefined}
+              onValueChange={(v) => setValue("pofId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona ubicación" />
+                <SelectValue placeholder="Selecciona POF" />
               </SelectTrigger>
               <SelectContent>
-                {clients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
-                    {client.name}
+                {centers.map((center) => (
+                  <SelectItem key={center.id} value={center.id}>
+                    {center.name}
                   </SelectItem>
                 ))}
               </SelectContent>

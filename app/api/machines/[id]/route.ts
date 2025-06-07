@@ -8,8 +8,8 @@ export async function GET(
     const machine = await db.machine.findUnique({
       where: { id: params.id },
       include: {
-        location: true,
-        client: true, // ✅ Ahora ya es válido
+        pof: true,
+        center: true,
         products: {
           include: {
             product: true,
