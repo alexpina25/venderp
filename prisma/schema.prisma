@@ -68,28 +68,29 @@ enum Role {
 //
 
 model Center {
-  id           String       @id @default(uuid())
-  name         String
-  address      String
-  city         String
-  postalCode   String?
-  province     String?
-  country      String?
-  contactName  String
-  contactPhone String
-  contactEmail String?
-  notes        String?
-  active       Boolean      @default(true)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  tenantId     String
-  tenant       Tenant       @relation(fields: [tenantId], references: [id])
-  pofs         POF[]
-  invoices     Invoice[]
-  users        CenterUser[]
+  id             String       @id @default(uuid())
+  name           String
+  address        String
+  city           String
+  postalCode     String?
+  province       String?
+  country        String?
+  contactName    String
+  contactPhone   String
+  contactEmail   String?
+  notes          String?
+  active         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  tenantId       String
+  tenant         Tenant       @relation(fields: [tenantId], references: [id])
+  pofs           POF[]
+  invoices       Invoice[]
+  users          CenterUser[]
   parentCenterId String?
-  parentCenter   Center?  @relation("CenterHierarchy", fields: [parentCenterId], references: [id])
-  subCenters     Center[] @relation("CenterHierarchy")
+  parentCenter   Center?      @relation("CenterHierarchy", fields: [parentCenterId], references: [id])
+  subCenters     Center[]     @relation("CenterHierarchy")
+  Machine        Machine[]
 }
 
 model POF {
