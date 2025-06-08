@@ -25,6 +25,11 @@ export function Navbar() {
         <Input placeholder="Search..." className="rounded-lg" />
         <Search strokeWidth={1} className="absolute top-2 right-2" />
       </div>
+      {session?.user?.tenant?.name ? (
+        <p className="font-semibold text-sm truncate hidden md:block">
+          {session.user.tenant.name}
+        </p>
+      ) : null}
       <div className="flex gap-x-2 items-center">
         <ToggleTheme />
         {session?.user ? (

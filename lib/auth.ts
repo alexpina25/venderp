@@ -16,7 +16,9 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) return null;
-        const user = await db.user.findUnique({ where: { email: credentials.email } });
+        const user = await db.user.findUnique({
+          where: { email: credentials.email },
+        });
         if (!user || !user.password) return null;
         const isValid = await compare(credentials.password, user.password);
         if (!isValid) return null;
@@ -25,9 +27,21 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    session({ session, token }) {
+    async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub as string;
+        const user = await db.user.findUnique({
+          where: { id: token.sub as string },
+          include: { tenant: true },
+        });
+        if (user?.tenant) {
+          session.user.tenant = {
+            id: user.tenant.id,
+            name: user.tenant.name,
+          };
+        } else {
+          session.user.tenant = null;
+        }
       }
       return session;
     },

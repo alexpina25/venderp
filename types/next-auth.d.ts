@@ -5,6 +5,10 @@ declare module "next-auth" {
     user: {
       id: string;
       email?: string | null;
+      tenant?: {
+        id: string;
+        name: string;
+      } | null;
     };
   }
 }
