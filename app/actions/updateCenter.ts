@@ -15,6 +15,7 @@ const schema = z.object({
   contactName: z.string(),
   contactPhone: z.string(),
   contactEmail: z.string().email().optional(),
+  parentCenterId: z.string().optional(),
   notes: z.string().optional(),
 });
 
@@ -33,6 +34,7 @@ export async function updateCenter(input: z.infer<typeof schema>) {
       contactName: data.contactName,
       contactPhone: data.contactPhone,
       contactEmail: data.contactEmail,
+      parentCenterId: data.parentCenterId,
       notes: data.notes,
     },
   });

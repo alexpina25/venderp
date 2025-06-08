@@ -14,6 +14,7 @@ const schema = z.object({
   contactName: z.string(),
   contactPhone: z.string(),
   contactEmail: z.string().email().optional(),
+  parentCenterId: z.string().optional(),
   notes: z.string().optional(),
 });
 

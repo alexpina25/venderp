@@ -72,6 +72,9 @@ model Center {
   name       String
   tenantId   String
   tenant     Tenant       @relation(fields: [tenantId], references: [id])
+  parentCenterId String?
+  parentCenter   Center?  @relation("CenterHierarchy", fields: [parentCenterId], references: [id])
+  subCenters     Center[] @relation("CenterHierarchy")
   pofs       POF[]
   invoices   Invoice[]
   users      CenterUser[]
