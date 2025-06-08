@@ -87,7 +87,9 @@ model Center {
   pofs         POF[]
   invoices     Invoice[]
   users        CenterUser[]
-  Machine      Machine[]
+  parentCenterId String?
+  parentCenter   Center?  @relation("CenterHierarchy", fields: [parentCenterId], references: [id])
+  subCenters     Center[] @relation("CenterHierarchy")
 }
 
 model POF {

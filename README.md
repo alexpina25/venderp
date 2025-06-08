@@ -20,6 +20,13 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Centros
+
+Los centros pueden organizarse en una jerarquía. Un centro puede definirse como
+"padre" de otros centros, creando así grupos de clientes. Los centros que
+actúan como padre no pueden tener POF asignados y se usan únicamente como
+contenedores de otros centros.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

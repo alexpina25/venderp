@@ -9,7 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+import { useEffect, useState } from "react";
 import { createCenter } from "@/app/actions/createCenter";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Center } from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -21,20 +30,30 @@ const formSchema = z.object({
   contactName: z.string(),
   contactPhone: z.string(),
   contactEmail: z.string().email().optional(),
+  parentCenterId: z.string().optional(),
   notes: z.string().optional(),
 });
 
 export function NewCenterForm() {
   const router = useRouter();
+  const [centers, setCenters] = useState<Center[]>([]);
+
+  useEffect(() => {
+    fetch("/api/centers?all=true")
+      .then((res) => res.json())
+      .then(setCenters);
+  }, []);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       country: "España",
+      parentCenterId: undefined,
     },
   });
 
@@ -93,6 +112,22 @@ export function NewCenterForm() {
       <div>
         <Label htmlFor="contactEmail">Email de contacto</Label>
         <Input id="contactEmail" {...register("contactEmail")} />
+      </div>
+
+      <div>
+        <Label>Centro padre</Label>
+        <Select onValueChange={(v) => setValue("parentCenterId", v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Sin centro padre" />
+          </SelectTrigger>
+          <SelectContent>
+            {centers.map((center) => (
+              <SelectItem key={center.id} value={center.id}>
+                {center.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
