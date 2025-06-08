@@ -19,39 +19,39 @@ model User {
   role             Role
   avatarUrl        String?
   tenantId         String?
-  tenant           Tenant? @relation(fields: [tenantId], references: [id])
+  tenant           Tenant?  @relation(fields: [tenantId], references: [id])
   dashboardWidgets String[] @default([])
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  routes         Route[]
-  maintenance    MaintenanceLog[]
-  activityLogs   ActivityLog[]
-  centers        CenterUser[]
-  pofs           POFUser[]
+  routes       Route[]
+  maintenance  MaintenanceLog[]
+  activityLogs ActivityLog[]
+  centers      CenterUser[]
+  pofs         POFUser[]
 }
 
 model Tenant {
-  id      String @id @default(uuid())
+  id      String   @id @default(uuid())
   name    String
   users   User[]
   centers Center[]
 }
 
 model CenterUser {
-  id        String @id @default(uuid())
-  userId    String
-  centerId  String
-  user      User   @relation(fields: [userId], references: [id])
-  center    Center @relation(fields: [centerId], references: [id])
+  id       String @id @default(uuid())
+  userId   String
+  centerId String
+  user     User   @relation(fields: [userId], references: [id])
+  center   Center @relation(fields: [centerId], references: [id])
 }
 
 model POFUser {
-  id      String @id @default(uuid())
-  userId  String
-  pofId   String
-  user    User @relation(fields: [userId], references: [id])
-  pof     POF  @relation(fields: [pofId], references: [id])
+  id     String @id @default(uuid())
+  userId String
+  pofId  String
+  user   User   @relation(fields: [userId], references: [id])
+  pof    POF    @relation(fields: [pofId], references: [id])
 }
 
 enum Role {
@@ -68,26 +68,49 @@ enum Role {
 //
 
 model Center {
-  id         String       @id @default(uuid())
-  name       String
-  tenantId   String
-  tenant     Tenant       @relation(fields: [tenantId], references: [id])
+  id           String       @id @default(uuid())
+  name         String
+  address      String
+  city         String
+  postalCode   String?
+  province     String?
+  country      String?
+  contactName  String
+  contactPhone String
+  contactEmail String?
+  notes        String?
+  active       Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  tenantId     String
+  tenant       Tenant       @relation(fields: [tenantId], references: [id])
+  pofs         POF[]
+  invoices     Invoice[]
+  users        CenterUser[]
   parentCenterId String?
   parentCenter   Center?  @relation("CenterHierarchy", fields: [parentCenterId], references: [id])
   subCenters     Center[] @relation("CenterHierarchy")
-  pofs       POF[]
-  invoices   Invoice[]
-  users      CenterUser[]
 }
 
 model POF {
-  id        String     @id @default(uuid())
-  name      String
-  address   String
-  centerId  String
-  center    Center     @relation(fields: [centerId], references: [id])
-  machine   Machine?
-  users     POFUser[]
+  id           String    @id @default(uuid())
+  name         String
+  address      String
+  city         String
+  postalCode   String?
+  province     String?
+  country      String?
+  contactName  String?
+  contactPhone String?
+  contactEmail String?
+  notes        String?
+  centerId     String
+  center       Center    @relation(fields: [centerId], references: [id])
+  machine      Machine?
+  users        POFUser[]
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 //
@@ -104,9 +127,11 @@ model Machine {
   status       MachineStatus @default(ACTIVE)
   lastCheck    DateTime?
   installedAt  DateTime?
+  centerId     String
+  center       Center        @relation(fields: [centerId], references: [id])
 
-  pofId        String? @unique
-  pof          POF?    @relation(fields: [pofId], references: [id])
+  pofId String? @unique
+  pof   POF?    @relation(fields: [pofId], references: [id])
 
   products       MachineProduct[]
   maintenanceLog MaintenanceLog[]
@@ -181,8 +206,8 @@ model Replenishment {
   date      DateTime @default(now())
   notes     String?
 
-  machine Machine            @relation(fields: [machineId], references: [id])
-  route   Route              @relation(fields: [routeId], references: [id])
+  machine Machine             @relation(fields: [machineId], references: [id])
+  route   Route               @relation(fields: [routeId], references: [id])
   items   ReplenishmentItem[]
 }
 
@@ -229,7 +254,7 @@ model Route {
   operatorId String
   notes      String?
 
-  operator       User           @relation(fields: [operatorId], references: [id])
+  operator       User            @relation(fields: [operatorId], references: [id])
   replenishments Replenishment[]
 }
 
