@@ -4,10 +4,8 @@ import { useState } from "react";
 import { Machine, MachineProduct, Product, POF } from "@prisma/client";
 import { MachineStockTable } from "@/components/machines/detail/stock/MachineStockTable"; // Stock
 import { MaintenanceHistoryTable } from "@/components/machines/detail/MaintenanceHistoryTable"; // Mantenimiento
+import { MachineSalesTable } from "@/components/machines/detail/sales/MachineSalesTable"; // Ventas
 import { Button } from "@/components/ui/button";
-
-
-// Extiende el tipo de máquina para incluir productosinterface MachineWithProducts extends Machine {
 
 export interface MachineWithProducts extends Machine {
   pof: POF | null;
@@ -30,7 +28,7 @@ export function MachineDetailsTabs({ machine }: Props) {
       case "maintenance":
         return <MaintenanceHistoryTable machineId={machine.id} />;
       case "sales":
-        return <div>Ventas (por implementar)</div>; // Implementar ventas
+        return <MachineSalesTable machineId={machine.id} />;
       default:
         return <div>Selecciona una sección.</div>;
     }

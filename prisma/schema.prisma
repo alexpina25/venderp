@@ -137,6 +137,7 @@ model Machine {
   products       MachineProduct[]
   maintenanceLog MaintenanceLog[]
   replenishments Replenishment[]
+  sales          Sale[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -172,6 +173,7 @@ model Product {
 
   machineStocks      MachineProduct[]
   replenishmentItems ReplenishmentItem[]
+  sales              Sale[]
 }
 
 enum ProductCategory {
@@ -297,4 +299,28 @@ model ActivityLog {
   timestamp DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+//
+// ─── 7. SALES ──────────────────────────────────────────────────────────────
+//
+
+enum SaleMethod {
+  COIN
+  BILL
+  CARD
+}
+
+model Sale {
+  id        String     @id @default(uuid())
+  machineId String
+  productId String
+  method    SaleMethod
+  price     Float
+  inserted  Float
+  change    Float
+  timestamp DateTime   @default(now())
+
+  machine Machine @relation(fields: [machineId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
