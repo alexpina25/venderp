@@ -70,5 +70,8 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "react-style-singleton": "2.2.3"
   }
 }
