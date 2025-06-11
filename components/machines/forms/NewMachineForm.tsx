@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type PofWithCenter = {
+type PosWithCenter = {
   id: string;
   name: string;
   centerId: string;
@@ -37,7 +37,7 @@ const formSchema = z.object({
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
   centerId: z.string(),
-  pofId: z.string(),
+  posId: z.string(),
   installedAt: z.string().optional(),
   customId: z.coerce.number().optional(),
 });
@@ -45,7 +45,7 @@ const formSchema = z.object({
 export function NewMachineForm() {
   const router = useRouter();
   const [centers, setCenters] = useState<CenterBasic[]>([]);
-  const [pofs, setPofs] = useState<PofWithCenter[]>([]);
+  const [posList, setPosList] = useState<PosWithCenter[]>([]);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
 
   const {
@@ -69,14 +69,14 @@ export function NewMachineForm() {
       .then(setCenters);
   }, []);
 
-  // Cargar POF
+  // Cargar POS
   useEffect(() => {
-    fetch("/api/pofs")
+    fetch("/api/pos")
       .then((res) => res.json())
-      .then(setPofs);
+      .then(setPosList);
   }, []);
 
-  const filteredPofs = pofs.filter(
+  const filteredPos = posList.filter(
     (loc) => loc.centerId === selectedCenterId
   );
 
@@ -151,7 +151,7 @@ export function NewMachineForm() {
           onValueChange={(v) => {
             setValue("centerId", v);
             setSelectedCenterId(v);
-            setValue("pofId", ""); // Reset POF
+            setValue("posId", ""); // Reset POS
           }}
         >
           <SelectTrigger>
@@ -172,21 +172,21 @@ export function NewMachineForm() {
 
       {selectedCenterId && (
         <div>
-          <Label>POF</Label>
-          <Select onValueChange={(v) => setValue("pofId", v)}>
+          <Label>POS</Label>
+          <Select onValueChange={(v) => setValue("posId", v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecciona POF" />
+              <SelectValue placeholder="Selecciona POS" />
             </SelectTrigger>
             <SelectContent>
-              {filteredPofs.map((pof) => (
-                <SelectItem key={pof.id} value={pof.id}>
-                  {pof.name}
+              {filteredPos.map((pos) => (
+                <SelectItem key={pos.id} value={pos.id}>
+                  {pos.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.pofId && (
-            <p className="text-xs text-red-500">{errors.pofId.message}</p>
+          {errors.posId && (
+            <p className="text-xs text-red-500">{errors.posId.message}</p>
           )}
         </div>
       )}

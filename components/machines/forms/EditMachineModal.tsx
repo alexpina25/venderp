@@ -30,12 +30,12 @@ const formSchema = z.object({
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  pofId: z.string(),
+  posId: z.string(),
   installedAt: z.string().optional(),
 });
 
 interface Props {
-  machine: Machine & { pof: { name: string } | null };
+  machine: Machine & { pos: { name: string } | null };
   open: boolean;
   onClose: () => void; // Función para cerrar el modal
   onSuccess: () => void; // Callback for successful edit
@@ -58,7 +58,7 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
       serialNumber: machine.serialNumber ?? "",
       type: machine.type,
       status: machine.status,
-      pofId: machine.pofId ?? "",
+      posId: machine.posId ?? "",
       installedAt: machine.installedAt
         ? new Date(machine.installedAt).toISOString().split("T")[0]
         : "",
@@ -149,13 +149,13 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
           </div>
 
           <div>
-          <Label htmlFor="pofId">POF / Centro</Label>
+          <Label htmlFor="posId">POS / Centro</Label>
           <Select
-              defaultValue={machine.pofId ?? undefined}
-              onValueChange={(v) => setValue("pofId", v)}
+              defaultValue={machine.posId ?? undefined}
+              onValueChange={(v) => setValue("posId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona POF" />
+                <SelectValue placeholder="Selecciona POS" />
               </SelectTrigger>
               <SelectContent>
                 {centers.map((center) => (

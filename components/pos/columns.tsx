@@ -1,24 +1,24 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { POF } from "@prisma/client";
+import { POS } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EditPofModal } from "./forms/EditPofModal";
-import { PofWithCenter } from "@/types";
+import { EditPosModal } from "./forms/EditPosModal";
+import { PosWithCenter } from "@/types";
 
-export const columns: ColumnDef<PofWithCenter>[] = [
+export const columns: ColumnDef<PosWithCenter>[] = [
   {
     accessorKey: "name",
     header: "Nombre",
     cell: ({ row }) => {
-      const pof = row.original;
+      const pos = row.original;
       return (
         <div className="flex items-center gap-2 justify-between">
           <span className="font-medium">{row.getValue("name")}</span>
-          <Link href={`/pofs/${pof.id}`}>
+          <Link href={`/pos/${pos.id}`}>
             <Button variant="ghost" size="icon">
               <Eye className="w-4 h-4" />
             </Button>
@@ -67,8 +67,8 @@ export const columns: ColumnDef<PofWithCenter>[] = [
     id: "acciones",
     header: "",
     cell: ({ row }) => {
-      const pof = row.original;
-      return <EditPofModal pof={pof} />;
+      const pos = row.original;
+      return <EditPosModal pos={pos} />;
     },
   },
 ];

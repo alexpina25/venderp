@@ -1,11 +1,11 @@
-import { Machine, POF, MachineStatus, MachineType } from "@prisma/client";
+import { Machine, POS, MachineStatus, MachineType } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 
 interface Props {
-  machine: Machine & { pof: POF | null };
+  machine: Machine & { pos: POS | null };
   onEdit: (machine: Machine) => void; // Función para abrir el modal
 }
 
@@ -50,8 +50,8 @@ export function MachineInfo({ machine, onEdit }: Props) {
       </div>
 
       <div>
-        <p className="text-sm text-muted-foreground">POF</p>
-        <p>{machine.pof?.name ?? "–"}</p>
+        <p className="text-sm text-muted-foreground">POS</p>
+        <p>{machine.pos?.name ?? "–"}</p>
       </div>
 
       <div>

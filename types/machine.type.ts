@@ -3,12 +3,12 @@ import {
   MachineProduct,
   Product,
   Center,
-  POF,
+  POS,
 } from "@prisma/client";
 
 export type MachineWithDetails = Machine & {
   center: Center;
-  pof: POF;
+  pos: POS;
   products: (MachineProduct & {
     product: Product;
   })[];

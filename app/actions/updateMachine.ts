@@ -12,7 +12,7 @@ const schema = z.object({
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  pofId: z.string(),
+  posId: z.string(),
   installedAt: z.string().optional(), // viene como string del input
 });
 
@@ -27,7 +27,7 @@ export async function updateMachine(input: z.infer<typeof schema>) {
       serialNumber: data.serialNumber || null,
       type: data.type,
       status: data.status,
-      pofId: data.pofId,
+      posId: data.posId,
       installedAt: data.installedAt ? new Date(data.installedAt) : null,
     },
   });

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Machine, MachineProduct, Product, POF } from "@prisma/client";
+import { Machine, MachineProduct, Product, POS } from "@prisma/client";
 import { MachineStockTable } from "@/components/machines/detail/stock/MachineStockTable"; // Stock
 import { MaintenanceHistoryTable } from "@/components/machines/detail/MaintenanceHistoryTable"; // Mantenimiento
 import { MachineSalesTable } from "@/components/machines/detail/sales/MachineSalesTable"; // Ventas
 import { Button } from "@/components/ui/button";
 
 export interface MachineWithProducts extends Machine {
-  pof: POF | null;
+  pos: POS | null;
   products: (MachineProduct & { product: Product })[];
 }
 
