@@ -1,31 +1,31 @@
-import { POF, Center } from "@prisma/client";
+import { POS, Center } from "@prisma/client";
 
 interface Props {
-  pof: POF & { center: Center };
+  pos: POS & { center: Center };
 }
 
-export function PofInfo({ pof }: Props) {
+export function PosInfo({ pos }: Props) {
   return (
     <div className="grid md:grid-cols-2 gap-6 bg-background rounded-lg p-4 border">
       <div>
         <p className="text-sm text-muted-foreground">Nombre</p>
-        <p className="font-medium">{pof.name}</p>
+        <p className="font-medium">{pos.name}</p>
       </div>
       <div>
         <p className="text-sm text-muted-foreground">Centro</p>
-        <p>{pof.center.name}</p>
+        <p>{pos.center.name}</p>
       </div>
       <div>
         <p className="text-sm text-muted-foreground">Dirección</p>
         <p>
-          {pof.address}, {pof.city}
+          {pos.address}, {pos.city}
         </p>
       </div>
       <div>
         <p className="text-sm text-muted-foreground">Contacto</p>
         <p>
-          {pof.contactName || "-"}
-          {pof.contactPhone ? ` (${pof.contactPhone})` : ""}
+          {pos.contactName || "-"}
+          {pos.contactPhone ? ` (${pos.contactPhone})` : ""}
         </p>
       </div>
     </div>

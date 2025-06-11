@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
-interface CreatePofInput {
+interface CreatePosInput {
   name: string;
   address: string;
   city: string;
@@ -17,8 +17,8 @@ interface CreatePofInput {
   centerId: string;
 }
 
-export async function createPof(data: CreatePofInput) {
-  await db.pof.create({
+export async function createPos(data: CreatePosInput) {
+  await db.pos.create({
     data: {
       name: data.name,
       address: data.address,
@@ -35,5 +35,5 @@ export async function createPof(data: CreatePofInput) {
   });
 
   // Revalida la ruta de ubicaciones si tienes una página de lista
-  revalidatePath("/pofs");
+  revalidatePath("/pos");
 }

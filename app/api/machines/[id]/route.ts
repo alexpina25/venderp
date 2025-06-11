@@ -8,7 +8,7 @@ export async function GET(
     const machine = await db.machine.findUnique({
       where: { id: params.id },
       include: {
-        pof: true,
+        pos: true,
         center: true,
         products: {
           include: {

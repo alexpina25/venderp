@@ -1,7 +1,6 @@
-import { Center, POF } from "@prisma/client";
-
-export type CenterWithPofs = Center & {
-  pofs: POF[];
+import { Center, POS } from "@prisma/client";
+export type CenterWithPos = Center & {
+  pos: POS[];
 };
 
 export type CenterWithChildren = Center & {

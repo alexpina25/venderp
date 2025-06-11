@@ -8,7 +8,7 @@ import { Eye, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditMachineModal } from "./forms/EditMachineModal";
 
-export const columns: ColumnDef<Machine & { pof: { name: string } }>[] = [
+export const columns: ColumnDef<Machine & { pos: { name: string } }>[] = [
   {
     accessorKey: "code", // Columna de código
     header: "Máquina",
@@ -72,10 +72,10 @@ export const columns: ColumnDef<Machine & { pof: { name: string } }>[] = [
     },
   },
   {
-    accessorKey: "pof.name",
-    header: "POF",
+    accessorKey: "pos.name",
+    header: "POS",
     cell: ({ row }) =>
-      row.original.pof?.name ?? (
+      row.original.pos?.name ?? (
         <span className="text-muted-foreground italic">Sin asignar</span>
       ),
   },

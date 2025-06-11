@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('SUPERADMIN', 'TENANT_ADMIN', 'TENANT_USER', 'CENTER_MANAGER', 'CENTER_USER', 'POF_USER');
+CREATE TYPE "Role" AS ENUM ('SUPERADMIN', 'TENANT_ADMIN', 'TENANT_USER', 'CENTER_MANAGER', 'CENTER_USER', 'POS_USER');
 
 -- CreateEnum
 CREATE TYPE "MachineType" AS ENUM ('SNACK', 'DRINK', 'COMBO', 'CAFE', 'OTHER');
@@ -50,12 +50,12 @@ CREATE TABLE "CenterUser" (
 );
 
 -- CreateTable
-CREATE TABLE "POFUser" (
+CREATE TABLE "POSUser" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "pofId" TEXT NOT NULL,
+    "posId" TEXT NOT NULL,
 
-    CONSTRAINT "POFUser_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "POSUser_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -81,7 +81,7 @@ CREATE TABLE "Center" (
 );
 
 -- CreateTable
-CREATE TABLE "POF" (
+CREATE TABLE "POS" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "address" TEXT NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE "POF" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "POF_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "POS_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -113,7 +113,7 @@ CREATE TABLE "Machine" (
     "lastCheck" TIMESTAMP(3),
     "installedAt" TIMESTAMP(3),
     "centerId" TEXT NOT NULL,
-    "pofId" TEXT,
+    "posId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -245,7 +245,7 @@ CREATE UNIQUE INDEX "Machine_code_key" ON "Machine"("code");
 CREATE UNIQUE INDEX "Machine_serialNumber_key" ON "Machine"("serialNumber");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Machine_pofId_key" ON "Machine"("pofId");
+CREATE UNIQUE INDEX "Machine_posId_key" ON "Machine"("posId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Product_customId_key" ON "Product"("customId");
@@ -260,10 +260,10 @@ ALTER TABLE "CenterUser" ADD CONSTRAINT "CenterUser_userId_fkey" FOREIGN KEY ("u
 ALTER TABLE "CenterUser" ADD CONSTRAINT "CenterUser_centerId_fkey" FOREIGN KEY ("centerId") REFERENCES "Center"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "POFUser" ADD CONSTRAINT "POFUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "POSUser" ADD CONSTRAINT "POSUser_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "POFUser" ADD CONSTRAINT "POFUser_pofId_fkey" FOREIGN KEY ("pofId") REFERENCES "POF"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "POSUser" ADD CONSTRAINT "POSUser_posId_fkey" FOREIGN KEY ("posId") REFERENCES "POS"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Center" ADD CONSTRAINT "Center_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -272,13 +272,13 @@ ALTER TABLE "Center" ADD CONSTRAINT "Center_tenantId_fkey" FOREIGN KEY ("tenantI
 ALTER TABLE "Center" ADD CONSTRAINT "Center_parentCenterId_fkey" FOREIGN KEY ("parentCenterId") REFERENCES "Center"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "POF" ADD CONSTRAINT "POF_centerId_fkey" FOREIGN KEY ("centerId") REFERENCES "Center"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "POS" ADD CONSTRAINT "POS_centerId_fkey" FOREIGN KEY ("centerId") REFERENCES "Center"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Machine" ADD CONSTRAINT "Machine_centerId_fkey" FOREIGN KEY ("centerId") REFERENCES "Center"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Machine" ADD CONSTRAINT "Machine_pofId_fkey" FOREIGN KEY ("pofId") REFERENCES "POF"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Machine" ADD CONSTRAINT "Machine_posId_fkey" FOREIGN KEY ("posId") REFERENCES "POS"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MachineProduct" ADD CONSTRAINT "MachineProduct_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

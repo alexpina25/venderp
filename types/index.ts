@@ -1,5 +1,5 @@
 export * from "./machine.type";
-export * from "./pof.type";
+export * from "./pos.type";
 export * from "./product.type";
 export * from "./replenishment.type";
 export * from "./user.type";

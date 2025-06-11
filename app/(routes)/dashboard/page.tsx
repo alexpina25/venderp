@@ -1,6 +1,6 @@
 // app/dashboard/page.tsx
 import { StatCard } from "@/components/dashboard/StatCard";
-import { RecentPofs } from "@/components/dashboard/RecentPofs";
+import { RecentPos } from "@/components/dashboard/RecentPos";
 import { RefillStats } from "@/components/dashboard/RefillStats";
 import { TotalMachines } from "@/components/dashboard/TotalMachinesCard";
 import { MachineConnections } from "@/components/dashboard/MachineConnections";
@@ -54,7 +54,7 @@ export default function DashboardPage() {
 
       {/* Actividad reciente y estadísticas */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <RecentPofs />
+        <RecentPos />
         <RefillStats />
       </section>
 

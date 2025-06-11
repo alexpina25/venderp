@@ -67,9 +67,9 @@ const passwordHash = await bcrypt.hash(plainPassword, 10);
         });
 
         for (let p = 0; p < 2; p++) {
-          const pof = await prisma.pOF.create({
+          const pos = await prisma.pOS.create({
             data: {
-              name: `POF ${p + 1}`,
+              name: `POS ${p + 1}`,
               address: faker.location.streetAddress(),
               city: faker.location.city(),
               centerId: subCenter.id,
@@ -83,7 +83,7 @@ const passwordHash = await bcrypt.hash(plainPassword, 10);
               serialNumber: faker.string.alphanumeric(10),
               type: "SNACK",
               centerId: subCenter.id,
-              pofId: pof.id,
+              posId: pos.id,
               status: "ACTIVE",
               installedAt: faker.date.past(),
             },

@@ -7,20 +7,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { EditPofForm } from "./EditPofForm";
-import { POF, Center } from "@prisma/client";
+import { EditPosForm } from "./EditPosForm";
+import { POS, Center } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 
 // Extendemos si necesitas más relaciones (por ejemplo, client)
-interface EditPofModalProps {
-  pof: POF & {
+interface EditPosModalProps {
+  pos: POS & {
     center: Center;
   };
 }
 
-export function EditPofModal({ pof }: EditPofModalProps) {
+export function EditPosModal({ pos }: EditPosModalProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -36,7 +36,7 @@ export function EditPofModal({ pof }: EditPofModalProps) {
           <DialogTitle>Editar ubicación</DialogTitle>
         </DialogHeader>
 
-        <EditPofForm pof={pof} onSuccess={() => setOpen(false)} />
+        <EditPosForm pos={pos} onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

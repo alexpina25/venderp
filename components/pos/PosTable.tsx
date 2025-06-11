@@ -1,15 +1,15 @@
 "use client";
 
-import { POF } from "@prisma/client";
+import { POS } from "@prisma/client";
 import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table/DataTable";
-import { PofWithCenter } from "@/types";
+import { PosWithCenter } from "@/types";
 
-interface PofTableProps {
-    data: PofWithCenter[];
+interface PosTableProps {
+    data: PosWithCenter[];
   }
 
-export function PofTable({ data }: PofTableProps) {
+export function PosTable({ data }: PosTableProps) {
   return (
     <DataTable
       columns={columns}

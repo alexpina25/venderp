@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const pofs = await db.pof.findMany({
+    const posList = await db.pos.findMany({
       where: {
         active: true,
       },
@@ -15,9 +15,9 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(pofs);
+    return NextResponse.json(posList);
   } catch (error) {
-    console.error("Error fetching pofs:", error);
+    console.error("Error fetching POS:", error);
     return new NextResponse("Error interno del servidor", { status: 500 });
   }
 }
