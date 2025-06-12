@@ -1,12 +1,11 @@
 import { PrismaClient, ProductCategory } from "@prisma/client";
 import { faker } from "@faker-js/faker";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
-
 async function main() {
-    const plainPassword = 'asdasdasd';
-const passwordHash = await bcrypt.hash(plainPassword, 10);
+  const plainPassword = "asdasdasd";
+  const passwordHash = await bcrypt.hash(plainPassword, 10);
 
   for (let t = 0; t < 3; t++) {
     const tenant = await prisma.tenant.create({
@@ -20,7 +19,7 @@ const passwordHash = await bcrypt.hash(plainPassword, 10);
               password: passwordHash,
               role: "TENANT_ADMIN",
             },
-            
+
             {
               name: faker.person.fullName(),
               email: faker.internet.email(),
@@ -74,6 +73,14 @@ const passwordHash = await bcrypt.hash(plainPassword, 10);
               address: faker.location.streetAddress(),
               city: faker.location.city(),
               centerId: subCenter.id,
+            },
+          });
+
+          await prisma.master.create({
+            data: {
+              serialNumber: faker.string.alphanumeric(12),
+              tenantId: tenant.id,
+              posId: pos.id,
             },
           });
 

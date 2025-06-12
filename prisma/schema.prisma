@@ -36,6 +36,7 @@ model Tenant {
   name    String
   users   User[]
   centers Center[]
+  masters Master[]
 }
 
 model CenterUser {
@@ -110,10 +111,22 @@ model POS {
   center       Center    @relation(fields: [centerId], references: [id])
   machine      Machine?
   users        POSUser[]
+  master       Master?
   active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   Sale         Sale[]
+}
+
+model Master {
+  id           String   @id @default(uuid())
+  serialNumber String   @unique
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+  posId        String?  @unique
+  pos          POS?     @relation(fields: [posId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 //
