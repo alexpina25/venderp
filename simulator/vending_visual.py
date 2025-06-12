@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import json
 from datetime import datetime
 import requests
@@ -15,6 +16,7 @@ PRODUCTOS = {
 }
 
 SERVER_URL = "http://localhost:3000/api/sales"
+MASTERS_URL = "http://localhost:3000/api/masters"
 BACKUP_FILE = "ventas_backup.json"
 
 class VendingSim:
@@ -25,13 +27,27 @@ class VendingSim:
         self.saldo_cashless = 0.0
         self.saldo_efectivo = 0.0
         self.ventas = []
+        self.masters = []
+        self.selected_master = None
 
         self.build_gui()
         self.cargar_backup()
+        self.cargar_masters()
 
     def build_gui(self):
+        frame_master = tk.LabelFrame(self.root, text="Selecciona master")
+        frame_master.grid(row=0, column=0, padx=10, pady=10, sticky="n")
+
+        self.search_var = tk.StringVar()
+        search_entry = tk.Entry(frame_master, textvariable=self.search_var)
+        search_entry.pack(fill="x")
+        self.master_list = tk.Listbox(frame_master, height=5)
+        self.master_list.pack(fill="both", expand=True)
+        self.master_list.bind("<<ListboxSelect>>", self.on_select_master)
+        self.search_var.trace_add("write", lambda *args: self.update_master_list())
+        
         frame_prod = tk.LabelFrame(self.root, text="Selecciona un producto")
-        frame_prod.grid(row=0, column=0, padx=10, pady=10)
+        frame_prod.grid(row=1, column=0, padx=10, pady=10)
 
         for idx, (code, item) in enumerate(PRODUCTOS.items()):
             b = tk.Button(frame_prod, text=f"{code} - {item['nombre']}\n{item['precio']} €",
@@ -40,7 +56,7 @@ class VendingSim:
             b.grid(row=idx // 2, column=idx % 2, padx=5, pady=5)
 
         frame_saldo = tk.LabelFrame(self.root, text="Saldo disponible")
-        frame_saldo.grid(row=1, column=0, padx=10, pady=5, sticky='w')
+        frame_saldo.grid(row=2, column=0, padx=10, pady=5, sticky='w')
 
         self.lbl_cash = tk.Label(frame_saldo, text="Cashless: 0.00 €")
         self.lbl_cash.pack(anchor='w')
@@ -55,7 +71,7 @@ class VendingSim:
         btn_devo.pack(pady=5)
 
         frame_ventas = tk.LabelFrame(self.root, text="🧾 Ventas registradas")
-        frame_ventas.grid(row=0, column=1, rowspan=2, padx=10, pady=10)
+        frame_ventas.grid(row=0, column=1, rowspan=3, padx=10, pady=10)
 
         self.txt_ventas = tk.Text(frame_ventas, width=40, height=20, state='disabled')
         self.txt_ventas.pack()
@@ -64,6 +80,34 @@ class VendingSim:
         self.lbl_cash.config(text=f"Cashless: {self.saldo_cashless:.2f} €")
         self.lbl_eff.config(text=f"Efectivo: {self.saldo_efectivo:.2f} €")
 
+    def cargar_masters(self):
+        try:
+            resp = requests.get(MASTERS_URL, timeout=5)
+            if resp.status_code == 200:
+                self.masters = resp.json()
+            else:
+                self.masters = []
+        except Exception as e:
+            print(f"Error fetching masters: {e}")
+            self.masters = []
+        self.update_master_list()
+
+    def update_master_list(self):
+        query = self.search_var.get().lower() if hasattr(self, "search_var") else ""
+        self.master_list.delete(0, tk.END)
+        for m in self.masters:
+            if query in m["serialNumber"].lower():
+                self.master_list.insert(tk.END, m["serialNumber"])
+
+    def on_select_master(self, _event=None):
+        selection = self.master_list.curselection()
+        if not selection:
+            return
+        serial = self.master_list.get(selection[0])
+        self.selected_master = next((m for m in self.masters if m["serialNumber"] == serial), None)
+        if self.selected_master:
+            self.registrar_evento(f"🔗 Master seleccionado: {serial}")
+            
     def añadir_cashless(self):
         self.saldo_cashless += 2.00
         self.actualizar_saldo()
@@ -84,6 +128,10 @@ class VendingSim:
         self.registrar_evento(f"💸 Devolución total: {total_devuelto:.2f} €")
 
     def comprar_producto(self, codigo):
+        if not self.selected_master:
+            messagebox.showwarning("Master", "Selecciona un master primero")
+            return
+
         prod = PRODUCTOS[codigo]
         precio = prod["precio"]
 
@@ -113,7 +161,10 @@ class VendingSim:
         if metodo == "efectivo":
             venta["importe_introducido"] = importe_introducido
             venta["cambio"] = cambio
-
+        else:
+            venta["importe_introducido"] = precio
+            venta["cambio"] = 0.0
+            
         self.ventas.append(venta)
         self.registrar_evento(
             f"✅ Venta: {venta['producto']} - {venta['precio']:.2f} € ({metodo})" +
@@ -129,10 +180,18 @@ class VendingSim:
         self.txt_ventas.see('end')
 
     def enviar_venta_json(self, venta):
+        if not self.selected_master or not self.selected_master.get("pos"):
+            self.registrar_evento("⚠️ Master sin POS asociado")
+            return
+
         payload = {
-            "device_id": "caslab_sim_01",
-            "timestamp": datetime.now().isoformat(),
-            "venta": venta
+            "posCode": self.selected_master["pos"]["code"],
+            "line": venta["codigo"],
+            "method": "CARD" if venta["metodo"] == "cashless" else "COIN",
+            "price": venta["precio"],
+            "inserted": venta["importe_introducido"],
+            "change": venta["cambio"],
+            "timestamp": venta["timestamp"],
         }
 
         try:

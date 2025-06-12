@@ -1,7 +1,7 @@
-import { POS, Center } from "@prisma/client";
+import { POS, Center, Master } from "@prisma/client";
 
 interface Props {
-  pos: POS & { center: Center };
+  pos: POS & { center: Center; master?: Master | null };
 }
 
 export function PosInfo({ pos }: Props) {
@@ -27,6 +27,10 @@ export function PosInfo({ pos }: Props) {
           {pos.contactName || "-"}
           {pos.contactPhone ? ` (${pos.contactPhone})` : ""}
         </p>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Master</p>
+        <p>{pos.master ? pos.master.serialNumber : "-"}</p>
       </div>
     </div>
   );

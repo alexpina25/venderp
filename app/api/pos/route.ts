@@ -3,12 +3,13 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const posList = await db.pos.findMany({
+    const posList = await db.pOS.findMany({
       where: {
         active: true,
       },
       include: {
-        center: true, // Incluye datos del centro
+        center: true,
+        master: true,
       },
       orderBy: {
         name: "asc",

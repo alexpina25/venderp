@@ -1,11 +1,15 @@
 import { db } from "@/lib/db";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const pos = await db.pOS.findUnique({
       where: { id: params.id },
       include: {
         center: true,
+        master: true,
         machine: {
           include: {
             pos: true,
