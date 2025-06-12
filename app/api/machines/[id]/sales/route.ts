@@ -25,6 +25,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Machine not found" }, { status: 404 });
     }
 
+    if (!machine.posId) {
+      return NextResponse.json(
+        { error: "Machine has no associated POS" },
+        { status: 404 }
+      );
+    }
+
     const machineProduct = await db.machineProduct.findFirst({
       where: { machineId: machine.id, line: data.line },
     });
@@ -43,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     const sale = await db.sale.create({
       data: {
-        machineId: machine.id,
+        posId: machine.posId!,
         productId: machineProduct.productId,
         method: data.method,
         price: data.price,
@@ -62,11 +69,21 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const machine = req.nextUrl.searchParams.get("machine");
-  const where = machine ? { machine: { code: machine } } : undefined;
+  const posId = req.nextUrl.searchParams.get("posId");
+  let where;
+  if (machine) {
+    const m = await db.machine.findUnique({ where: { code: machine } });
+    if (!m || !m.posId) {
+      return NextResponse.json({ error: "Machine not found" }, { status: 404 });
+    }
+    where = { posId: m.posId };
+  } else if (posId) {
+    where = { posId };
+  }
 
   const sales = await db.sale.findMany({
     where,
-    include: { machine: true, product: true },
+    include: { product: true, pos: true },
     orderBy: { timestamp: "desc" },
   });
 

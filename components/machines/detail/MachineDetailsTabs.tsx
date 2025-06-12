@@ -28,7 +28,11 @@ export function MachineDetailsTabs({ machine }: Props) {
       case "maintenance":
         return <MaintenanceHistoryTable machineId={machine.id} />;
       case "sales":
-        return <MachineSalesTable machineId={machine.id} />;
+        return machine.pos ? (
+          <MachineSalesTable posId={machine.pos.id} />
+        ) : (
+          <div>No POS asociado</div>
+        );
       default:
         return <div>Selecciona una sección.</div>;
     }

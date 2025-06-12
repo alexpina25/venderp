@@ -30,10 +30,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!machine) {
-      return NextResponse.json(
-        { error: "Machine not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Machine not found" }, { status: 404 });
     }
 
     const machineProduct = await db.machineProduct.findFirst({
@@ -54,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     const sale = await db.sale.create({
       data: {
-        machineId: machine.id,
+        posId: pos.id,
         productId: machineProduct.productId,
         method: data.method,
         price: data.price,
@@ -72,12 +69,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const machineId = req.nextUrl.searchParams.get("machineId");
-  const where = machineId ? { machineId } : undefined;
+  const posId = req.nextUrl.searchParams.get("posId");
+  const where = posId ? { posId } : undefined;
 
   const sales = await db.sale.findMany({
     where,
-    include: { machine: true, product: true },
+    include: { product: true, pos: true },
     orderBy: { timestamp: "desc" },
   });
 

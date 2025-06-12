@@ -19,15 +19,15 @@ interface Sale {
 }
 
 interface Props {
-  machineId: string;
+  posId: string;
 }
 
-export function MachineSalesTable({ machineId }: Props) {
+export function MachineSalesTable({ posId }: Props) {
   const [sales, setSales] = useState<Sale[]>([]);
 
   useEffect(() => {
     async function fetchSales() {
-      const res = await fetch(`/api/sales?machineId=${machineId}`);
+      const res = await fetch(`/api/sales?posId=${posId}`);
       if (res.ok) {
         const data = await res.json();
         setSales(data);
@@ -35,7 +35,7 @@ export function MachineSalesTable({ machineId }: Props) {
     }
 
     fetchSales();
-  }, [machineId]);
+  }, [posId]);
 
   return (
     <div className="rounded-md border overflow-x-auto bg-background p-4">
