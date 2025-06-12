@@ -69,6 +69,7 @@ const passwordHash = await bcrypt.hash(plainPassword, 10);
         for (let p = 0; p < 2; p++) {
           const pos = await prisma.pOS.create({
             data: {
+              code: `T${t + 1}C${c + 1}S${s + 1}P${p + 1}`,
               name: `POS ${p + 1}`,
               address: faker.location.streetAddress(),
               city: faker.location.city(),

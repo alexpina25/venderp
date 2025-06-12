@@ -21,6 +21,7 @@ import { Center } from "@prisma/client";
 import { createPos } from "@/app/actions/createPos"; // 🛠️ Asegúrate de tener este action
 
 const formSchema = z.object({
+  code: z.string().min(2),
   name: z.string().min(2),
   address: z.string().min(5),
   city: z.string().min(2),
@@ -63,6 +64,10 @@ export function NewPosForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <Label htmlFor="code">Código</Label>
+        <Input id="code" {...register("code")} />
+      </div>
       <div>
         <Label htmlFor="name">Nombre</Label>
         <Input id="name" {...register("name")} />

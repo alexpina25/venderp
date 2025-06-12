@@ -95,6 +95,7 @@ model Center {
 
 model POS {
   id           String    @id @default(uuid())
+  code         String    @unique
   name         String
   address      String
   city         String

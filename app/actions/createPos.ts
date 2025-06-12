@@ -2,8 +2,10 @@
 
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { randomUUID } from "crypto";
 
 interface CreatePosInput {
+  code: string;
   name: string;
   address: string;
   city: string;
@@ -18,8 +20,9 @@ interface CreatePosInput {
 }
 
 export async function createPos(data: CreatePosInput) {
-  await db.pos.create({
+  await db.pOS.create({
     data: {
+      code: data.code,
       name: data.name,
       address: data.address,
       city: data.city,
@@ -34,6 +37,5 @@ export async function createPos(data: CreatePosInput) {
     },
   });
 
-  // Revalida la ruta de ubicaciones si tienes una página de lista
   revalidatePath("/pos");
 }
