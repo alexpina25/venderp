@@ -7,8 +7,8 @@ import "./globals.css";
 const noto = Noto_Sans_Display({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VENDERP",
-  description: "VENDERP is a ERP system for managing your business.",
+  title: "VENDCORE",
+  description: "VENDCORE is a ERP system for managing your business.",
 };
 
 export default function RootLayout({
