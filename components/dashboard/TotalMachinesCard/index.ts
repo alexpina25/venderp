@@ -1,1 +1,1 @@
-export * from "./TotalMachines";
+export * from "./TotalMachinesCard";
