@@ -81,8 +81,9 @@ class VendingSim:
         self.lbl_eff.config(text=f"Efectivo: {self.saldo_efectivo:.2f} €")
 
     def cargar_masters(self):
+        headers = {"x-api-key": "supersecreta123"}
         try:
-            resp = requests.get(MASTERS_URL, timeout=5)
+            resp = requests.get(MASTERS_URL, headers=headers)
             if resp.status_code == 200:
                 self.masters = resp.json()
             else:
@@ -195,7 +196,8 @@ class VendingSim:
         }
 
         try:
-            response = requests.post(SERVER_URL, json=payload, timeout=5)
+            headers = {"x-api-key": "supersecreta123"}
+            response = requests.post(SERVER_URL, json=payload, timeout=5, headers=headers)
             if response.status_code == 200:
                 self.registrar_evento("📡 JSON enviado con éxito al servidor.")
             else:

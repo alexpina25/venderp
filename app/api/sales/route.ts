@@ -14,6 +14,11 @@ const saleSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const apiKey = req.headers.get("x-api-key");
+  if (apiKey !== process.env.DEVICE_API_KEY) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const data = saleSchema.parse(await req.json());
 
@@ -70,13 +75,20 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const posId = req.nextUrl.searchParams.get("posId");
-  const where = posId ? { posId } : undefined;
 
   const sales = await db.sale.findMany({
-    where,
-    include: { product: true, pos: true },
+    where: posId ? { posId } : undefined,
+    include: { product: true },
     orderBy: { timestamp: "desc" },
   });
 
-  return NextResponse.json(sales);
+  const transformed = sales.map((sale) => ({
+    id: sale.id,
+    date: sale.timestamp.toISOString(),
+    product: sale.product.name,
+    paymentMethod: sale.method,
+    price: sale.price,
+  }));
+
+  return NextResponse.json(transformed);
 }

@@ -15,7 +15,7 @@ interface Sale {
   date: string;
   product: string;
   paymentMethod: string;
-  amount: number;
+  price: number;
 }
 
 interface Props {
@@ -57,7 +57,7 @@ export function MachineSalesTable({ posId }: Props) {
               <TableCell>{sale.product}</TableCell>
               <TableCell>{sale.paymentMethod}</TableCell>
               <TableCell className="text-right">
-                {sale.amount.toFixed(2)}
+                {sale.price}
               </TableCell>
             </TableRow>
           ))}
