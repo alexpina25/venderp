@@ -10,9 +10,17 @@ import {
 } from 'recharts'
 
 import { CustomIcon } from "@/components/ui/CustomIcon"
-import { dataTotalMachines } from "./TotalMachines.data"
 
-export function TotalMachines() {
+export type TotalMachinesData = {
+    name: string
+    value: number
+    fill: string
+}
+interface TotalMachinesChartProps {
+    data: TotalMachinesData[]
+}
+
+export function TotalMachinesChart({ data }: TotalMachinesChartProps) {
     return (
         <div className="w-full p-5 mb-4 transition rounded-lg shadow-sm lg:mb-0 bg-background xl:w-96 hover:shadow-lg">
             <div className="flex items-center mb-4 gap-x-2">
@@ -24,7 +32,7 @@ export function TotalMachines() {
                     <PieChart>
                         <Pie
                             dataKey="value"
-                            data={dataTotalMachines}
+                            data={data}
                             outerRadius={80}
                             labelLine={false}
                         />

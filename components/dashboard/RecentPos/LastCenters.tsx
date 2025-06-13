@@ -1,9 +1,15 @@
 import { Building } from "lucide-react";
 
 import { CustomIcon } from "@/components/ui/CustomIcon";
-import { CentersTable } from "../CentersTable";
+import { CenterTable } from "@/components/centers/CenterTable";
+import { db } from "@/lib/db";
 
-export function RecentPos() {
+export async function RecentPos() {
+    const centers = await db.center.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+    })
+
     return (
         <div className="p-5 rounded-lg shadow-sm bg-background">
             <div className="flex items-center gap-x-2">
@@ -11,7 +17,7 @@ export function RecentPos() {
                 <p className="text-xl">Last centers</p>
             </div>
             <div>
-                <CentersTable />
+                <CenterTable data={centers} />
             </div>
         </div>
     )

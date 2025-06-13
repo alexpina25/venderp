@@ -4,34 +4,48 @@ import { RecentPos } from "@/components/dashboard/RecentPos";
 import { RefillStats } from "@/components/dashboard/RefillStats";
 import { TotalMachines } from "@/components/dashboard/TotalMachinesCard";
 import { MachineConnections } from "@/components/dashboard/MachineConnections";
-
 import { UsersRound, Waypoints, BookOpenCheck } from "lucide-react";
+import { db } from "@/lib/db";
+import { formatPrice } from "@/lib/formatPrice";
 
-const stats = [
-  {
-    icon: UsersRound,
-    total: "58",
-    average: 15,
-    title: "Máquinas activas",
-    tooltipText: "Total de empresas registradas en el sistema",
-  },
-  {
-    icon: Waypoints,
-    total: "86.5%",
-    average: 80,
-    title: "Tasa de visitas cumplidas",
-    tooltipText: "Porcentaje de rutas completadas exitosamente",
-  },
-  {
-    icon: BookOpenCheck,
-    total: "363,95€",
-    average: 30,
-    title: "Ingresos últimos 7 días",
-    tooltipText: "Ventas totales aproximadas por máquinas",
-  },
-];
+export default async function DashboardPage() {
+  const [activeMachines, totalMachines, sales] = await Promise.all([
+    db.machine.count({ where: { status: "ACTIVE" } }),
+    db.machine.count(),
+    db.sale.aggregate({
+      _sum: { price: true },
+      where: { timestamp: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } },
+    }),
+  ]);
 
-export default function DashboardPage() {
+  const rate = totalMachines
+    ? Math.round((activeMachines / totalMachines) * 100)
+    : 0;
+
+  const stats = [
+    {
+      icon: UsersRound,
+      total: String(activeMachines),
+      average: rate,
+      title: "Máquinas activas",
+      tooltipText: "Total de máquinas registradas en el sistema",
+    },
+    {
+      icon: Waypoints,
+      total: `${rate}%`,
+      average: rate,
+      title: "Tasa de máquinas en servicio",
+      tooltipText: "Porcentaje de máquinas activas sobre el total",
+    },
+    {
+      icon: BookOpenCheck,
+      total: formatPrice(sales._sum.price || 0),
+      average: 0,
+      title: "Ingresos últimos 7 días",
+      tooltipText: "Ventas totales aproximadas por máquinas",
+    },
+  ];
+
   return (
     <div className="space-y-10">
       <h2 className="text-3xl font-semibold">Dashboard</h2>
