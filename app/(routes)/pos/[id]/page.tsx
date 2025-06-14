@@ -4,6 +4,9 @@ import { PosInfo } from "@/components/pos/detail/PosInfo";
 import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 import { PosWithMachineDetails } from "@/types";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 async function fetchPosData(id: string): Promise<PosWithMachineDetails> {
   const res = await fetch(`/api/pos/${id}`);
@@ -33,7 +36,14 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="p-6 space-y-8">
-      <h2 className="text-2xl font-bold">Detalle de POS</h2>
+      <div className="flex items-center gap-2">
+        <Button asChild variant="default" size="icon">
+          <Link href="/machines">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h2 className="text-2xl font-bold">Detalle de POS</h2>
+      </div>
       {pos && (
         <>
           <PosInfo pos={pos} />

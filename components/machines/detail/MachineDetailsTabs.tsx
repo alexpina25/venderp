@@ -23,7 +23,6 @@ export function MachineDetailsTabs({ machine }: Props) {
   const renderTabContent = () => {
     switch (activeTab) {
       case "stock":
-        // Pasa los productos a la tabla de stock
         return <MachineStockTable machine={machine} />;
       case "maintenance":
         return <MaintenanceHistoryTable machineId={machine.id} />;
@@ -48,7 +47,7 @@ export function MachineDetailsTabs({ machine }: Props) {
           size="sm"
           className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
             activeTab === "sales"
-              ? "bg-blue-500 text-white"
+              ? "bg-background text-white"
               : "bg-transparent text-gray-600"
           }`}
         >
@@ -61,7 +60,7 @@ export function MachineDetailsTabs({ machine }: Props) {
           size="sm"
           className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
             activeTab === "stock"
-              ? "bg-blue-500 text-white"
+              ? "bg-background text-white"
               : "bg-transparent text-gray-600"
           }`}
         >
@@ -73,7 +72,7 @@ export function MachineDetailsTabs({ machine }: Props) {
           size="sm"
           className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
             activeTab === "maintenance"
-              ? "bg-blue-500 text-white"
+              ? "bg-background text-white"
               : "bg-transparent text-gray-600"
           }`}
         >

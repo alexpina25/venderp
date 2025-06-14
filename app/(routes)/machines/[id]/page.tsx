@@ -2,7 +2,10 @@
 import { useState, useEffect } from "react";
 import { MachineInfo } from "@/components/machines/detail/MachineInfo";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
-import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs"; // Importamos el nuevo componente
+//import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 async function fetchMachineData(id: string) {
   const response = await fetch(`/api/machines/${id}`);
@@ -60,7 +63,7 @@ export default function MachineDetailPage({
   };
 
   const handleCancel = async () => {
-    // Aquí también podemos hacer un refetch de la máquina si fuera necesario
+
     try {
       const updatedMachine = await fetchMachineData(params.id); // Volver a obtener los datos actuales
       setSelectedMachine(updatedMachine); // Actualiza el estado con los datos más recientes
@@ -72,15 +75,20 @@ export default function MachineDetailPage({
 
   return (
     <div className="p-6 space-y-8">
-      <h2 className="text-2xl font-bold">Detalle de máquina</h2>
+      <div className="flex items-center gap-2">
+        <Button asChild variant="default" size="icon">
+          <Link href="/machines">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h2 className="text-2xl font-bold">Detalle de máquina</h2>
+      </div>
 
       {selectedMachine && (
         <>
           {/* Información básica de la máquina */}
           <MachineInfo machine={selectedMachine} onEdit={openEditModal} />
 
-          {/* Tablas de contenido adicional (Stock, Mantenimiento, Ventas, etc.) */}
-          <MachineDetailsTabs machine={selectedMachine} />
 
           {/* Modal de edición */}
           <EditMachineModal
