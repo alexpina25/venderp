@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { CenterTable } from "@/components/centers/CenterTable";
+import { ParentCenterTable } from "@/components/centers/ParentCenterTable";
 import { NewCenterModal } from "@/components/centers/forms/NewCenterModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -7,11 +8,18 @@ export default async function CentersPage() {
   const centers = await db.center.findMany({
     where: { subCenters: { none: {} } },
     orderBy: { name: "desc" },
+    include: {
+      parentCenter: { select: { name: true } },
+      pos: { where: { active: true }, select: { id: true } },
+    },
   });
 
   const parentCenters = await db.center.findMany({
     where: { subCenters: { some: {} } },
     orderBy: { name: "desc" },
+    include: {
+      subCenters: { where: { active: true }, select: { id: true } },
+    },
   });
 
   return (
@@ -30,7 +38,7 @@ export default async function CentersPage() {
           <CenterTable data={centers} />
         </TabsContent>
         <TabsContent value="padres">
-          <CenterTable data={parentCenters} />
+          <ParentCenterTable data={parentCenters} />
         </TabsContent>
       </Tabs>
     </div>

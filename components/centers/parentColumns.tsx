@@ -8,12 +8,11 @@ import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export type CenterChild = Center & {
-  parentCenter: Pick<Center, "name"> | null;
-  pos: { id: string }[];
+export type ParentCenter = Center & {
+  subCenters: { id: string }[];
 };
 
-export const columns: ColumnDef<CenterChild>[] = [
+export const parentColumns: ColumnDef<ParentCenter>[] = [
   {
     accessorKey: "name",
     header: "Nombre",
@@ -32,9 +31,18 @@ export const columns: ColumnDef<CenterChild>[] = [
     },
   },
   {
-    accessorKey: "parentCenter.name",
-    header: "Centro padre",
-    cell: ({ row }) => row.original.parentCenter?.name ?? "-",
+    accessorKey: "city",
+    header: "Ciudad",
+  },
+  {
+    accessorKey: "contactPhone",
+    header: "Teléfono",
+    cell: ({ row }) => row.getValue("contactPhone") ?? "-",
+  },
+  {
+    accessorKey: "contactEmail",
+    header: "Email",
+    cell: ({ row }) => row.getValue("contactEmail") ?? "-",
   },
   {
     accessorKey: "active",
@@ -57,9 +65,9 @@ export const columns: ColumnDef<CenterChild>[] = [
     },
   },
   {
-    id: "posCount",
-    header: "POS activos",
-    cell: ({ row }) => row.original.pos.length,
+    id: "childrenCount",
+    header: "Subcentros activos",
+    cell: ({ row }) => row.original.subCenters.length,
   },
   {
     id: "acciones",

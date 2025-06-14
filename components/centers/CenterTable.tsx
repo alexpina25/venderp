@@ -1,11 +1,10 @@
 "use client";
 
-import { Center } from "@prisma/client";
-import { columns } from "./columns";
+import { columns, CenterChild } from "./columns";
 import { DataTable } from "@/components/ui/data-table/DataTable";
 
 interface CenterTableProps {
-  data: Center[];
+  data: CenterChild[];
 }
 
 export function CenterTable({ data }: CenterTableProps) {
