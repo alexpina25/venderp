@@ -1,12 +1,16 @@
 import { db } from "@/lib/db";
 import { CenterTable } from "@/components/centers/CenterTable";
 import { NewCenterModal } from "@/components/centers/forms/NewCenterModal";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function CentersPage() {
   const centers = await db.center.findMany({
+    where: { subCenters: { none: {} } },
+    orderBy: { name: "desc" },
+  });
+
+  const parentCenters = await db.center.findMany({
+    where: { subCenters: { some: {} } },
     orderBy: { name: "desc" },
   });
 
@@ -17,7 +21,18 @@ export default async function CentersPage() {
         <NewCenterModal />
       </div>
 
-      <CenterTable data={centers} />
+      <Tabs defaultValue="centros" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="centros">Centros</TabsTrigger>
+          <TabsTrigger value="padres">Centros padre</TabsTrigger>
+        </TabsList>
+        <TabsContent value="centros">
+          <CenterTable data={centers} />
+        </TabsContent>
+        <TabsContent value="padres">
+          <CenterTable data={parentCenters} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
