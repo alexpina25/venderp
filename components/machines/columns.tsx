@@ -17,7 +17,7 @@ export const columns: ColumnDef<Machine & { pos: { name: string } }>[] = [
       return (
         <div className="flex items-center gap-2 justify-between">
           
-          <span className="font-medium">{row.getValue("code")}</span>
+          <span className="font-medium">{row.getValue("customId")}</span>
           <Link href={`/machines/${machine.id}`}>
             <Button variant="ghost" size="icon">
               <Eye className="w-4 h-4" />

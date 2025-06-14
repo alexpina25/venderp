@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function MachineDetailsTabs({ machine }: Props) {
-  const [activeTab, setActiveTab] = useState<string>("stock");
+  const [activeTab, setActiveTab] = useState<string>("sales");
 
   // Definir el contenido de las pestañas
   const renderTabContent = () => {
@@ -43,6 +43,19 @@ export function MachineDetailsTabs({ machine }: Props) {
       {/* Pestañas de navegación */}
       <div className="flex border-b border-gray-300 gap-1">
         <Button
+          onClick={() => setActiveTab("sales")}
+          variant={activeTab === "sales" ? "default" : "outline"}
+          size="sm"
+          className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
+            activeTab === "sales"
+              ? "bg-blue-500 text-white"
+              : "bg-transparent text-gray-600"
+          }`}
+        >
+          Ventas
+        </Button>
+        
+        <Button
           onClick={() => setActiveTab("stock")}
           variant={activeTab === "stock" ? "default" : "outline"}
           size="sm"
@@ -65,18 +78,6 @@ export function MachineDetailsTabs({ machine }: Props) {
           }`}
         >
           Mantenimiento
-        </Button>
-        <Button
-          onClick={() => setActiveTab("sales")}
-          variant={activeTab === "sales" ? "default" : "outline"}
-          size="sm"
-          className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
-            activeTab === "sales"
-              ? "bg-blue-500 text-white"
-              : "bg-transparent text-gray-600"
-          }`}
-        >
-          Ventas
         </Button>
       </div>
 

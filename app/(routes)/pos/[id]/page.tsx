@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { PosInfo } from "@/components/pos/detail/PosInfo";
-import { MachineInfo } from "@/components/machines/detail/MachineInfo";
 import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 import { PosWithMachineDetails } from "@/types";
@@ -40,10 +39,18 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
           <PosInfo pos={pos} />
           {pos.machine && (
             <>
-              <MachineInfo machine={pos.machine} onEdit={openEditModal} />
-              <MachineDetailsTabs machine={pos.machine} />
+              <MachineDetailsTabs
+                machine={{
+                  ...pos.machine,
+                  pos: pos,
+                  products: pos.machine.products ?? [],
+                }}
+              />
               <EditMachineModal
-                machine={pos.machine}
+                machine={{
+                  ...pos.machine,
+                  pos: pos ? { name: pos.name } : null,
+                }}
                 open={isModalOpen}
                 onClose={async () => {
                   closeModal();
