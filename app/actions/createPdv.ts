@@ -20,7 +20,7 @@ interface CreatePdvInput {
 }
 
 export async function createPdv(data: CreatePdvInput) {
-  await db.pOS.create({
+  await db.pDV.create({
     data: {
       code: data.code,
       name: data.name,

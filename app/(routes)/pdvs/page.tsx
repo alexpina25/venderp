@@ -3,7 +3,7 @@ import { PdvTable } from "@/components/pdv/PdvTable";
 import { NewPdvModal } from "@/components/pdv/forms/NewPdvModal";
 
 export default async function PdvPage() {
-  const pdvList = await db.pOS.findMany({
+  const pdvList = await db.pDV.findMany({
     orderBy: { createdAt: "desc" },
     include: {
       center: true, // Para poder ver a qué centro pertenece cada PDV

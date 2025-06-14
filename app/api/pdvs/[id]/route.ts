@@ -5,7 +5,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const pdv = await db.pOS.findUnique({
+    const pdv = await db.pDV.findUnique({
       where: { id: params.id },
       include: {
         center: true,

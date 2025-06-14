@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { POS as PDV } from "@prisma/client";
+import { PDV } from "@prisma/client";
 import { updatePdv } from "@/app/actions/updatePdv"; // Asegúrate de tener esta acción creada
 
 import { Input } from "@/components/ui/input";

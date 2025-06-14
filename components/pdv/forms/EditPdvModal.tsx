@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { EditPdvForm } from "./EditPdvForm";
-import { POS as PDV, Center } from "@prisma/client";
+import { PDV, Center } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";

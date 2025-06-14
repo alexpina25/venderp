@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Machine, MachineProduct, Product, POS } from "@prisma/client";
+import { Machine, MachineProduct, Product, PDV } from "@prisma/client";
 import { MachineStockTable } from "@/components/machines/detail/stock/MachineStockTable"; // Stock
 import { MaintenanceHistoryTable } from "@/components/machines/detail/MaintenanceHistoryTable"; // Mantenimiento
 import { MachineSalesTable } from "@/components/machines/detail/sales/MachineSalesTable"; // Ventas
 import { Button } from "@/components/ui/button";
 
 export interface MachineWithProducts extends Machine {
-  pos: POS | null;
+  pos: PDV | null;
   products: (MachineProduct & { product: Product })[];
 }
 
@@ -30,7 +30,7 @@ export function MachineDetailsTabs({ machine }: Props) {
         return machine.pos ? (
           <MachineSalesTable posId={machine.pos.id} />
         ) : (
-          <div>No POS asociado</div>
+          <div>No PDV asociado</div>
         );
       default:
         return <div>Selecciona una sección.</div>;

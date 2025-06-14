@@ -178,9 +178,9 @@ export function NewMachineForm() {
               <SelectValue placeholder="Selecciona PDV" />
             </SelectTrigger>
             <SelectContent>
-              {filteredPdvs.map((pos) => (
-                <SelectItem key={pos.id} value={pos.id}>
-                  {pos.name}
+              {filteredPdvs.map((pdv) => (
+                <SelectItem key={pdv.id} value={pdv.id}>
+                  {pdv.name}
                 </SelectItem>
               ))}
             </SelectContent>
