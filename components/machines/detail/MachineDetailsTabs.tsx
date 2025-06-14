@@ -47,8 +47,8 @@ export function MachineDetailsTabs({ machine }: Props) {
           size="sm"
           className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
             activeTab === "sales"
-              ? "bg-background text-white"
-              : "bg-transparent text-gray-600"
+              ? "bg-black text-white"
+              : "bg-background text-gray-700"
           }`}
         >
           Ventas
@@ -60,8 +60,8 @@ export function MachineDetailsTabs({ machine }: Props) {
           size="sm"
           className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
             activeTab === "stock"
-              ? "bg-background text-white"
-              : "bg-transparent text-gray-600"
+              ? "bg-black text-white"
+              : "bg-background text-gray-700"
           }`}
         >
           Stock
@@ -72,8 +72,8 @@ export function MachineDetailsTabs({ machine }: Props) {
           size="sm"
           className={`p-2 text-lg rounded-t-lg transition-all duration-300 ${
             activeTab === "maintenance"
-              ? "bg-background text-white"
-              : "bg-transparent text-gray-600"
+              ? "bg-black text-white"
+              : "bg-background text-gray-700"
           }`}
         >
           Mantenimiento
