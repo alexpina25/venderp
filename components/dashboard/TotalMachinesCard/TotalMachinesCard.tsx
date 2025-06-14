@@ -19,7 +19,7 @@ export async function TotalMachines() {
 
     const data: TotalMachinesData[] = counts.map((c) => ({
         name: c.type,
-        value: c._count,
+        value: c._count._all,
         fill: colors[c.type] || "#8884d8",
     }));
 
