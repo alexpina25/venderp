@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     if (!machine.posId) {
       return NextResponse.json(
-        { error: "Machine has no associated POS" },
+        { error: "Machine has no associated PDV" },
         { status: 404 }
       );
     }
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const machine = req.nextUrl.searchParams.get("machine");
-  const posId = req.nextUrl.searchParams.get("posId");
+  const pdvId = req.nextUrl.searchParams.get("pdvId");
   let where;
   if (machine) {
     const m = await db.machine.findUnique({ where: { code: machine } });
@@ -77,8 +77,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Machine not found" }, { status: 404 });
     }
     where = { posId: m.posId };
-  } else if (posId) {
-    where = { posId };
+  } else if (pdvId) {
+    where = { posId: pdvId };
   }
 
   const sales = await db.sale.findMany({

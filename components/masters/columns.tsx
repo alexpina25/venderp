@@ -25,7 +25,7 @@ export const columns: ColumnDef<Master & { pos: { name: string } | null }>[] = [
   },
   {
     accessorKey: "pos",
-    header: "POS",
+    header: "PDV",
     cell: ({ row }) => row.original.pos?.name || "-",
   },
   {

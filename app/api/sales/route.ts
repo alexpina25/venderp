@@ -4,7 +4,7 @@ import { z } from "zod";
 import { SaleMethod } from "@prisma/client";
 
 const saleSchema = z.object({
-  posCode: z.string(),
+  pdvCode: z.string(),
   line: z.string(),
   method: z.nativeEnum(SaleMethod),
   price: z.number(),
@@ -22,16 +22,16 @@ export async function POST(req: NextRequest) {
   try {
     const data = saleSchema.parse(await req.json());
 
-    const pos = await db.pOS.findFirst({
-      where: { code: data.posCode },
+    const pdv = await db.pOS.findFirst({
+      where: { code: data.pdvCode },
     });
 
-    if (!pos) {
-      return NextResponse.json({ error: "POS not found" }, { status: 404 });
+    if (!pdv) {
+      return NextResponse.json({ error: "PDV not found" }, { status: 404 });
     }
 
     const machine = await db.machine.findFirst({
-      where: { posId: pos.id },
+      where: { posId: pdv.id },
     });
 
     if (!machine) {
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     const sale = await db.sale.create({
       data: {
-        posId: pos.id,
+        posId: pdv.id,
         productId: machineProduct.productId,
         method: data.method,
         price: data.price,
@@ -74,10 +74,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const posId = req.nextUrl.searchParams.get("posId");
+  const pdvId = req.nextUrl.searchParams.get("pdvId");
 
   const sales = await db.sale.findMany({
-    where: posId ? { posId } : undefined,
+    where: pdvId ? { posId: pdvId } : undefined,
     include: { product: true },
     orderBy: { timestamp: "desc" },
   });
