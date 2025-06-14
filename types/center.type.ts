@@ -1,4 +1,4 @@
-import { Center, POS as PDV } from "@prisma/client";
+import { Center, PDV } from "@prisma/client";
 export type CenterWithPdv = Center & {
   pdvs: PDV[];
 };

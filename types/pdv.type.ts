@@ -1,5 +1,5 @@
 import {
-  POS as PDV,
+  PDV,
   Machine,
   MachineProduct,
   Product,

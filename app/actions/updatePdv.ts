@@ -20,7 +20,7 @@ const schema = z.object({
 export async function updatePdv(input: z.infer<typeof schema>) {
   const values = schema.parse(input);
 
-  await db.pos.update({
+  await db.pDV.update({
     where: { id: values.id },
     data: {
       name: values.name,

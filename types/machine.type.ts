@@ -3,7 +3,7 @@ import {
   MachineProduct,
   Product,
   Center,
-  POS as PDV,
+  PDV,
 } from "@prisma/client";
 
 export type MachineWithDetails = Machine & {

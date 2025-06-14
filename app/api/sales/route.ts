@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = saleSchema.parse(await req.json());
 
-    const pdv = await db.pOS.findFirst({
+    const pdv = await db.pDV.findFirst({
       where: { code: data.pdvCode },
     });
 

@@ -1,4 +1,4 @@
-import { Master, POS as PDV, Tenant } from "@prisma/client";
+import { Master, PDV, Tenant } from "@prisma/client";
 
 interface Props {
   master: Master & { pos: PDV | null; tenant: Tenant };

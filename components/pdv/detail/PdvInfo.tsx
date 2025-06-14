@@ -1,4 +1,4 @@
-import { POS as PDV, Center, Master } from "@prisma/client";
+import { PDV, Center, Master } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 

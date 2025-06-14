@@ -66,10 +66,10 @@ async function main() {
         });
 
         for (let p = 0; p < 2; p++) {
-          const pos = await prisma.pOS.create({
+          const pdv = await prisma.pDV.create({
             data: {
               code: `T${t + 1}C${c + 1}S${s + 1}P${p + 1}`,
-              name: `POS ${p + 1}`,
+              name: `PDV ${p + 1}`,
               address: faker.location.streetAddress(),
               city: faker.location.city(),
               centerId: subCenter.id,
@@ -80,7 +80,7 @@ async function main() {
             data: {
               serialNumber: faker.string.alphanumeric(12),
               tenantId: tenant.id,
-              posId: pos.id,
+              posId: pdv.id,
             },
           });
 
@@ -91,7 +91,7 @@ async function main() {
               serialNumber: faker.string.alphanumeric(10),
               type: "SNACK",
               centerId: subCenter.id,
-              posId: pos.id,
+              posId: pdv.id,
               status: "ACTIVE",
               installedAt: faker.date.past(),
             },
