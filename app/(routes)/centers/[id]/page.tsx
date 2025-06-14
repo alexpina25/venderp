@@ -23,6 +23,7 @@ export default function CenterDetailPage({
   params: { id: string };
 }) {
   const [center, setCenter] = useState<CenterWithPos | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCenterData(params.id)
@@ -34,6 +35,9 @@ export default function CenterDetailPage({
     const updated = await fetchCenterData(params.id);
     setCenter(updated);
   };
+
+  const openEditModal = () => setIsModalOpen(true);
+  const closeEditModal = () => setIsModalOpen(false);
 
   return (
     <div className="p-6 space-y-8">
@@ -48,8 +52,16 @@ export default function CenterDetailPage({
 
       {center && (
         <>
-          <EditCenterModal center={center} />
-          <CenterInfo center={center} />
+          <EditCenterModal
+            center={center}
+            open={isModalOpen}
+            onClose={closeEditModal}
+            onSuccess={async () => {
+              await refreshData();
+              closeEditModal();
+            }}
+          />
+          <CenterInfo center={center} onEdit={openEditModal} />
           <div className="space-y-4 bg-background rounded-lg p-4 border">
             <h3 className="text-xl font-semibold">POS asignados</h3>
             <PosTable

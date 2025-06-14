@@ -2,11 +2,12 @@
 import { useState, useEffect } from "react";
 import { PosInfo } from "@/components/pos/detail/PosInfo";
 import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
-import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
+import { EditPosModal } from "@/components/pos/forms/EditPosModal";
 import { PosWithMachineDetails } from "@/types";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 
 async function fetchPosData(id: string): Promise<PosWithMachineDetails> {
   const res = await fetch(`/api/pos/${id}`);
@@ -18,7 +19,8 @@ async function fetchPosData(id: string): Promise<PosWithMachineDetails> {
 
 export default function PosDetailPage({ params }: { params: { id: string } }) {
   const [pos, setPos] = useState<PosWithMachineDetails | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMachineModalOpen, setIsMachineModalOpen] = useState(false);
+  const [isEditPosOpen, setIsEditPosOpen] = useState(false);
 
   useEffect(() => {
     fetchPosData(params.id)
@@ -26,8 +28,10 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
       .catch((err) => console.error(err));
   }, [params.id]);
 
-  const openEditModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openEditModal = () => setIsMachineModalOpen(true);
+  const closeModal = () => setIsMachineModalOpen(false);
+  const openPosEditModal = () => setIsEditPosOpen(true);
+  const closePosEditModal = () => setIsEditPosOpen(false);
 
   const refreshData = async () => {
     const updated = await fetchPosData(params.id);
@@ -46,7 +50,19 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
       </div>
       {pos && (
         <>
-          <PosInfo pos={pos} />
+          <EditPosModal
+            pos={pos}
+            open={isEditPosOpen}
+            onClose={async () => {
+              closePosEditModal();
+              await refreshData();
+            }}
+            onSuccess={async () => {
+              closePosEditModal();
+              await refreshData();
+            }}
+          />
+          <PosInfo pos={pos} onEdit={openPosEditModal} />
           {pos.machine && (
             <>
               <MachineDetailsTabs
@@ -61,7 +77,7 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
                   ...pos.machine,
                   pos: pos ? { name: pos.name } : null,
                 }}
-                open={isModalOpen}
+                open={isMachineModalOpen}
                 onClose={async () => {
                   closeModal();
                   await refreshData();
