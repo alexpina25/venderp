@@ -38,7 +38,7 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
     <div className="p-6 space-y-8">
       <div className="flex items-center gap-2">
         <Button asChild variant="default" size="icon">
-          <Link href="/machines">
+          <Link href="/pos">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
