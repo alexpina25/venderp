@@ -2,17 +2,26 @@
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { POS } from "@prisma/client";
-import { updatePos } from "@/app/actions/updatePos"; // Asegúrate de tener esta acción creada
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+
+import { Center } from "@prisma/client";
+import { createPdv } from "@/app/actions/createPdv"; // 🛠️ Asegúrate de tener este action
 
 const formSchema = z.object({
-  id: z.string(),
+  code: z.string().min(2),
   name: z.string().min(2),
   address: z.string().min(5),
   city: z.string().min(2),
@@ -23,53 +32,45 @@ const formSchema = z.object({
   contactPhone: z.string().optional(),
   contactEmail: z.string().email().optional(),
   notes: z.string().optional(),
+  centerId: z.string().min(1, "Selecciona un centro"),
 });
 
-interface Props {
-  pos: POS;
-  onSuccess?: () => void;
-}
-
-export function EditPosForm({ pos, onSuccess }: Props) {
+export function NewPdvForm() {
   const router = useRouter();
+  const [centers, setCenters] = useState<Center[]>([]);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: pos.id,
-      name: pos.name,
-      address: pos.address,
-      city: pos.city,
-      postalCode: pos.postalCode ?? "",
-      province: pos.province ?? "",
-      country: pos.country ?? "España",
-      contactName: pos.contactName ?? "",
-      contactPhone: pos.contactPhone ?? "",
-      contactEmail: pos.contactEmail ?? "",
-      notes: pos.notes ?? "",
+      country: "España",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await updatePos(values);
+  useEffect(() => {
+    fetch("/api/centers")
+      .then((res) => res.json())
+      .then(setCenters);
+  }, []);
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+      await createPdv(values);
     router.refresh();
-    onSuccess?.();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <input type="hidden" {...register("id")} />
-
+      <div>
+        <Label htmlFor="code">Código</Label>
+        <Input id="code" {...register("code")} />
+      </div>
       <div>
         <Label htmlFor="name">Nombre</Label>
         <Input id="name" {...register("name")} />
-        {errors.name && (
-          <p className="text-xs text-red-500">{errors.name.message}</p>
-        )}
       </div>
 
       <div>
@@ -83,7 +84,7 @@ export function EditPosForm({ pos, onSuccess }: Props) {
           <Input id="city" {...register("city")} />
         </div>
         <div>
-          <Label htmlFor="postalCode">Código postal</Label>
+          <Label htmlFor="postalCode">Código Postal</Label>
           <Input id="postalCode" {...register("postalCode")} />
         </div>
       </div>
@@ -115,12 +116,31 @@ export function EditPosForm({ pos, onSuccess }: Props) {
       </div>
 
       <div>
+        <Label>Centro asociado</Label>
+        <Select onValueChange={(v) => setValue("centerId", v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona centro" />
+          </SelectTrigger>
+          <SelectContent>
+            {centers.map((center) => (
+              <SelectItem key={center.id} value={center.id}>
+                {center.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.centerId && (
+          <p className="text-xs text-red-500 mt-1">{errors.centerId.message}</p>
+        )}
+      </div>
+
+      <div>
         <Label htmlFor="notes">Notas</Label>
         <Input id="notes" {...register("notes")} />
       </div>
 
       <Button type="submit" disabled={isSubmitting}>
-        Guardar cambios
+        Crear ubicación
       </Button>
     </form>
   );

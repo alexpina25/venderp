@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type PosWithCenter = {
+type PdvWithCenter = {
   id: string;
   name: string;
   centerId: string;
@@ -37,7 +37,7 @@ const formSchema = z.object({
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
   centerId: z.string(),
-  posId: z.string(),
+  pdvId: z.string(),
   installedAt: z.string().optional(),
   customId: z.coerce.number().optional(),
 });
@@ -45,7 +45,7 @@ const formSchema = z.object({
 export function NewMachineForm() {
   const router = useRouter();
   const [centers, setCenters] = useState<CenterBasic[]>([]);
-  const [posList, setPosList] = useState<PosWithCenter[]>([]);
+  const [pdvList, setPdvList] = useState<PdvWithCenter[]>([]);
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
 
   const {
@@ -69,14 +69,14 @@ export function NewMachineForm() {
       .then(setCenters);
   }, []);
 
-  // Cargar POS
+  // Cargar PDVs
   useEffect(() => {
-    fetch("/api/pos")
+    fetch("/api/pdvs")
       .then((res) => res.json())
-      .then(setPosList);
+      .then(setPdvList);
   }, []);
 
-  const filteredPos = posList.filter(
+  const filteredPdvs = pdvList.filter(
     (loc) => loc.centerId === selectedCenterId
   );
 
@@ -151,7 +151,7 @@ export function NewMachineForm() {
           onValueChange={(v) => {
             setValue("centerId", v);
             setSelectedCenterId(v);
-            setValue("posId", ""); // Reset POS
+            setValue("pdvId", ""); // Reset PDV
           }}
         >
           <SelectTrigger>
@@ -172,21 +172,21 @@ export function NewMachineForm() {
 
       {selectedCenterId && (
         <div>
-          <Label>POS</Label>
-          <Select onValueChange={(v) => setValue("posId", v)}>
+          <Label>PDV</Label>
+          <Select onValueChange={(v) => setValue("pdvId", v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecciona POS" />
+              <SelectValue placeholder="Selecciona PDV" />
             </SelectTrigger>
             <SelectContent>
-              {filteredPos.map((pos) => (
+              {filteredPdvs.map((pos) => (
                 <SelectItem key={pos.id} value={pos.id}>
                   {pos.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.posId && (
-            <p className="text-xs text-red-500">{errors.posId.message}</p>
+          {errors.pdvId && (
+            <p className="text-xs text-red-500">{errors.pdvId.message}</p>
           )}
         </div>
       )}

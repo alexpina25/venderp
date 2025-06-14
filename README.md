@@ -24,7 +24,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 Los centros pueden organizarse en una jerarquía. Un centro puede definirse como
 "padre" de otros centros, creando así grupos de clientes. Los centros que
-actúan como padre no pueden tener POS asignados y se usan únicamente como
+actúan como padre no pueden tener PDVs asignados y se usan únicamente como
 contenedores de otros centros.
 
 ## Learn More
