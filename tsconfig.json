@@ -17,7 +17,7 @@
         "name": "next"
       }
     ],
-    "types": ["next-auth", "next-intl"],
+    "types": ["next-auth"],
     "paths": {
       "@/*": ["./*"]
     }
