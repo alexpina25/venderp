@@ -1,15 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CenterWithPos, PosWithCenter } from "@/types";
+import {
+  CenterWithPosAndChildren,
+  CenterWithParentAndPos,
+  PosWithCenter,
+} from "@/types";
 import { CenterInfo } from "@/components/centers/detail/CenterInfo";
 import { EditCenterModal } from "@/components/centers/forms/EditCenterModal";
 import { PosTable } from "@/components/pos/PosTable";
+import { CenterTable } from "@/components/centers/CenterTable";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-async function fetchCenterData(id: string): Promise<CenterWithPos> {
+async function fetchCenterData(id: string): Promise<CenterWithPosAndChildren> {
   const res = await fetch(`/api/centers/${id}`);
   if (!res.ok) {
     throw new Error("Error fetching center data");
@@ -22,7 +27,7 @@ export default function CenterDetailPage({
 }: {
   params: { id: string };
 }) {
-  const [center, setCenter] = useState<CenterWithPos | null>(null);
+  const [center, setCenter] = useState<CenterWithPosAndChildren | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -63,12 +68,23 @@ export default function CenterDetailPage({
           />
           <CenterInfo center={center} onEdit={openEditModal} />
           <div className="space-y-4 bg-background rounded-lg p-4 border">
-            <h3 className="text-xl font-semibold">POS asignados</h3>
-            <PosTable
-              data={center.pos.map(
-                (p) => ({ ...p, center: center } as PosWithCenter)
-              )}
-            />
+            {center.subCenters.length > 0 ? (
+              <>
+                <h3 className="text-xl font-semibold">Centros asignados</h3>
+                <CenterTable
+                  data={center.subCenters as CenterWithParentAndPos[]}
+                />
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold">POS asignados</h3>
+                <PosTable
+                  data={center.pos.map(
+                    (p) => ({ ...p, center: center } as PosWithCenter)
+                  )}
+                />
+              </>
+            )}
           </div>
         </>
       )}

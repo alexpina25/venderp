@@ -7,7 +7,15 @@ export async function GET(
   try {
     const center = await db.center.findUnique({
       where: { id: params.id },
-      include: { pos: true },
+      include: {
+        pos: true,
+        subCenters: {
+          include: {
+            parentCenter: { select: { name: true } },
+            pos: { where: { active: true }, select: { id: true } },
+          },
+        },
+      },
     });
 
     if (!center) {

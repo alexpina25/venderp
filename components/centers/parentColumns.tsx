@@ -69,12 +69,12 @@ export const parentColumns: ColumnDef<ParentCenter>[] = [
     header: "Subcentros activos",
     cell: ({ row }) => row.original.subCenters.length,
   },
-  {
+/*   {
     id: "acciones",
     header: "",
     cell: ({ row }) => {
       const center = row.original as Center;
       return <EditCenterModal center={center} />;
     },
-  },
+  }, */
 ];

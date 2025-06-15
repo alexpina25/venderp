@@ -63,12 +63,12 @@ export const columns: ColumnDef<PosWithCenter>[] = [
       return date.toLocaleDateString("es-ES");
     },
   },
-  {
+/*   {
     id: "acciones",
     header: "",
     cell: ({ row }) => {
         const pos = row.original;
         return <EditPosModal pos={pos} />;
     },
-  },
+  }, */
 ];

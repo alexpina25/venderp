@@ -15,3 +15,8 @@ export type CenterWithParentAndPos = Center & {
 export type CenterWithActiveChildren = Center & {
   subCenters: Pick<Center, "id">[];
 };
+
+export type CenterWithPosAndChildren = Center & {
+  pos: POS[];
+  subCenters: CenterWithParentAndPos[];
+};
