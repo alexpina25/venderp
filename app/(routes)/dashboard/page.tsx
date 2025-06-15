@@ -68,7 +68,7 @@ export default async function DashboardPage() {
 
       {/* Actividad reciente y estadísticas */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <RecentPoss />
+        <RecentPos />
         <RefillStats />
       </section>
 

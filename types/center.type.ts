@@ -1,6 +1,6 @@
 import { Center, POS } from "@prisma/client";
 export type CenterWithPos = Center & {
-  poss: POS[];
+  pos: POS[];
 };
 
 export type CenterWithChildren = Center & {
