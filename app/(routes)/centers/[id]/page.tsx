@@ -65,7 +65,7 @@ export default function CenterDetailPage({
           <div className="space-y-4 bg-background rounded-lg p-4 border">
             <h3 className="text-xl font-semibold">POSs asignados</h3>
             <PosTable
-              data={center.poss.map(
+              data={center.pos.map(
                 (p) => ({ ...p, center: center } as PosWithCenter)
               )}
             />
