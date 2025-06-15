@@ -28,7 +28,7 @@ model User {
   maintenance  MaintenanceLog[]
   activityLogs ActivityLog[]
   centers      CenterUser[]
-  pos          POSUser[]
+  pos          PDVUser[]
 }
 
 model Tenant {
@@ -47,12 +47,12 @@ model CenterUser {
   center   Center @relation(fields: [centerId], references: [id])
 }
 
-model POSUser {
+model PDVUser {
   id     String @id @default(uuid())
   userId String
   posId  String
   user   User   @relation(fields: [userId], references: [id])
-  pos    POS    @relation(fields: [posId], references: [id])
+  pos    PDV    @relation(fields: [posId], references: [id])
 }
 
 enum Role {
@@ -61,7 +61,7 @@ enum Role {
   TENANT_USER
   CENTER_MANAGER
   CENTER_USER
-  POS_USER
+  PDV_USER
 }
 
 //
@@ -85,7 +85,7 @@ model Center {
   updatedAt      DateTime     @updatedAt
   tenantId       String
   tenant         Tenant       @relation(fields: [tenantId], references: [id])
-  pos            POS[]
+  pos            PDV[]
   invoices       Invoice[]
   users          CenterUser[]
   parentCenterId String?
@@ -94,7 +94,7 @@ model Center {
   Machine        Machine[]
 }
 
-model POS {
+model PDV {
   id           String    @id @default(uuid())
   code         String    @unique
   name         String
@@ -110,7 +110,7 @@ model POS {
   centerId     String
   center       Center    @relation(fields: [centerId], references: [id])
   machine      Machine?
-  users        POSUser[]
+  users        PDVUser[]
   master       Master?
   active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
@@ -124,7 +124,7 @@ model Master {
   tenantId     String
   tenant       Tenant   @relation(fields: [tenantId], references: [id])
   posId        String?  @unique
-  pos          POS?     @relation(fields: [posId], references: [id])
+  pos          PDV?     @relation(fields: [posId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -147,7 +147,7 @@ model Machine {
   center       Center        @relation(fields: [centerId], references: [id])
 
   posId String? @unique
-  pos   POS?    @relation(fields: [posId], references: [id])
+  pos   PDV?    @relation(fields: [posId], references: [id])
 
   products       MachineProduct[]
   maintenanceLog MaintenanceLog[]
@@ -336,7 +336,7 @@ model Sale {
   change    Float
   timestamp DateTime   @default(now())
 
-  pos       POS      @relation(fields: [posId], references: [id])
+  pos       PDV      @relation(fields: [posId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
   Machine   Machine? @relation(fields: [machineId], references: [id])
   machineId String?

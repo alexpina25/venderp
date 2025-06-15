@@ -1,15 +1,14 @@
 "use client";
 
-import { POS } from "@prisma/client";
-import { columns } from "./columns";
+import { columns } from "./pdvColumns";
 import { DataTable } from "@/components/ui/data-table/DataTable";
-import { PosWithCenter } from "@/types";
+import { PdvWithCenter } from "@/types";
 
-interface PosTableProps {
-    data: PosWithCenter[];
-  }
+interface PdvTableProps {
+    data: PdvWithCenter[];
+}
 
-export function PosTable({ data }: PosTableProps) {
+export function PdvTable({ data }: PdvTableProps) {
   return (
     <DataTable
       columns={columns}

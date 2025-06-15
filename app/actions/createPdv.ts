@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
 
-interface CreatePosInput {
+interface CreatePdvInput {
   code: string;
   name: string;
   address: string;
@@ -19,8 +19,8 @@ interface CreatePosInput {
   centerId: string;
 }
 
-export async function createPos(data: CreatePosInput) {
-  await db.pOS.create({
+export async function createPdv(data: CreatePdvInput) {
+  await db.pDV.create({
     data: {
       code: data.code,
       name: data.name,
@@ -37,5 +37,5 @@ export async function createPos(data: CreatePosInput) {
     },
   });
 
-  revalidatePath("/pos");
+  revalidatePath("/pdvs");
 }

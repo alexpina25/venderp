@@ -1,5 +1,5 @@
 import {
-  POS,
+  PDV,
   Machine,
   MachineProduct,
   Product,
@@ -7,12 +7,12 @@ import {
   Master,
 } from "@prisma/client";
 
-export type PosWithMachines = POS & {
+export type PdvWithMachines = PDV & {
   center: Center;
   machine: Machine | null;
 };
 
-export type PosWithMachineDetails = POS & {
+export type PdvWithMachineDetails = PDV & {
   center: Center;
   machine:
     | (Machine & { products: (MachineProduct & { product: Product })[] })
@@ -20,6 +20,6 @@ export type PosWithMachineDetails = POS & {
   master: Master | null;
 };
 
-export type PosWithCenter = POS & {
+export type PdvWithCenter = PDV & {
   center: Center;
 };

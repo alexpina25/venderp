@@ -17,10 +17,10 @@ const schema = z.object({
   notes: z.string().optional(),
 });
 
-export async function updatePos(input: z.infer<typeof schema>) {
+export async function updatePdv(input: z.infer<typeof schema>) {
   const values = schema.parse(input);
 
-  await db.pos.update({
+  await db.pDV.update({
     where: { id: values.id },
     data: {
       name: values.name,

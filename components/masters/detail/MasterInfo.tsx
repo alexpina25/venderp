@@ -1,7 +1,7 @@
-import { Master, POS, Tenant } from "@prisma/client";
+import { Master, PDV, Tenant } from "@prisma/client";
 
 interface Props {
-  master: Master & { pos: POS | null; tenant: Tenant };
+  master: Master & { pos: PDV | null; tenant: Tenant };
 }
 
 export function MasterInfo({ master }: Props) {
@@ -12,7 +12,7 @@ export function MasterInfo({ master }: Props) {
         <p className="font-medium">{master.serialNumber}</p>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">POS asociado</p>
+        <p className="text-sm text-muted-foreground">PDV asociado</p>
         <p>{master.pos ? master.pos.name : "-"}</p>
       </div>
       <div>
