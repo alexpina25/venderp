@@ -4,7 +4,7 @@ import { CustomIcon } from "@/components/ui/CustomIcon";
 import { CenterTable } from "@/components/centers/CenterTable";
 import { db } from "@/lib/db";
 
-export async function RecentPoss() {
+export async function RecentPos() {
   const centers = await db.center.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
