@@ -2,10 +2,12 @@
 
 import { FormEvent } from "react";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function SignInPage() {
+  const t = useTranslations("SignIn");
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -22,17 +24,17 @@ export default function SignInPage() {
       onSubmit={handleSubmit}
     >
       <h2 className="text-lg font-medium text-center text-foreground mb-2">
-        Iniciar sesión
+        {t("title")}
       </h2>
-      <Input name="email" type="email" placeholder="Email" required />
+      <Input name="email" type="email" placeholder={t("email")} required />
       <Input
         name="password"
         type="password"
-        placeholder="Contraseña"
+        placeholder={t("password")}
         required
       />
       <Button type="submit" className="w-full">
-        Entrar
+        {t("submit")}
       </Button>
     </form>
   );
