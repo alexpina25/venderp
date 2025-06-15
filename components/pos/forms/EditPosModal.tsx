@@ -63,7 +63,7 @@ export function EditPosModal({
           <DialogTitle>Editar ubicación</DialogTitle>
         </DialogHeader>
 
-        <EditPosForm pos={pos} onSuccess={handleSuccess} />
+          <EditPosForm pos={pos} onSuccess={handleSuccess} />
       </DialogContent>
     </Dialog>
   );

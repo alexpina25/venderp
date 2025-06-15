@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = saleSchema.parse(await req.json());
 
-    const pos = await db.pOS.findFirst({
+    const pos = await db.pos.findFirst({
       where: { code: data.posCode },
     });
 
@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
   const posId = req.nextUrl.searchParams.get("posId");
 
   const sales = await db.sale.findMany({
-    where: posId ? { posId } : undefined,
+    where: posId ? { posId: posId } : undefined,
     include: { product: true },
     orderBy: { timestamp: "desc" },
   });

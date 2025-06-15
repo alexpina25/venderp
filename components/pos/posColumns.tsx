@@ -14,11 +14,11 @@ export const columns: ColumnDef<PosWithCenter>[] = [
     accessorKey: "name",
     header: "Nombre",
     cell: ({ row }) => {
-      const pos = row.original;
+        const pos = row.original;
       return (
         <div className="flex items-center gap-2 justify-between">
           <span className="font-medium">{row.getValue("name")}</span>
-          <Link href={`/pos/${pos.id}`}>
+          <Link href={`/poss/${pos.id}`}>
             <Button variant="ghost" size="icon">
               <Eye className="w-4 h-4" />
             </Button>
@@ -67,8 +67,8 @@ export const columns: ColumnDef<PosWithCenter>[] = [
     id: "acciones",
     header: "",
     cell: ({ row }) => {
-      const pos = row.original;
-      return <EditPosModal pos={pos} />;
+        const pos = row.original;
+        return <EditPosModal pos={pos} />;
     },
   },
 ];

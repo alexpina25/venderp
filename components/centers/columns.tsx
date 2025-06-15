@@ -58,15 +58,15 @@ export const columns: ColumnDef<CenterChild>[] = [
   },
   {
     id: "posCount",
-    header: "POS activos",
+    header: "POSs activos",
     cell: ({ row }) => row.original.pos.length,
   },
-  {
+/*   {
     id: "acciones",
     header: "",
     cell: ({ row }) => {
       const center = row.original as Center;
       return <EditCenterModal center={center} />;
     },
-  },
+  }, */
 ];

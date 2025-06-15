@@ -63,7 +63,7 @@ export default function CenterDetailPage({
           />
           <CenterInfo center={center} onEdit={openEditModal} />
           <div className="space-y-4 bg-background rounded-lg p-4 border">
-            <h3 className="text-xl font-semibold">POS asignados</h3>
+            <h3 className="text-xl font-semibold">POSs asignados</h3>
             <PosTable
               data={center.pos.map(
                 (p) => ({ ...p, center: center } as PosWithCenter)

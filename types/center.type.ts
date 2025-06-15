@@ -1,6 +1,6 @@
 import { Center, POS } from "@prisma/client";
 export type CenterWithPos = Center & {
-  pos: POS[];
+  poss: POS[];
 };
 
 export type CenterWithChildren = Center & {
@@ -9,7 +9,7 @@ export type CenterWithChildren = Center & {
 
 export type CenterWithParentAndPos = Center & {
   parentCenter: Pick<Center, "name"> | null;
-  pos: Pick<POS, "id">[];
+  poss: Pick<POS, "id">[];
 };
 
 export type CenterWithActiveChildren = Center & {

@@ -57,8 +57,8 @@ export function NewPosForm() {
       .then(setCenters);
   }, []);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await createPos(values);
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+      await createPos(values);
     router.refresh();
   };
 

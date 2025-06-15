@@ -11,9 +11,7 @@ export default function LayoutAuth({
         <div className="flex justify-center">
           <Logo />
         </div>
-        <h1 className="text-2xl font-semibold text-foreground">
-          Welcome to VendCore!
-        </h1>
+        <h1 className="text-2xl font-semibold text-foreground">Welcome to VendCore!</h1>
         {children}
       </div>
     </div>

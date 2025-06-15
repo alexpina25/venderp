@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const posList = await db.pOS.findMany({
+    const posList = await db.pos.findMany({
       where: {
         active: true,
       },

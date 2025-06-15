@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
     }
     where = { posId: m.posId };
   } else if (posId) {
-    where = { posId };
+    where = { posId: posId };
   }
 
   const sales = await db.sale.findMany({

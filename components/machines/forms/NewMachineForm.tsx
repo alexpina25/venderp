@@ -69,14 +69,14 @@ export function NewMachineForm() {
       .then(setCenters);
   }, []);
 
-  // Cargar POS
+  // Cargar POSs
   useEffect(() => {
-    fetch("/api/pos")
+    fetch("/api/poss")
       .then((res) => res.json())
       .then(setPosList);
   }, []);
 
-  const filteredPos = posList.filter(
+  const filteredPoss = posList.filter(
     (loc) => loc.centerId === selectedCenterId
   );
 
@@ -178,7 +178,7 @@ export function NewMachineForm() {
               <SelectValue placeholder="Selecciona POS" />
             </SelectTrigger>
             <SelectContent>
-              {filteredPos.map((pos) => (
+              {filteredPoss.map((pos) => (
                 <SelectItem key={pos.id} value={pos.id}>
                   {pos.name}
                 </SelectItem>

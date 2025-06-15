@@ -66,7 +66,7 @@ async function main() {
         });
 
         for (let p = 0; p < 2; p++) {
-          const pos = await prisma.pOS.create({
+          const pos = await prisma.pos.create({
             data: {
               code: `T${t + 1}C${c + 1}S${s + 1}P${p + 1}`,
               name: `POS ${p + 1}`,

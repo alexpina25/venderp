@@ -40,17 +40,17 @@ export function EditPosForm({ pos, onSuccess }: Props) {
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: pos.id,
-      name: pos.name,
-      address: pos.address,
-      city: pos.city,
-      postalCode: pos.postalCode ?? "",
-      province: pos.province ?? "",
-      country: pos.country ?? "España",
-      contactName: pos.contactName ?? "",
-      contactPhone: pos.contactPhone ?? "",
-      contactEmail: pos.contactEmail ?? "",
-      notes: pos.notes ?? "",
+        id: pos.id,
+        name: pos.name,
+        address: pos.address,
+        city: pos.city,
+        postalCode: pos.postalCode ?? "",
+        province: pos.province ?? "",
+        country: pos.country ?? "España",
+        contactName: pos.contactName ?? "",
+        contactPhone: pos.contactPhone ?? "",
+        contactEmail: pos.contactEmail ?? "",
+        notes: pos.notes ?? "",
     },
   });
 

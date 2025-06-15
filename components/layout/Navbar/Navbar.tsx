@@ -7,6 +7,7 @@ import { ToggleTheme } from "@/components/ui/ToggleTheme";
 import { SidebarRoutes } from "../SidebarRoutes";
 import { Button } from "@/components/ui/button";
 
+
 export function Navbar() {
   const { data: session } = useSession();
   return (
@@ -33,9 +34,7 @@ export function Navbar() {
       <div className="flex gap-x-2 items-center">
         <ToggleTheme />
         {session?.user ? (
-          <Button variant="ghost" onClick={() => signOut()}>
-            Sign out
-          </Button>
+          <Button variant="ghost" onClick={() => signOut()}>Sign out</Button>
         ) : null}
       </div>
     </nav>

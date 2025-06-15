@@ -15,10 +15,10 @@ export function NewPosModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" size="sm" className="gap-1">
-          <Plus className="w-4 h-4" />
-          Nuevo POS
-        </Button>
+          <Button variant="default" size="sm" className="gap-1">
+            <Plus className="w-4 h-4" />
+            Nuevo POS
+          </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-xl">
@@ -26,7 +26,7 @@ export function NewPosModal() {
           <DialogTitle>Registrar nuevo POS</DialogTitle>
         </DialogHeader>
 
-        <NewPosForm />
+          <NewPosForm />
       </DialogContent>
     </Dialog>
   );
