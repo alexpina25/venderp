@@ -1,0 +1,8 @@
+{
+  "SignIn": {
+    "title": "Iniciar sesión",
+    "email": "Email",
+    "password": "Contraseña",
+    "submit": "Entrar"
+  }
+}

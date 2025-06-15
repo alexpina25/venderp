@@ -61,12 +61,12 @@ export const columns: ColumnDef<CenterChild>[] = [
     header: "PDVs activos",
     cell: ({ row }) => row.original.pos.length,
   },
-  {
+/*   {
     id: "acciones",
     header: "",
     cell: ({ row }) => {
       const center = row.original as Center;
       return <EditCenterModal center={center} />;
     },
-  },
+  }, */
 ];
