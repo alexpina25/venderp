@@ -5,7 +5,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const pdv = await db.pDV.findUnique({
+    const pos = await db.pos.findUnique({
       where: { id: params.id },
       include: {
         center: true,
@@ -21,18 +21,18 @@ export async function GET(
       },
     });
 
-    if (!pdv) {
-      return new Response("PDV not found", { status: 404 });
+    if (!pos) {
+      return new Response("POS not found", { status: 404 });
     }
 
-    return new Response(JSON.stringify(pdv), {
+    return new Response(JSON.stringify(pos), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
       },
     });
   } catch (error) {
-    console.error("Error fetching PDV:", error);
-    return new Response("Error fetching PDV", { status: 500 });
+    console.error("Error fetching POS:", error);
+    return new Response("Error fetching POS", { status: 500 });
   }
 }

@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PDV } from "@prisma/client";
-import { updatePdv } from "@/app/actions/updatePdv"; // Asegúrate de tener esta acción creada
+import { POS } from "@prisma/client";
+import { updatePos } from "@/app/actions/updatePos"; // Asegúrate de tener esta acción creada
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,11 +26,11 @@ const formSchema = z.object({
 });
 
 interface Props {
-  pdv: PDV;
+  pos: POS;
   onSuccess?: () => void;
 }
 
-export function EditPdvForm({ pdv, onSuccess }: Props) {
+export function EditPosForm({ pos, onSuccess }: Props) {
   const router = useRouter();
 
   const {
@@ -40,22 +40,22 @@ export function EditPdvForm({ pdv, onSuccess }: Props) {
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        id: pdv.id,
-        name: pdv.name,
-        address: pdv.address,
-        city: pdv.city,
-        postalCode: pdv.postalCode ?? "",
-        province: pdv.province ?? "",
-        country: pdv.country ?? "España",
-        contactName: pdv.contactName ?? "",
-        contactPhone: pdv.contactPhone ?? "",
-        contactEmail: pdv.contactEmail ?? "",
-        notes: pdv.notes ?? "",
+        id: pos.id,
+        name: pos.name,
+        address: pos.address,
+        city: pos.city,
+        postalCode: pos.postalCode ?? "",
+        province: pos.province ?? "",
+        country: pos.country ?? "España",
+        contactName: pos.contactName ?? "",
+        contactPhone: pos.contactPhone ?? "",
+        contactEmail: pos.contactEmail ?? "",
+        notes: pos.notes ?? "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await updatePdv(values);
+    await updatePos(values);
     router.refresh();
     onSuccess?.();
   };

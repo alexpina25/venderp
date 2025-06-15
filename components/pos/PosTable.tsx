@@ -1,14 +1,14 @@
 "use client";
 
-import { columns } from "./pdvColumns";
+import { columns } from "./posColumns";
 import { DataTable } from "@/components/ui/data-table/DataTable";
-import { PdvWithCenter } from "@/types";
+import { PosWithCenter } from "@/types";
 
-interface PdvTableProps {
-    data: PdvWithCenter[];
+interface PosTableProps {
+    data: PosWithCenter[];
 }
 
-export function PdvTable({ data }: PdvTableProps) {
+export function PosTable({ data }: PosTableProps) {
   return (
     <DataTable
       columns={columns}

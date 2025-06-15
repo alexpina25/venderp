@@ -1,81 +1,81 @@
 "use client";
 import { useState, useEffect } from "react";
-import { PdvInfo } from "@/components/pdv/detail/PdvInfo";
+import { PosInfo } from "@/components/pos/detail/PosInfo";
 import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
-import { EditPdvModal } from "@/components/pdv/forms/EditPdvModal";
-import { PdvWithMachineDetails } from "@/types";
+import { EditPosModal } from "@/components/pos/forms/EditPosModal";
+import { PosWithMachineDetails } from "@/types";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 
-async function fetchPdvData(id: string): Promise<PdvWithMachineDetails> {
-  const res = await fetch(`/api/pdvs/${id}`);
+async function fetchPosData(id: string): Promise<PosWithMachineDetails> {
+  const res = await fetch(`/api/poss/${id}`);
   if (!res.ok) {
-    throw new Error("Error fetching PDV data");
+    throw new Error("Error fetching POS data");
   }
   return res.json();
 }
 
-export default function PdvDetailPage({ params }: { params: { id: string } }) {
-  const [pdv, setPdv] = useState<PdvWithMachineDetails | null>(null);
+export default function PosDetailPage({ params }: { params: { id: string } }) {
+  const [pos, setPos] = useState<PosWithMachineDetails | null>(null);
   const [isMachineModalOpen, setIsMachineModalOpen] = useState(false);
-  const [isEditPdvOpen, setIsEditPdvOpen] = useState(false);
+  const [isEditPosOpen, setIsEditPosOpen] = useState(false);
 
   useEffect(() => {
-    fetchPdvData(params.id)
-      .then(setPdv)
+    fetchPosData(params.id)
+      .then(setPos)
       .catch((err) => console.error(err));
   }, [params.id]);
 
   const openEditModal = () => setIsMachineModalOpen(true);
   const closeModal = () => setIsMachineModalOpen(false);
-  const openPdvEditModal = () => setIsEditPdvOpen(true);
-  const closePdvEditModal = () => setIsEditPdvOpen(false);
+  const openPosEditModal = () => setIsEditPosOpen(true);
+  const closePosEditModal = () => setIsEditPosOpen(false);
 
   const refreshData = async () => {
-    const updated = await fetchPdvData(params.id);
-    setPdv(updated);
+    const updated = await fetchPosData(params.id);
+    setPos(updated);
   };
 
   return (
     <div className="p-6 space-y-8">
       <div className="flex items-center gap-2">
         <Button asChild variant="default" size="icon">
-          <Link href="/pdvs">
+          <Link href="/poss">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h2 className="text-2xl font-bold">Detalle de PDV</h2>
+        <h2 className="text-2xl font-bold">Detalle de POS</h2>
       </div>
-      {pdv && (
+      {pos && (
         <>
-          <EditPdvModal
-            pdv={pdv}
-            open={isEditPdvOpen}
+          <EditPosModal
+            pos={pos}
+            open={isEditPosOpen}
             onClose={async () => {
-              closePdvEditModal();
+              closePosEditModal();
               await refreshData();
             }}
             onSuccess={async () => {
-              closePdvEditModal();
+              closePosEditModal();
               await refreshData();
             }}
           />
-          <PdvInfo pdv={pdv} onEdit={openPdvEditModal} />
-          {pdv.machine && (
+          <PosInfo pos={pos} onEdit={openPosEditModal} />
+          {pos.machine && (
             <>
               <MachineDetailsTabs
                 machine={{
-                  ...pdv.machine,
-                  pos: pdv,
-                  products: pdv.machine.products ?? [],
+                  ...pos.machine,
+                  pos: pos,
+                  products: pos.machine.products ?? [],
                 }}
               />
               <EditMachineModal
                 machine={{
-                  ...pdv.machine,
-                  pos: pdv ? { name: pdv.name } : null,
+                  ...pos.machine,
+                  pos: pos ? { name: pos.name } : null,
                 }}
                 open={isMachineModalOpen}
                 onClose={async () => {

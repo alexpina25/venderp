@@ -7,15 +7,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { EditPdvForm } from "./EditPdvForm";
-import { PDV, Center } from "@prisma/client";
+import { EditPosForm } from "./EditPosForm";
+import { POS, Center } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 
 // Extendemos si necesitas más relaciones (por ejemplo, client)
-interface EditPdvModalProps {
-  pdv: PDV & {
+interface EditPosModalProps {
+  pos: POS & {
     center: Center;
   };
   open?: boolean;
@@ -23,12 +23,12 @@ interface EditPdvModalProps {
   onSuccess?: () => void;
 }
 
-export function EditPdvModal({
-  pdv,
+export function EditPosModal({
+  pos,
   open,
   onClose,
   onSuccess,
-}: EditPdvModalProps) {
+}: EditPosModalProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = open !== undefined && onClose !== undefined;
   const dialogOpen = isControlled ? open : internalOpen;
@@ -63,7 +63,7 @@ export function EditPdvModal({
           <DialogTitle>Editar ubicación</DialogTitle>
         </DialogHeader>
 
-          <EditPdvForm pdv={pdv} onSuccess={handleSuccess} />
+          <EditPosForm pos={pos} onSuccess={handleSuccess} />
       </DialogContent>
     </Dialog>
   );

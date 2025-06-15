@@ -1,15 +1,15 @@
-import { Center, PDV } from "@prisma/client";
-export type CenterWithPdv = Center & {
-  pdvs: PDV[];
+import { Center, POS } from "@prisma/client";
+export type CenterWithPos = Center & {
+  poss: POS[];
 };
 
 export type CenterWithChildren = Center & {
   subCenters: Center[];
 };
 
-export type CenterWithParentAndPdv = Center & {
+export type CenterWithParentAndPos = Center & {
   parentCenter: Pick<Center, "name"> | null;
-  pdvs: Pick<PDV, "id">[];
+  poss: Pick<POS, "id">[];
 };
 
 export type CenterWithActiveChildren = Center & {

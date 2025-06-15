@@ -182,11 +182,11 @@ class VendingSim:
 
     def enviar_venta_json(self, venta):
         if not self.selected_master or not self.selected_master.get("pos"):
-            self.registrar_evento("⚠️ Master sin PDV asociado")
+            self.registrar_evento("⚠️ Master sin POS asociado")
             return
 
         payload = {
-            "pdvCode": self.selected_master["pos"]["code"],
+            "posCode": self.selected_master["pos"]["code"],
             "line": venta["codigo"],
             "method": "CARD" if venta["metodo"] == "cashless" else "COIN",
             "price": venta["precio"],

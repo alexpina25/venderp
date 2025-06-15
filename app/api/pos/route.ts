@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const pdvList = await db.pDV.findMany({
+    const posList = await db.pos.findMany({
       where: {
         active: true,
       },
@@ -16,9 +16,9 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(pdvList);
+    return NextResponse.json(posList);
   } catch (error) {
-    console.error("Error fetching PDV:", error);
+    console.error("Error fetching POS:", error);
     return new NextResponse("Error interno del servidor", { status: 500 });
   }
 }

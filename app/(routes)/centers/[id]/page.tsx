@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CenterWithPdv, PdvWithCenter } from "@/types";
+import { CenterWithPos, PosWithCenter } from "@/types";
 import { CenterInfo } from "@/components/centers/detail/CenterInfo";
 import { EditCenterModal } from "@/components/centers/forms/EditCenterModal";
-import { PdvTable } from "@/components/pdv/PdvTable";
+import { PosTable } from "@/components/pos/PosTable";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-async function fetchCenterData(id: string): Promise<CenterWithPdv> {
+async function fetchCenterData(id: string): Promise<CenterWithPos> {
   const res = await fetch(`/api/centers/${id}`);
   if (!res.ok) {
     throw new Error("Error fetching center data");
@@ -22,7 +22,7 @@ export default function CenterDetailPage({
 }: {
   params: { id: string };
 }) {
-  const [center, setCenter] = useState<CenterWithPdv | null>(null);
+  const [center, setCenter] = useState<CenterWithPos | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -63,10 +63,10 @@ export default function CenterDetailPage({
           />
           <CenterInfo center={center} onEdit={openEditModal} />
           <div className="space-y-4 bg-background rounded-lg p-4 border">
-            <h3 className="text-xl font-semibold">PDVs asignados</h3>
-            <PdvTable
-              data={center.pdvs.map(
-                (p) => ({ ...p, center: center } as PdvWithCenter)
+            <h3 className="text-xl font-semibold">POSs asignados</h3>
+            <PosTable
+              data={center.poss.map(
+                (p) => ({ ...p, center: center } as PosWithCenter)
               )}
             />
           </div>

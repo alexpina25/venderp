@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 
 import { Center } from "@prisma/client";
-import { createPdv } from "@/app/actions/createPdv"; // 🛠️ Asegúrate de tener este action
+import { createPos } from "@/app/actions/createPos"; // 🛠️ Asegúrate de tener este action
 
 const formSchema = z.object({
   code: z.string().min(2),
@@ -35,7 +35,7 @@ const formSchema = z.object({
   centerId: z.string().min(1, "Selecciona un centro"),
 });
 
-export function NewPdvForm() {
+export function NewPosForm() {
   const router = useRouter();
   const [centers, setCenters] = useState<Center[]>([]);
 
@@ -58,7 +58,7 @@ export function NewPdvForm() {
   }, []);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-      await createPdv(values);
+      await createPos(values);
     router.refresh();
   };
 
