@@ -8,7 +8,9 @@ export async function GET(
     const center = await db.center.findUnique({
       where: { id: params.id },
       include: {
-        pos: true,
+        pos: {
+          include: { Sale: { orderBy: { timestamp: "desc" }, take: 1 } },
+        },
         subCenters: {
           include: {
             parentCenter: { select: { name: true } },
@@ -22,7 +24,12 @@ export async function GET(
       return new Response("Center not found", { status: 404 });
     }
 
-    return new Response(JSON.stringify(center), {
+    const transformed = {
+      ...center,
+      pos: center.pos.map((p) => ({ ...p, lastSale: p.Sale[0] || null })),
+    };
+
+    return new Response(JSON.stringify(transformed), {
       status: 200,
       headers: {
         "Content-Type": "application/json",

@@ -112,6 +112,7 @@ model POS {
   machine      Machine?
   users        POSUser[]
   master       Master?
+  coverage     Int       @default(0)
   active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt

@@ -1,15 +1,15 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { POS } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditPosModal } from "./forms/EditPosModal";
-import { PosWithCenter } from "@/types";
+import { CoverageIndicator } from "./CoverageIndicator";
+import { PosWithLastSale } from "@/types";
 
-export const columns: ColumnDef<PosWithCenter>[] = [
+export const columns: ColumnDef<PosWithLastSale>[] = [
   {
     accessorKey: "name",
     header: "Nombre",
@@ -44,6 +44,13 @@ export const columns: ColumnDef<PosWithCenter>[] = [
     header: "Teléfono",
   },
   {
+    accessorKey: "coverage",
+    header: "Cobertura",
+    cell: ({ row }) => (
+      <CoverageIndicator value={row.getValue("coverage") as number} />
+    ),
+  },
+  {
     accessorKey: "active",
     header: "Estado",
     cell: ({ row }) => {
@@ -52,6 +59,25 @@ export const columns: ColumnDef<PosWithCenter>[] = [
         <Badge variant={isActive ? "default" : "destructive"}>
           {isActive ? "Activa" : "Inactiva"}
         </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "lastSale",
+    header: "Última venta",
+    cell: ({ row }) => {
+      const lastSale = row.original.lastSale;
+      if (!lastSale) return <span className="italic text-muted-foreground">–</span>;
+      const date = new Date(lastSale.timestamp);
+      const diff = Date.now() - date.getTime();
+      const hour = 60 * 60 * 1000;
+      const day = 24 * hour;
+      const color = diff <= hour ? "bg-green-500" : diff <= day ? "bg-yellow-500" : "bg-red-500";
+      return (
+        <div className="flex items-center gap-2">
+          {date.toLocaleString("es-ES")}
+          <span className={`w-2 h-2 rounded-full ${color}`}></span>
+        </div>
       );
     },
   },
