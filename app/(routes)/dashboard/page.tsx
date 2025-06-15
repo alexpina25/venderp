@@ -1,6 +1,6 @@
 // app/dashboard/page.tsx
 import { StatCard } from "@/components/dashboard/StatCard";
-import { RecentPoss } from "@/components/dashboard/RecentPoss";
+import { RecentPos } from "@/components/dashboard/RecentPos/LastCenters";
 import { RefillStats } from "@/components/dashboard/RefillStats";
 import { TotalMachines } from "@/components/dashboard/TotalMachinesCard";
 import { MachineConnections } from "@/components/dashboard/MachineConnections";
