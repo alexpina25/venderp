@@ -4,5 +4,12 @@
     "email": "Email",
     "password": "Password",
     "submit": "Enter"
+  },
+  "AuthLayout": {
+    "welcome": "Welcome to VendCore!"
+  },
+  "Navbar": {
+    "searchPlaceholder": "Search...",
+    "signOut": "Sign out"
   }
 }
