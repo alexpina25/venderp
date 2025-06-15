@@ -3,7 +3,7 @@ import { PosTable } from "@/components/pos/PosTable";
 import { NewPosModal } from "@/components/pos/forms/NewPosModal";
 
 export default async function PosPage() {
-  const posList = await db.pos.findMany({
+  const posList = await db.pOS.findMany({
     orderBy: { createdAt: "desc" },
     include: {
       center: true,
