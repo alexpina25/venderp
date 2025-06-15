@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 
 async function fetchPosData(id: string): Promise<PosWithMachineDetails> {
-  const res = await fetch(`/api/poss/${id}`);
+  const res = await fetch(`/api/pos/${id}`);
   if (!res.ok) {
     throw new Error("Error fetching POS data");
   }
@@ -42,7 +42,7 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
     <div className="p-6 space-y-8">
       <div className="flex items-center gap-2">
         <Button asChild variant="default" size="icon">
-          <Link href="/poss">
+          <Link href="/pos">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>

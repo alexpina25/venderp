@@ -9,7 +9,7 @@ export type CenterWithChildren = Center & {
 
 export type CenterWithParentAndPos = Center & {
   parentCenter: Pick<Center, "name"> | null;
-  poss: Pick<POS, "id">[];
+  pos: Pick<POS, "id">[];
 };
 
 export type CenterWithActiveChildren = Center & {

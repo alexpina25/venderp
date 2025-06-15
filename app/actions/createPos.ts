@@ -20,7 +20,7 @@ interface CreatePosInput {
 }
 
 export async function createPos(data: CreatePosInput) {
-  await db.pos.create({
+  await db.pOS.create({
     data: {
       code: data.code,
       name: data.name,
@@ -37,5 +37,5 @@ export async function createPos(data: CreatePosInput) {
     },
   });
 
-  revalidatePath("/poss");
+  revalidatePath("/pos");
 }
