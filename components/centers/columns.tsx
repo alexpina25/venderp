@@ -57,8 +57,8 @@ export const columns: ColumnDef<CenterChild>[] = [
     },
   },
   {
-    id: "pdvCount",
-    header: "PDVs activos",
+    id: "posCount",
+    header: "POSs activos",
     cell: ({ row }) => row.original.pos.length,
   },
 /*   {

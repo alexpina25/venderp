@@ -1,6 +1,6 @@
-import { Sale, Product, PDV } from "@prisma/client";
+import { Sale, Product, POS } from "@prisma/client";
 
 export type SaleWithDetails = Sale & {
-  pos: PDV;
+  pos: POS;
   product: Product;
 };

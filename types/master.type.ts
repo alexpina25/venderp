@@ -1,6 +1,6 @@
-import { Master, PDV, Tenant } from "@prisma/client";
+import { Master, POS, Tenant } from "@prisma/client";
 
 export type MasterWithRelations = Master & {
   tenant: Tenant;
-  pos: PDV | null;
+  pos: POS | null;
 };

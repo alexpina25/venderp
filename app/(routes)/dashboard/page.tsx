@@ -1,6 +1,6 @@
 // app/dashboard/page.tsx
 import { StatCard } from "@/components/dashboard/StatCard";
-import { RecentPdvs } from "@/components/dashboard/RecentPdvs";
+import { RecentPoss } from "@/components/dashboard/RecentPoss";
 import { RefillStats } from "@/components/dashboard/RefillStats";
 import { TotalMachines } from "@/components/dashboard/TotalMachinesCard";
 import { MachineConnections } from "@/components/dashboard/MachineConnections";
@@ -68,7 +68,7 @@ export default async function DashboardPage() {
 
       {/* Actividad reciente y estadísticas */}
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <RecentPdvs />
+        <RecentPoss />
         <RefillStats />
       </section>
 

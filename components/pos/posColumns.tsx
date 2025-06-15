@@ -1,24 +1,24 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { PDV } from "@prisma/client";
+import { POS } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EditPdvModal } from "./forms/EditPdvModal";
-import { PdvWithCenter } from "@/types";
+import { EditPosModal } from "./forms/EditPosModal";
+import { PosWithCenter } from "@/types";
 
-export const columns: ColumnDef<PdvWithCenter>[] = [
+export const columns: ColumnDef<PosWithCenter>[] = [
   {
     accessorKey: "name",
     header: "Nombre",
     cell: ({ row }) => {
-        const pdv = row.original;
+        const pos = row.original;
       return (
         <div className="flex items-center gap-2 justify-between">
           <span className="font-medium">{row.getValue("name")}</span>
-          <Link href={`/pdvs/${pdv.id}`}>
+          <Link href={`/poss/${pos.id}`}>
             <Button variant="ghost" size="icon">
               <Eye className="w-4 h-4" />
             </Button>
@@ -67,8 +67,8 @@ export const columns: ColumnDef<PdvWithCenter>[] = [
     id: "acciones",
     header: "",
     cell: ({ row }) => {
-        const pdv = row.original;
-        return <EditPdvModal pdv={pdv} />;
+        const pos = row.original;
+        return <EditPosModal pos={pos} />;
     },
   },
 ];

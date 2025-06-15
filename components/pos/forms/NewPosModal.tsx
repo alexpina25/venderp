@@ -9,24 +9,24 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { NewPdvForm } from "./NewPdvForm";
+import { NewPosForm } from "./NewPosForm";
 
-export function NewPdvModal() {
+export function NewPosModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
           <Button variant="default" size="sm" className="gap-1">
             <Plus className="w-4 h-4" />
-            Nuevo PDV
+            Nuevo POS
           </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Registrar nuevo PDV</DialogTitle>
+          <DialogTitle>Registrar nuevo POS</DialogTitle>
         </DialogHeader>
 
-          <NewPdvForm />
+          <NewPosForm />
       </DialogContent>
     </Dialog>
   );

@@ -30,7 +30,7 @@ const formSchema = z.object({
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  pdvId: z.string(),
+  posId: z.string(),
   installedAt: z.string().optional(),
 });
 
@@ -58,7 +58,7 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
       serialNumber: machine.serialNumber ?? "",
       type: machine.type,
       status: machine.status,
-      pdvId: machine.posId ?? "",
+      posId: machine.posId ?? "",
       installedAt: machine.installedAt
         ? new Date(machine.installedAt).toISOString().split("T")[0]
         : "",
@@ -149,13 +149,13 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
           </div>
 
           <div>
-          <Label htmlFor="pdvId">PDV / Centro</Label>
+          <Label htmlFor="posId">POS / Centro</Label>
           <Select
               defaultValue={machine.posId ?? undefined}
-              onValueChange={(v) => setValue("pdvId", v)}
+              onValueChange={(v) => setValue("posId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona PDV" />
+                <SelectValue placeholder="Selecciona POS" />
               </SelectTrigger>
               <SelectContent>
                 {centers.map((center) => (
