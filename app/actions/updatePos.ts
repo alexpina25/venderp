@@ -15,6 +15,7 @@ const schema = z.object({
   contactPhone: z.string().optional(),
   contactEmail: z.string().email().optional(),
   notes: z.string().optional(),
+  coverage: z.coerce.number().min(0).max(31).optional(),
 });
 
 export async function updatePos(input: z.infer<typeof schema>) {
@@ -33,6 +34,7 @@ export async function updatePos(input: z.infer<typeof schema>) {
       contactPhone: values.contactPhone,
       contactEmail: values.contactEmail,
       notes: values.notes,
+      coverage: values.coverage ?? 0,
     },
   });
 }

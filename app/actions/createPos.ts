@@ -34,6 +34,7 @@ export async function createPos(data: CreatePosInput) {
       contactEmail: data.contactEmail,
       notes: data.notes,
       centerId: data.centerId,
+      coverage: 0,
     },
   });
 

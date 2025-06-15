@@ -2,10 +2,10 @@
 
 import { columns } from "./posColumns";
 import { DataTable } from "@/components/ui/data-table/DataTable";
-import { PosWithCenter } from "@/types";
+import { PosWithLastSale } from "@/types";
 
 interface PosTableProps {
-    data: PosWithCenter[];
+  data: PosWithLastSale[];
 }
 
 export function PosTable({ data }: PosTableProps) {

@@ -5,7 +5,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const pos = await db.pOS.findUnique({
+    const pos = await db.pos.findUnique({
       where: { id: params.id },
       include: {
         center: true,
@@ -18,6 +18,7 @@ export async function GET(
             },
           },
         },
+        Sale: { orderBy: { timestamp: "desc" }, take: 1 },
       },
     });
 
@@ -25,7 +26,12 @@ export async function GET(
       return new Response("POS not found", { status: 404 });
     }
 
-    return new Response(JSON.stringify(pos), {
+    const result = {
+      ...pos,
+      lastSale: pos?.Sale?.[0] || null,
+    };
+
+    return new Response(JSON.stringify(result), {
       status: 200,
       headers: {
         "Content-Type": "application/json",

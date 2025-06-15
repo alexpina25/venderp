@@ -5,6 +5,7 @@ import {
   Product,
   Center,
   Master,
+  Sale,
 } from "@prisma/client";
 
 export type PosWithMachines = POS & {
@@ -22,4 +23,9 @@ export type PosWithMachineDetails = POS & {
 
 export type PosWithCenter = POS & {
   center: Center;
+};
+
+export type PosWithLastSale = POS & {
+  center: Center;
+  lastSale: Sale | null;
 };

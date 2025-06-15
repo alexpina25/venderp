@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   CenterWithPosAndChildren,
   CenterWithParentAndPos,
-  PosWithCenter,
+  PosWithLastSale,
 } from "@/types";
 import { CenterInfo } from "@/components/centers/detail/CenterInfo";
 import { EditCenterModal } from "@/components/centers/forms/EditCenterModal";
@@ -80,7 +80,7 @@ export default function CenterDetailPage({
                 <h3 className="text-xl font-semibold">POS asignados</h3>
                 <PosTable
                   data={center.pos.map(
-                    (p) => ({ ...p, center: center } as PosWithCenter)
+                    (p) => ({ ...p, center: center, lastSale: p.lastSale } as PosWithLastSale)
                   )}
                 />
               </>
