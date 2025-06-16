@@ -19,7 +19,14 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState, useEffect } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,6 +42,9 @@ export function DataTable<TData, TValue>({
   searchPlaceholder = "Buscar...",
 }: DataTableProps<TData, TValue>) {
   const [filter, setFilter] = useState("");
+    const [pageSize, setPageSize] = useState(10);
+
+  const pageSizeOptions = [10, 20, 50, 100];
 
   const table = useReactTable({
     data,
@@ -50,6 +60,11 @@ export function DataTable<TData, TValue>({
       return String(value).toLowerCase().includes(filterValue.toLowerCase());
     },
   });
+
+    useEffect(() => {
+    table.setPageSize(pageSize);
+  }, [pageSize, table]);
+
 
   const filterColumnId = filterColumn as string;
 
@@ -111,23 +126,36 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Anterior
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Siguiente
-        </Button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <span className="text-sm text-muted-foreground">Total: {data.length}</span>
+        <div className="flex items-center gap-2">
+          <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
+            <SelectTrigger className="h-8 w-[80px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {pageSizeOptions.map((size) => (
+                <SelectItem key={size} value={String(size)}>{size}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Anterior
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Siguiente
+          </Button>
+        </div>
       </div>
     </div>
   );

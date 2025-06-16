@@ -46,9 +46,15 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
   {
     accessorKey: "coverage",
     header: "Cobertura",
-    cell: ({ row }) => (
-      <CoverageIndicator value={row.getValue("coverage") as number} />
-    ),
+    cell: ({ row }) => {
+      const coverage = row.getValue("coverage") as number;
+      return (
+        <div className="flex items-center gap-2">
+          <CoverageIndicator value={coverage} />
+          <span className="text-sm text-muted-foreground">{coverage}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "active",
