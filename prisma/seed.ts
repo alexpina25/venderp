@@ -1,4 +1,9 @@
-import { PrismaClient, ProductCategory } from "@prisma/client";
+import {
+  PrismaClient,
+  ProductCategory,
+  MachineStatus,
+  SaleMethod,
+} from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
@@ -48,6 +53,7 @@ async function main() {
           contactPhone: faker.phone.number(),
           tenantId: tenant.id,
           country: "España",
+          active: faker.datatype.boolean(),
         },
       });
 
@@ -62,17 +68,20 @@ async function main() {
             tenantId: tenant.id,
             parentCenterId: parentCenter.id,
             country: "España",
+            active: faker.datatype.boolean(),
           },
         });
 
         for (let p = 0; p < 2; p++) {
-          const pos = await prisma.pos.create({
+          const pos = await prisma.pOS.create({
             data: {
               code: `T${t + 1}C${c + 1}S${s + 1}P${p + 1}`,
               name: `POS ${p + 1}`,
               address: faker.location.streetAddress(),
               city: faker.location.city(),
               centerId: subCenter.id,
+              coverage: faker.number.int({ min: 0, max: 31 }),
+              active: faker.datatype.boolean(),
             },
           });
 
@@ -92,7 +101,7 @@ async function main() {
               type: "SNACK",
               centerId: subCenter.id,
               posId: pos.id,
-              status: "ACTIVE",
+              status: faker.helpers.arrayElement(Object.values(MachineStatus)),
               installedAt: faker.date.past(),
             },
           });
@@ -118,6 +127,35 @@ async function main() {
               selection: "101",
             },
           });
+
+          for (let v = 0; v < 5; v++) {
+            const method = faker.helpers.arrayElement(
+              Object.values(SaleMethod)
+            );
+            const price = product.price;
+            const inserted =
+              method === SaleMethod.CARD
+                ? price
+                : parseFloat(
+                    (
+                      price +
+                      faker.number.float({ min: 0, max: 2, fractionDigits: 2 })
+                    ).toFixed(2)
+                  );
+            const change = parseFloat((inserted - price).toFixed(2));
+            await prisma.sale.create({
+              data: {
+                posId: pos.id,
+                productId: product.id,
+                machineId: machine.id,
+                method,
+                price,
+                inserted,
+                change,
+                timestamp: faker.date.recent(),
+              },
+            });
+          }
         }
       }
     }

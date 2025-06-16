@@ -5,7 +5,7 @@ import {
     Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts'
 export type SalesData = {
-    year: string
+    label: string
     coins: number
     cards: number
 }
@@ -48,7 +48,7 @@ export function SalesChart({ data }: SalesChartProps) {
                                 <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <XAxis dataKey="year" />
+                        <XAxis dataKey="label" />
                         <YAxis />
                         <Tooltip />
                         <Area
