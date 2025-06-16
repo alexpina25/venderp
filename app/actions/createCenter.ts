@@ -18,12 +18,23 @@ const schema = z.object({
   notes: z.string().optional(),
 });
 
-export async function createCenter(input: z.infer<typeof schema>) {
+export async function createCenter(input: z.infer<typeof schema> & { tenantId: string }) {
   const data = schema.parse(input);
 
   await db.center.create({
     data: {
-      ...data,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode || null,
+      province: data.province || null,
+      country: data.country || null,
+      contactName: data.contactName,
+      contactPhone: data.contactPhone,
+      contactEmail: data.contactEmail || null,
+      parentCenterId: data.parentCenterId || null,
+      notes: data.notes || null,
+      tenantId: input.tenantId,
     },
   });
 }
