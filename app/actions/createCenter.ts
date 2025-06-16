@@ -3,6 +3,7 @@
 
 import { db } from "@/lib/db";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -18,23 +19,27 @@ const schema = z.object({
   notes: z.string().optional(),
 });
 
-export async function createCenter(input: z.infer<typeof schema> & { tenantId: string }) {
+export async function createCenter(
+  input: z.infer<typeof schema> & { tenantId: string }
+) {
   const data = schema.parse(input);
 
+  const centerData: Prisma.CenterUncheckedCreateInput = {
+    name: data.name,
+    address: data.address,
+    city: data.city,
+    postalCode: data.postalCode ?? null,
+    province: data.province ?? null,
+    country: data.country ?? null,
+    contactName: data.contactName,
+    contactPhone: data.contactPhone,
+    contactEmail: data.contactEmail ?? null,
+    parentCenterId: data.parentCenterId ?? null,
+    notes: data.notes ?? null,
+    tenantId: input.tenantId,
+  };
+
   await db.center.create({
-    data: {
-      name: data.name,
-      address: data.address,
-      city: data.city,
-      postalCode: data.postalCode || null,
-      province: data.province || null,
-      country: data.country || null,
-      contactName: data.contactName,
-      contactPhone: data.contactPhone,
-      contactEmail: data.contactEmail || null,
-      parentCenterId: data.parentCenterId || null,
-      notes: data.notes || null,
-      tenantId: input.tenantId,
-    },
+    data: centerData,
   });
 }
