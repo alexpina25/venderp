@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { createCenter } from "@/app/actions/createCenter";
 import {
   Select,
@@ -37,6 +38,7 @@ const formSchema = z.object({
 export function NewCenterForm() {
   const router = useRouter();
   const [centers, setCenters] = useState<Center[]>([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     fetch("/api/centers?all=true")
@@ -58,7 +60,8 @@ export function NewCenterForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await createCenter(values);
+    if (!session?.user?.tenant?.id) return;
+    await createCenter({ ...values, tenantId: session.user.tenant.id });
     router.refresh(); // recarga los datos en /centers
   };
 
