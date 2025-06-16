@@ -60,8 +60,9 @@ export function NewCenterForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!session?.user?.tenant?.id) return;
-    await createCenter({ ...values, tenantId: session.user.tenant.id });
+    const tenantId = session?.user?.tenant?.id;
+    if (!tenantId) return;
+    await createCenter({ ...values, tenantId });
     router.refresh(); // recarga los datos en /centers
   };
 
