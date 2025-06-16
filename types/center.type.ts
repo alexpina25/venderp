@@ -1,4 +1,4 @@
-import { Center, POS } from "@prisma/client";
+import { Center, POS, Machine, Master, Sale } from "@prisma/client";
 export type CenterWithPos = Center & {
   pos: POS[];
 };
@@ -17,6 +17,10 @@ export type CenterWithActiveChildren = Center & {
 };
 
 export type CenterWithPosAndChildren = Center & {
-  pos: POS[];
+  pos: (POS & {
+    machine: Machine | null;
+    master: Master | null;
+    lastSale: Sale | null;
+  })[];
   subCenters: CenterWithParentAndPos[];
 };

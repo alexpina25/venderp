@@ -80,7 +80,12 @@ export default function CenterDetailPage({
                 <h3 className="text-xl font-semibold">POS asignados</h3>
                 <PosTable
                   data={center.pos.map(
-                    (p) => ({ ...p, center: center, lastSale: p.lastSale } as PosWithLastSale)
+                    (p) =>
+                      ({
+                        ...p,
+                        center: center,
+                        lastSale: p.lastSale,
+                      } as PosWithLastSale)
                   )}
                 />
               </>

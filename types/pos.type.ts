@@ -27,7 +27,7 @@ export type PosWithCenter = POS & {
 
 export type PosWithLastSale = POS & {
   center: Center;
-    machine: Machine | null;
+  machine: Machine | null;
   master: Master | null;
   lastSale: Sale | null;
 };
