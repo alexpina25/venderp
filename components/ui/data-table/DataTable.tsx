@@ -126,9 +126,18 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <span className="text-sm text-muted-foreground">Total: {data.length}</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-2">
+        <span className="text-muted-foreground mr-6">Total: {data.length}</span>
         <div className="flex items-center gap-2">
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Anterior
+          </Button>
           <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
             <SelectTrigger className="h-8 w-[80px]">
               <SelectValue />
@@ -139,14 +148,6 @@ export function DataTable<TData, TValue>({
               ))}
             </SelectContent>
           </Select>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Anterior
-          </Button>
           <Button
             variant="outline"
             size="sm"

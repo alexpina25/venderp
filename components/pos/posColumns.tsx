@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EditPosModal } from "./forms/EditPosModal";
 import { CoverageIndicator } from "./CoverageIndicator";
 import { PosWithLastSale } from "@/types";
 
@@ -14,7 +13,7 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
     accessorKey: "name",
     header: "Nombre",
     cell: ({ row }) => {
-        const pos = row.original;
+      const pos = row.original;
       return (
         <div className="flex items-center gap-2 justify-between">
           <span className="font-medium">{row.getValue("name")}</span>
@@ -28,20 +27,28 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
     },
   },
   {
-    accessorKey: "city",
-    header: "Ciudad",
+    accessorKey: "code",
+    header: "Código",
   },
   {
-    accessorKey: "address",
-    header: "Dirección",
+    accessorKey: "centerId",
+    header: "Center ID",
   },
   {
-    accessorKey: "contactName",
-    header: "Contacto",
+    id: "centerName",
+    header: "Centro",
+    cell: ({ row }) => row.original.center.name,
   },
   {
-    accessorKey: "contactPhone",
-    header: "Teléfono",
+    id: "machineId",
+    header: "Máquina",
+    cell: ({ row }) => row.original.machine ? row.original.machine.id : "-",
+  },
+  {
+    id: "masterSerial",
+    header: "Master",
+    cell: ({ row }) =>
+      row.original.master ? row.original.master.serialNumber : "-",
   },
   {
     accessorKey: "coverage",
@@ -87,14 +94,14 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
       );
     },
   },
-  {
+/*   {
     accessorKey: "createdAt",
     header: "Creado el",
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       return date.toLocaleDateString("es-ES");
     },
-  },
+  }, */
 /*   {
     id: "acciones",
     header: "",

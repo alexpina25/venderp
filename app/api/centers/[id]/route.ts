@@ -9,7 +9,11 @@ export async function GET(
       where: { id: params.id },
       include: {
         pos: {
-          include: { Sale: { orderBy: { timestamp: "desc" }, take: 1 } },
+          include: {
+            Sale: { orderBy: { timestamp: "desc" }, take: 1 },
+            machine: true,
+            master: true,
+          },
         },
         subCenters: {
           include: {

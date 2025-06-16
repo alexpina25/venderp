@@ -7,6 +7,8 @@ export default async function PosPage() {
     orderBy: { createdAt: "desc" },
     include: {
       center: true,
+            machine: true,
+      master: true,
       Sale: { orderBy: { timestamp: "desc" }, take: 1 },
     },
   });
