@@ -60,7 +60,7 @@ async function main() {
       for (let s = 0; s < 2; s++) {
         const subCenter = await prisma.center.create({
           data: {
-            name: `SubCentro ${s + 1}`,
+            name: `Centro ${s + 1}`,
             address: faker.location.streetAddress(),
             city: faker.location.city(),
             contactName: faker.person.fullName(),
@@ -76,7 +76,7 @@ async function main() {
           const pos = await prisma.pOS.create({
             data: {
               code: `T${t + 1}C${c + 1}S${s + 1}P${p + 1}`,
-              name: `POS ${p + 1}`,
+              name: `Punto de venta ${p + 1}`,
               address: faker.location.streetAddress(),
               city: faker.location.city(),
               centerId: subCenter.id,
@@ -109,7 +109,11 @@ async function main() {
           const product = await prisma.product.create({
             data: {
               name: faker.commerce.productName(),
-              price: parseFloat(faker.commerce.price()),
+              price: parseFloat(
+                faker.number
+                  .float({ min: 1, max: 3, fractionDigits: 2 })
+                  .toFixed(2)
+              ),
               category: ProductCategory.SNACK,
               unit: "unit",
             },
