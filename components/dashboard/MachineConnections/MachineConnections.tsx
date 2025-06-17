@@ -2,10 +2,15 @@ import { CustomIcon } from "@/components/ui/CustomIcon"
 import { List } from "lucide-react"
 import { MachineTable } from "@/components/machines/MachineTable"
 import { db } from "@/lib/db"
+import { getServerAuthSession } from "@/lib/auth"
 
 
 export async function MachineConnections() {
+    const session = await getServerAuthSession()
+    const tenantId = session?.user?.tenant?.id
+
     const machines = await db.machine.findMany({
+        where: { center: { tenantId } },
         include: { pos: { select: { name: true } } },
         orderBy: { createdAt: "desc" },
         take: 5,

@@ -1,12 +1,19 @@
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 import { CenterTable } from "@/components/centers/CenterTable";
 import { ParentCenterTable } from "@/components/centers/ParentCenterTable";
 import { NewCenterModal } from "@/components/centers/forms/NewCenterModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function CentersPage() {
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
+
   const centers = await db.center.findMany({
-    where: { subCenters: { none: {} } },
+    where: {
+      tenantId,
+      subCenters: { none: {} },
+    },
     orderBy: { name: "desc" },
     include: {
       parentCenter: { select: { name: true } },
@@ -15,7 +22,10 @@ export default async function CentersPage() {
   });
 
   const parentCenters = await db.center.findMany({
-    where: { subCenters: { some: {} } },
+    where: {
+      tenantId,
+      subCenters: { some: {} },
+    },
     orderBy: { name: "desc" },
     include: {
       subCenters: { where: { active: true }, select: { id: true } },
