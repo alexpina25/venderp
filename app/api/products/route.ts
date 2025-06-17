@@ -1,12 +1,17 @@
 // app/api/products/route.ts
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db"; // Asegúrate de que tienes prisma correctamente configurado
+import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 
 export async function GET() {
   try {
+    const session = await getServerAuthSession();
+    const tenantId = session?.user?.tenant?.id;
+
     const products = await db.product.findMany({
       where: {
-        active: true, // Filtrar productos activos (puedes cambiar esto según sea necesario)
+        tenantId,
+        active: true,
       },
       select: {
         id: true,

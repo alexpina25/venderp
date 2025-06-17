@@ -16,11 +16,13 @@ const schema = z.object({
   stockMin: z.number().int().nonnegative().optional(),
 });
 
-export async function updateProduct(input: z.infer<typeof schema>) {
+export async function updateProduct(
+  input: z.infer<typeof schema> & { tenantId: string }
+) {
   const data = schema.parse(input);
 
   await db.product.update({
-    where: { id: data.id },
+    where: { id: data.id, tenantId: input.tenantId },
     data: {
       name: data.name,
       category: data.category,

@@ -15,12 +15,15 @@ const schema = z.object({
   stockMin: z.number().int().nonnegative().optional(),
 });
 
-export async function createProduct(input: z.infer<typeof schema>) {
+export async function createProduct(
+  input: z.infer<typeof schema> & { tenantId: string }
+) {
   const data = schema.parse(input);
 
   await db.product.create({
     data: {
       ...data,
+      tenantId: input.tenantId,
     },
   });
 }

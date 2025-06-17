@@ -32,11 +32,12 @@ model User {
 }
 
 model Tenant {
-  id      String   @id @default(uuid())
+  id      String    @id @default(uuid())
   name    String
   users   User[]
   centers Center[]
   masters Master[]
+  Product Product[]
 }
 
 model CenterUser {
@@ -177,6 +178,8 @@ model Product {
   id        String          @id @default(uuid())
   customId  Int?            @unique
   name      String
+  tenantId  String
+  tenant    Tenant          @relation(fields: [tenantId], references: [id])
   category  ProductCategory
   price     Float
   cost      Float?

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Product, ProductCategory } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import { updateProduct } from "@/app/actions/updateProduct";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,7 @@ interface EditProductFormProps {
 
 export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const {
     register,
@@ -57,7 +59,9 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await updateProduct(values);
+    const tenantId = session?.user?.tenant?.id;
+    if (!tenantId) return;
+    await updateProduct({ ...values, tenantId });
     router.refresh();
     onSuccess?.();
   };

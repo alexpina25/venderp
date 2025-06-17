@@ -6,6 +6,7 @@ import { ProductCategory } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 import { createProduct } from "@/app/actions/createProduct";
 
@@ -33,6 +34,7 @@ const formSchema = z.object({
 export function NewProductForm() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const { data: session } = useSession();
 
   const {
     register,
@@ -47,8 +49,10 @@ export function NewProductForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const tenantId = session?.user?.tenant?.id;
+    if (!tenantId) return;
     setSubmitting(true);
-    await createProduct(values);
+    await createProduct({ ...values, tenantId });
     router.refresh();
     setSubmitting(false);
   };

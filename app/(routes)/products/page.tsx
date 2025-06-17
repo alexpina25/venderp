@@ -1,9 +1,13 @@
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 import { ProductTable } from "@/components/products/ProductTable";
 import { NewProductModal } from "@/components/products/NewProductModal";
 
 export default async function ProductsPage() {
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
   const products = await db.product.findMany({
+    where: { tenantId },
     orderBy: { createdAt: "desc" },
   });
 
