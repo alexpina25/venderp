@@ -6,16 +6,12 @@ export async function GET(req: NextRequest) {
   if (apiKey !== process.env.DEVICE_API_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const tenantId = req.nextUrl.searchParams.get("tenantId");
+
   try {
-    const masters = await db.master.findMany({
-      where: tenantId ? { tenantId } : {},
-      include: { pos: true, tenant: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return NextResponse.json(masters);
+    const tenants = await db.tenant.findMany({ orderBy: { name: "asc" } });
+    return NextResponse.json(tenants);
   } catch (error) {
-    console.error("Error fetching masters:", error);
+    console.error("Error fetching tenants:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
