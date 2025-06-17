@@ -1,9 +1,14 @@
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 import { MachineTable } from "@/components/machines/MachineTable";
 import { NewMachineModal } from "@/components/machines/forms/NewMachineModal";
 
 export default async function MachinesPage() {
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
+
   const machines = await db.machine.findMany({
+    where: { center: { tenantId } },
     include: {
       pos: {
         select: {

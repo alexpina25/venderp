@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerAuthSession } from "@/lib/auth";
 import { format, subDays, subWeeks, subMonths, subYears, startOfWeek, startOfMonth, startOfYear } from "date-fns";
 
 export async function GET(req: NextRequest) {
@@ -30,8 +31,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Invalid group" }, { status: 400 });
   }
 
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
+
   const sales = await db.sale.findMany({
-    where: { timestamp: { gte: start } },
+    where: { timestamp: { gte: start }, pos: { center: { tenantId } } },
   });
 
   const map: Record<string, { label: string; coins: number; cards: number }> = {};

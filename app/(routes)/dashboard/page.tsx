@@ -6,15 +6,22 @@ import { TotalMachines } from "@/components/dashboard/TotalMachinesCard";
 import { MachineConnections } from "@/components/dashboard/MachineConnections";
 import { UsersRound, Waypoints, BookOpenCheck } from "lucide-react";
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 import { formatPrice } from "@/lib/formatPrice";
 
 export default async function DashboardPage() {
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
+
   const [activeMachines, totalMachines, sales] = await Promise.all([
-    db.machine.count({ where: { status: "ACTIVE" } }),
-    db.machine.count(),
+    db.machine.count({ where: { status: "ACTIVE", center: { tenantId } } }),
+    db.machine.count({ where: { center: { tenantId } } }),
     db.sale.aggregate({
       _sum: { price: true },
-      where: { timestamp: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } },
+      where: {
+        timestamp: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+        pos: { center: { tenantId } },
+      },
     }),
   ]);
 

@@ -1,9 +1,14 @@
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 import { PosTable } from "@/components/pos/PosTable";
 import { NewPosModal } from "@/components/pos/forms/NewPosModal";
 
 export default async function PosPage() {
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
+
   const posList = await db.pOS.findMany({
+    where: { center: { tenantId } },
     orderBy: { createdAt: "desc" },
     include: {
       center: true,

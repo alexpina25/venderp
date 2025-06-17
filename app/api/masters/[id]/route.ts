@@ -1,9 +1,13 @@
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const master = await db.master.findUnique({
-      where: { id: params.id },
+    const session = await getServerAuthSession();
+    const tenantId = session?.user?.tenant?.id;
+
+    const master = await db.master.findFirst({
+      where: { id: params.id, tenantId },
       include: { pos: true, tenant: true },
     });
 

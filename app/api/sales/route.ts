@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerAuthSession } from "@/lib/auth";
 import { z } from "zod";
 import { SaleMethod } from "@prisma/client";
 
@@ -75,9 +76,14 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const posId = req.nextUrl.searchParams.get("posId");
+  const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
 
   const sales = await db.sale.findMany({
-    where: posId ? { posId: posId } : undefined,
+    where: {
+      ...(posId ? { posId } : {}),
+      pos: { center: { tenantId } },
+    },
     include: { product: true },
     orderBy: { timestamp: "desc" },
   });
