@@ -108,6 +108,7 @@ async function main() {
 
           const product = await prisma.product.create({
             data: {
+              tenantId: tenant.id,
               name: faker.commerce.productName(),
               price: parseFloat(
                 faker.number
