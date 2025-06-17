@@ -17,10 +17,8 @@ model User {
   name             String
   password         String
   role             Role
-  avatarUrl        String?
   tenantId         String?
   tenant           Tenant?  @relation(fields: [tenantId], references: [id])
-  dashboardWidgets String[] @default([])
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -77,8 +75,8 @@ model Center {
   postalCode     String?
   province       String?
   country        String?
-  contactName    String
-  contactPhone   String
+  contactName    String?
+  contactPhone   String?
   contactEmail   String?
   notes          String?
   active         Boolean      @default(true)

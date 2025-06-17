@@ -2,8 +2,10 @@ import { db } from "@/lib/db";
 import { getServerAuthSession } from "@/lib/auth";
 import { CenterTable } from "@/components/centers/CenterTable";
 import { ParentCenterTable } from "@/components/centers/ParentCenterTable";
-import { NewCenterModal } from "@/components/centers/forms/NewCenterModal";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus } from "lucide-react";
 
 export default async function CentersPage() {
   const session = await getServerAuthSession();
@@ -36,7 +38,10 @@ export default async function CentersPage() {
     <div className="p-6 space-y-6 bg-background">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Centros</h2>
-        <NewCenterModal />
+        <Button asChild variant="default" size="sm" className="gap-1">
+          
+          <Link href="/centers/new"><Plus className="w-4 h-4" />Nuevo centro</Link>
+        </Button>
       </div>
 
       <Tabs defaultValue="centros" className="space-y-4">
