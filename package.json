@@ -38,10 +38,13 @@
     "@tanstack/react-table": "^8.16.0",
     "@uploadthing/react": "^6.4.4",
     "axios": "^1.6.8",
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
+    "inquirer": "^12.6.3",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.372.0",
     "next": "14.1.4",
@@ -58,6 +61,7 @@
     "zod": "^3.23.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
@@ -70,7 +74,7 @@
     "tailwindcss": "^3.3.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
-    "typescript": "^5"
+    "typescript": "^5.8.3"
   },
   "overrides": {
     "react-style-singleton": "2.2.3"
