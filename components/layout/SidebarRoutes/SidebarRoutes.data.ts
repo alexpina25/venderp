@@ -9,6 +9,7 @@ import {
   Settings,
   Activity,
   Building2,
+  Users,
 } from "lucide-react";
 
 export const sidebarSections = [
@@ -34,6 +35,7 @@ export const sidebarSections = [
     items: [
       { label: "Facturación", href: "/invoices", icon: FileText },
       { label: "Actividad", href: "/activity", icon: Activity },
+      { label: "Usuarios", href: "/users", icon: Users },
       { label: "Configuración", href: "/settings", icon: Settings },
     ],
   },
