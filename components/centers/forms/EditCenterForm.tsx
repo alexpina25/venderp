@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 
 const formSchema = z.object({
   id: z.string(),
@@ -30,6 +31,7 @@ const formSchema = z.object({
   contactName: z.string(),
   contactPhone: z.string(),
   contactEmail: z.string().email().optional(),
+    isParent: z.boolean().optional(),
   parentCenterId: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -42,6 +44,7 @@ interface Props {
 export function EditCenterForm({ center, onSuccess }: Props) {
   const router = useRouter();
   const [centers, setCenters] = useState<Center[]>([]);
+    const [isParent, setIsParent] = useState(center.isParent);
 
   useEffect(() => {
     fetch("/api/centers?all=true")
@@ -67,13 +70,18 @@ export function EditCenterForm({ center, onSuccess }: Props) {
       contactName: center.contactName ?? "",
       contactPhone: center.contactPhone?? "",
       contactEmail: center.contactEmail ?? "",
+            isParent: center.isParent,
       parentCenterId: center.parentCenterId ?? "",
       notes: center.notes ?? "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await updateCenter(values);
+    await updateCenter({
+      ...values,
+      isParent,
+      parentCenterId: isParent ? undefined : values.parentCenterId,
+    });
     router.refresh();
     onSuccess?.(); // 👈 cierre del modal
   };
@@ -133,20 +141,36 @@ export function EditCenterForm({ center, onSuccess }: Props) {
       </div>
 
       <div>
-        <Label>Centro padre</Label>
-        <Select onValueChange={(v) => setValue("parentCenterId", v)} defaultValue={center.parentCenterId ?? undefined}>
-          <SelectTrigger>
-            <SelectValue placeholder="Sin centro padre" />
-          </SelectTrigger>
-          <SelectContent>
-            {centers.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Label className="flex items-center gap-2">
+          ¿Es un centro padre?
+          <Switch
+            checked={isParent}
+            onCheckedChange={(v) => {
+              setIsParent(v);
+              setValue("isParent", v);
+              if (v) setValue("parentCenterId", undefined);
+            }}
+          />
+        </Label>
       </div>
+
+      {!isParent && (
+        <div>
+          <Label>Centro padre</Label>
+          <Select onValueChange={(v) => setValue("parentCenterId", v)} defaultValue={center.parentCenterId ?? undefined}>
+            <SelectTrigger>
+              <SelectValue placeholder="Sin centro padre" />
+            </SelectTrigger>
+            <SelectContent>
+              {centers.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <div>
         <Label htmlFor="notes">Notas</Label>

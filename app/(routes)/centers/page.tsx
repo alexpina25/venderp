@@ -15,6 +15,7 @@ export default async function CentersPage() {
     where: {
       tenantId,
       subCenters: { none: {} },
+      isParent: false,
     },
     orderBy: { name: "desc" },
     include: {
@@ -26,7 +27,7 @@ export default async function CentersPage() {
   const parentCenters = await db.center.findMany({
     where: {
       tenantId,
-      subCenters: { some: {} },
+      isParent: true,
     },
     orderBy: { name: "desc" },
     include: {
@@ -39,8 +40,10 @@ export default async function CentersPage() {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Centros</h2>
         <Button asChild variant="default" size="sm" className="gap-1">
-          
-          <Link href="/centers/new"><Plus className="w-4 h-4" />Nuevo centro</Link>
+          <Link href="/centers/new">
+            <Plus className="w-4 h-4" />
+            Nuevo centro
+          </Link>
         </Button>
       </div>
 

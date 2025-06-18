@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const centers = await db.center.findMany({
     where: {
       tenantId,
-      ...(all ? {} : { subCenters: { none: {} } }),
+      ...(all ? {} : { subCenters: { none: {} }, isParent: false }),
     },
     orderBy: { name: "asc" },
   });

@@ -61,7 +61,7 @@ export function NewCenterForm() {
   });
 
   useEffect(() => {
-    fetch("/api/centers")
+    fetch("/api/centers?all=true")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) setCenters(data);
@@ -84,8 +84,8 @@ export function NewCenterForm() {
 
     router.refresh();
   };
-
-  const parentCenters = centers.filter((c) => c.parentCenterId === null);
+  
+  const parentCenters = centers.filter((c) => c.isParent);
 
   return (
     <form

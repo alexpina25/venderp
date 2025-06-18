@@ -15,6 +15,7 @@ const schema = z.object({
   contactName: z.string().optional(),
   contactPhone: z.string().optional(),
   contactEmail: z.string().email().optional(),
+    isParent: z.boolean().optional(),
   parentCenterId: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -34,7 +35,8 @@ export async function createCenter(
     contactName: data.contactName ?? null,
     contactPhone: data.contactPhone ?? null,
     contactEmail: data.contactEmail ?? null,
-    parentCenterId: data.parentCenterId ?? null,
+    isParent: data.isParent ?? false,
+    parentCenterId: data.isParent ? null : data.parentCenterId ?? null,
     notes: data.notes ?? null,
     tenantId: input.tenantId,
   };
