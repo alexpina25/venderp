@@ -4,7 +4,11 @@ import { SidebarItem } from "@/components/layout/SidebarItem";
 import { Separator } from "@/components/ui/separator";
 import { sidebarSections } from "./SidebarRoutes.data";
 
-export function SidebarRoutes() {
+type SidebarRoutesProps = {
+  onNavigate?: () => void;
+};
+
+export function SidebarRoutes({ onNavigate }: SidebarRoutesProps) {
   return (
     <div className="flex flex-col justify-between h-full">
       <div>
@@ -14,7 +18,11 @@ export function SidebarRoutes() {
               {section.title}
             </p>
             {section.items.map((item) => (
-              <SidebarItem key={item.label} item={item} />
+              <SidebarItem
+                key={item.label}
+                item={item}
+                onClick={onNavigate}
+              />
             ))}
             <Separator className="mt-4" />
           </div>
