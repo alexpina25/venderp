@@ -103,7 +103,7 @@ export function NewCenterForm() {
     router.push("/centers");
   };
 
-  const parentCenters = centers.filter((c) => c.isParent);
+  const parentCenters = centers.filter((c) => c.parentCenterId === null);
 
   return (
     <form

@@ -31,20 +31,24 @@ const formSchema = z.object({
   contactName: z.string(),
   contactPhone: z.string(),
   contactEmail: z.string().email().optional(),
-    isParent: z.boolean().optional(),
+  isParent: z.boolean().optional(),
   parentCenterId: z.string().optional(),
   notes: z.string().optional(),
 });
 
+interface CenterWithIsParent extends Center {
+  isParent: boolean;
+}
+
 interface Props {
-  center: Center;
+  center: CenterWithIsParent;
   onSuccess?: () => void;
 }
 
 export function EditCenterForm({ center, onSuccess }: Props) {
   const router = useRouter();
   const [centers, setCenters] = useState<Center[]>([]);
-    const [isParent, setIsParent] = useState(center.isParent);
+  const [isParent, setIsParent] = useState(center.isParent);
 
   useEffect(() => {
     fetch("/api/centers?all=true")
@@ -68,9 +72,9 @@ export function EditCenterForm({ center, onSuccess }: Props) {
       province: center.province ?? "",
       country: center.country ?? "España",
       contactName: center.contactName ?? "",
-      contactPhone: center.contactPhone?? "",
+      contactPhone: center.contactPhone ?? "",
       contactEmail: center.contactEmail ?? "",
-            isParent: center.isParent,
+      isParent: center.isParent,
       parentCenterId: center.parentCenterId ?? "",
       notes: center.notes ?? "",
     },
@@ -157,7 +161,10 @@ export function EditCenterForm({ center, onSuccess }: Props) {
       {!isParent && (
         <div>
           <Label>Centro padre</Label>
-          <Select onValueChange={(v) => setValue("parentCenterId", v)} defaultValue={center.parentCenterId ?? undefined}>
+          <Select
+            onValueChange={(v) => setValue("parentCenterId", v)}
+            defaultValue={center.parentCenterId ?? undefined}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Sin centro padre" />
             </SelectTrigger>
