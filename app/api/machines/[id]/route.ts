@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { getServerAuthSession } from "@/lib/auth";
+import { ok, error, handleError } from "@/lib/apiResponses";
 
 export async function GET(
   request: Request,
@@ -23,16 +24,11 @@ export async function GET(
     });
 
     if (!machine) {
-      return new Response("Machine not found", { status: 404 });
+      return error("Machine not found", 404);
     }
 
-    return new Response(JSON.stringify(machine), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return ok(machine);
   } catch (error) {
-    return new Response("Error fetching machine data", { status: 500 });
+    return handleError(error, "Error fetching machine data");
   }
 }

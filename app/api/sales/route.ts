@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getServerAuthSession } from "@/lib/auth";
+import { ok, error, handleError } from "@/lib/apiResponses";
 import { z } from "zod";
 import { SaleMethod } from "@prisma/client";
 
@@ -17,7 +18,7 @@ const saleSchema = z.object({
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get("x-api-key");
   if (apiKey !== process.env.DEVICE_API_KEY) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return error("Unauthorized", 401);
   }
 
   try {
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!pos) {
-      return NextResponse.json({ error: "POS not found" }, { status: 404 });
+      return error("POS not found", 404);
     }
 
     const machine = await db.machine.findFirst({
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!machine) {
-      return NextResponse.json({ error: "Machine not found" }, { status: 404 });
+      return error("Machine not found", 404);
     }
 
     const machineProduct = await db.machineProduct.findFirst({
@@ -44,10 +45,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!machineProduct) {
-      return NextResponse.json(
-        { error: "Product line not found" },
-        { status: 404 }
-      );
+      return error("Product line not found", 404);
     }
 
     await db.machineProduct.update({
@@ -67,10 +65,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(sale, { status: 201 });
+    return ok(sale, { status: 201 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    return handleError(error, "Invalid data");
   }
 }
 
@@ -96,5 +93,5 @@ export async function GET(req: NextRequest) {
     price: sale.price,
   }));
 
-  return NextResponse.json(transformed);
+  return ok(transformed);
 }

@@ -2,6 +2,9 @@
 import { useState, useEffect } from "react";
 import { MachineInfo } from "@/components/machines/detail/MachineInfo";
 import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/use-toast";
+import { MachineWithDetails } from "@/types";
 //import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -20,8 +23,9 @@ export default function MachineDetailPage({
 }: {
   params: { id: string };
 }) {
-  const [selectedMachine, setSelectedMachine] = useState<any | null>(null);
+  const [selectedMachine, setSelectedMachine] = useState<MachineWithDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Fetch machine data on initial load or when the ID changes
   useEffect(() => {
@@ -30,7 +34,13 @@ export default function MachineDetailPage({
         const machine = await fetchMachineData(params.id);
         setSelectedMachine(machine);
       } catch (error) {
-        console.error(error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "No se pudo cargar la máquina",
+        });
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -38,7 +48,7 @@ export default function MachineDetailPage({
   }, [params.id]);
 
   // Open the Edit Machine Modal
-  const openEditModal = (machine: any) => {
+  const openEditModal = (machine: MachineWithDetails) => {
     setSelectedMachine(machine);
     setIsModalOpen(true);
   };
@@ -83,8 +93,12 @@ export default function MachineDetailPage({
         </Button>
         <h2 className="text-2xl font-bold">Detalle de máquina</h2>
       </div>
-
-      {selectedMachine && (
+      {loading && (
+        <div className="flex justify-center py-10">
+          <Spinner />
+        </div>
+      )}
+      {!loading && selectedMachine && (
         <>
           {/* Información básica de la máquina */}
           <MachineInfo machine={selectedMachine} onEdit={openEditModal} />
