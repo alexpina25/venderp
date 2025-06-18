@@ -1,5 +1,5 @@
 // scripts/create-user.ts
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import inquirer from "inquirer";
 import { PrismaClient } from "@prisma/client";
 

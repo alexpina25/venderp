@@ -11,6 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Product, Machine } from "@prisma/client";
+import { toast } from "@/components/ui/use-toast";
+import { addMachineProduct } from "@/app/actions/addMachineProduct";
 import {
   Dialog,
   DialogContent,
@@ -61,25 +63,23 @@ export function AddProductModal({
   const handleAddProduct = async () => {
     if (!selectedProduct || quantity <= 0 || !line || !selection) return;
 
-    const response = await fetch(`/api/machines/${machine.id}/add-product`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      await addMachineProduct({
+        machineId: machine.id,
         productId: selectedProduct.id,
         quantity,
         price,
         line,
         selection,
-      }),
-    });
-
-    if (response.ok) {
+      });
       onSuccess();
       onClose();
-    } else {
-      console.error("Error al añadir el producto a la máquina");
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudo añadir el producto",
+      });
     }
   };
 

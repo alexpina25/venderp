@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { getServerAuthSession } from "@/lib/auth";
+import { ok, error, handleError } from "@/lib/apiResponses";
 
 export async function GET(
   request: Request,
@@ -29,7 +30,7 @@ export async function GET(
     });
 
     if (!center) {
-      return new Response("Center not found", { status: 404 });
+      return error("Center not found", 404);
     }
 
     const transformed = {
@@ -37,14 +38,8 @@ export async function GET(
       pos: center.pos.map((p) => ({ ...p, lastSale: p.Sale[0] || null })),
     };
 
-    return new Response(JSON.stringify(transformed), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return ok(transformed);
   } catch (error) {
-    console.error("Error fetching center:", error);
-    return new Response("Error fetching center", { status: 500 });
+    return handleError(error, "Error fetching center");
   }
 }
