@@ -1,12 +1,13 @@
-import { Machine, POS, MachineStatus, MachineType } from "@prisma/client";
+import { MachineStatus, MachineType } from "@prisma/client";
+import { MachineWithDetails } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 //import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 
 interface Props {
-  machine: Machine & { pos: POS | null };
-  onEdit: (machine: Machine) => void; // Función para abrir el modal
+  machine: MachineWithDetails;
+  onEdit: (machine: MachineWithDetails) => void;
 }
 
 export function MachineInfo({ machine, onEdit }: Props) {
@@ -81,8 +82,6 @@ export function MachineInfo({ machine, onEdit }: Props) {
             : "–"}
         </p>
       </div>
-
-      
     </div>
   );
 }
