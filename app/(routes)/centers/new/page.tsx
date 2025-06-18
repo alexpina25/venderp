@@ -5,7 +5,7 @@ import { NewCenterForm } from "@/components/centers/forms/NewCenterForm";
 
 export default function NewCenterPage() {
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-6">
       <div className="flex items-center gap-2">
         <Button asChild variant="default" size="icon">
           <Link href="/centers">

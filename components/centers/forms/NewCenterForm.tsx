@@ -22,6 +22,7 @@ import {
 
 import { Center } from "@prisma/client";
 import { createCenter } from "@/app/actions/createCenter";
+import { toast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -72,19 +73,36 @@ export function NewCenterForm() {
     const tenantId = session?.user?.tenant?.id;
 
     if (!tenantId) {
-      alert("No se encontró tenant ID");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se encontró tenant ID",
+      });
       return;
     }
 
-    await createCenter({
-      ...values,
-      tenantId: tenantId,
-      parentCenterId: isParent ? undefined : values.parentCenterId,
-    });
+    try {
+      await createCenter({
+        ...values,
+        tenantId: tenantId,
+        parentCenterId: isParent ? undefined : values.parentCenterId,
+      });
+      toast({
+        title: "Centro creado",
+        description: "El centro se ha registrado correctamente.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error al crear centro",
+        description: "No se pudo crear el centro.",
+      });
+    }
 
     router.refresh();
+    router.push("/centers");
   };
-  
+
   const parentCenters = centers.filter((c) => c.isParent);
 
   return (
@@ -208,7 +226,11 @@ export function NewCenterForm() {
           placeholder="Observaciones adicionales"
         />
       </div>
-      <Button type="submit" disabled={isSubmitting} className="w-full bg-green-600 hover:bg-green-700">
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-green-600 hover:bg-green-700"
+      >
         Crear centro
       </Button>
     </form>
