@@ -6,6 +6,7 @@ import { Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import * as Dialog from "@radix-ui/react-dialog";
+import { ChangePasswordModal } from "../forms/ChangePasswordModal";
 
 interface Props {
   user: User & {
@@ -42,6 +43,7 @@ export function UserInfo({ user, onEdit }: Props) {
           <Pencil className="w-4 h-4 mr-2" />
           Editar
         </Button>
+        <ChangePasswordModal userId={user.id} />
         <Dialog.Root>
           <Dialog.Trigger asChild>
             <Button size="sm" variant="destructive">

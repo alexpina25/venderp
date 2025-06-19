@@ -15,9 +15,9 @@ import { useState } from "react";
 interface Props {
   user: {
     id: string;
-    email: string;
     name: string;
     role: string;
+        active: boolean;
     center?: { id: string; name: string } | null;
     pos?: { id: string; name: string } | null;
   };

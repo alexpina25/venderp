@@ -2,14 +2,11 @@
 
 import { db } from "@/lib/db";
 import { z } from "zod";
-import bcrypt from "bcryptjs";
 
 const schema = z
   .object({
     id: z.string(),
-    email: z.string().email(),
     name: z.string().min(2),
-    password: z.string().min(4).optional(),
     role: z.enum([
       "TENANT_ADMIN",
       "TENANT_USER",
@@ -17,6 +14,7 @@ const schema = z
       "CENTER_USER",
       "POS_USER",
     ]),
+        active: z.boolean(),
     centerId: z.string().optional(),
     posId: z.string().optional(),
   })
@@ -36,10 +34,6 @@ const schema = z
 export async function updateUser(input: z.infer<typeof schema>) {
   const data = schema.parse(input);
 
-  const passwordHash = data.password
-    ? await bcrypt.hash(data.password, 10)
-    : undefined;
-
   await db.$transaction(async (tx) => {
     await tx.centerUser.deleteMany({ where: { userId: data.id } });
     await tx.pOSUser.deleteMany({ where: { userId: data.id } });
@@ -47,10 +41,8 @@ export async function updateUser(input: z.infer<typeof schema>) {
     await tx.user.update({
       where: { id: data.id },
       data: {
-        email: data.email,
         name: data.name,
         role: data.role,
-        ...(passwordHash ? { password: passwordHash } : {}),
       },
     });
 

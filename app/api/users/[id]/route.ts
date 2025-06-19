@@ -25,6 +25,7 @@ export async function GET(
     email: user.email,
     name: user.name,
     role: user.role,
+    active: user.active,
     center: user.centers[0]?.center ?? null,
     pos: user.pos[0]?.pos ?? null,
   };

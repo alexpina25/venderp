@@ -21,6 +21,7 @@ model User {
   tenant    Tenant?  @relation(fields: [tenantId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  active    Boolean  @default(true)
 
   routes       Route[]
   maintenance  MaintenanceLog[]

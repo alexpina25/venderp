@@ -45,10 +45,11 @@ export async function createTenantUser(
       name: data.name,
       password: passwordHash,
       role: data.role,
+      active: true,
       tenantId: input.tenantId,
     },
   });
-  
+
   if (data.role === "CENTER_MANAGER" || data.role === "CENTER_USER") {
     await db.centerUser.create({
       data: { userId: user.id, centerId: data.centerId! },

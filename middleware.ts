@@ -10,7 +10,7 @@ export default withAuth({
       const PUBLIC_ROUTES = ["/api/sales", "/api/masters"];
 
       if (PUBLIC_ROUTES.includes(pathname)) return true;
-      return !!token;
+      return !!token && token.active !== false;
     },
   },
 });

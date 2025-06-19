@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
         const user = await db.user.findUnique({
           where: { email: credentials.email },
         });
-        if (!user || !user.password) return null;
+        if (!user || !user.password || !user.active) return null;
         const isValid = await compare(credentials.password, user.password);
         if (!isValid) return null;
         return { id: user.id, email: user.email };
@@ -27,6 +27,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async jwt({ token }) {
+      if (token.sub) {
+        const user = await db.user.findUnique({ where: { id: token.sub } });
+        token.active = user?.active ?? false;
+      }
+      return token;
+    },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub as string;
@@ -35,6 +42,7 @@ export const authOptions: NextAuthOptions = {
           include: { tenant: true },
         });
         session.user.role = user?.role ?? null;
+        session.user.active = user?.active ?? null;
         if (user?.tenant) {
           session.user.tenant = {
             id: user.tenant.id,

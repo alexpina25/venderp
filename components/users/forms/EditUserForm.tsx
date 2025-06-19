@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -22,9 +23,7 @@ import { toast } from "@/components/ui/use-toast";
 const formSchema = z
   .object({
     id: z.string(),
-    email: z.string().email(),
     name: z.string().min(2),
-    password: z.string().min(4).optional(),
     role: z.enum([
       "TENANT_ADMIN",
       "TENANT_USER",
@@ -32,6 +31,7 @@ const formSchema = z
       "CENTER_USER",
       "POS_USER",
     ]),
+    active: z.boolean(),
     centerId: z.string().optional(),
     posId: z.string().optional(),
   })
@@ -51,9 +51,9 @@ const formSchema = z
 interface Props {
   user: {
     id: string;
-    email: string;
     name: string;
     role: string;
+    active: boolean;
     center?: { id: string; name: string } | null;
     pos?: { id: string; name: string } | null;
   };
@@ -73,9 +73,9 @@ export function EditUserForm({ user, onSuccess }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: user.id,
-      email: user.email,
       name: user.name,
       role: user.role as any,
+      active: user.active,
       centerId: user.center?.id,
       posId: user.pos?.id,
     },
@@ -119,26 +119,19 @@ export function EditUserForm({ user, onSuccess }: Props) {
       <input type="hidden" {...register("id")} />
 
       <div>
-        <Label htmlFor="email">Usuario</Label>
-        <Input id="email" {...register("email")} />
-        {errors.email && (
-          <p className="text-xs text-red-500">{errors.email.message}</p>
-        )}
-      </div>
-      <div>
         <Label htmlFor="name">Nombre</Label>
         <Input id="name" {...register("name")} />
         {errors.name && (
           <p className="text-xs text-red-500">{errors.name.message}</p>
         )}
       </div>
-      <div>
-        <Label htmlFor="password">Contraseña</Label>
-        <Input id="password" type="password" {...register("password")} />
-        {errors.password && (
-          <p className="text-xs text-red-500">{errors.password.message}</p>
-        )}
-      </div>
+        <Label className="flex items-center gap-2">
+          Activo
+          <Switch
+            checked={watch("active")}
+            onCheckedChange={(v) => setValue("active", v)}
+          />
+        </Label>
       <div>
         <Label>Rol</Label>
         <Select
