@@ -1,10 +1,23 @@
 // app/(routes)/activity/page.tsx
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 
 export default async function ActivityPage() {
+    const session = await getServerAuthSession();
+  const userId = session?.user?.id;
+
+  const current = userId
+    ? await db.user.findUnique({ where: { id: userId } })
+    : null;
+
+  if (!current || current.role !== "TENANT_ADMIN" || !current.tenantId) {
+    redirect("/dashboard");
+  }
+
   const logs = await db.activityLog.findMany({
     include: { user: true },
     orderBy: { timestamp: "desc" },

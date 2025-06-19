@@ -5,7 +5,8 @@ export type SidebarItemProps = {
     label: string;
     icon: LucideIcon;
     href: string;
+    adminOnly?: boolean;
   };
   key: string;
-    onClick?: () => void;
+  onClick?: () => void;
 };

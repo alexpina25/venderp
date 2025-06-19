@@ -108,7 +108,7 @@ export function NewCenterForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-background p-6 rounded-lg border max-w-3xl mx-auto"
+      className="space-y-6 bg-background p-6 rounded-lg border mx-auto"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

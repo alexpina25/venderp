@@ -33,9 +33,19 @@ export const sidebarSections = [
   {
     title: "Administración",
     items: [
-      { label: "Facturación", href: "/invoices", icon: FileText },
-      { label: "Actividad", href: "/activity", icon: Activity },
-      { label: "Usuarios", href: "/users", icon: Users },
+      {
+        label: "Facturación",
+        href: "/invoices",
+        icon: FileText,
+        adminOnly: true,
+      },
+      {
+        label: "Actividad",
+        href: "/activity",
+        icon: Activity,
+        adminOnly: true,
+      },
+      { label: "Usuarios", href: "/users", icon: Users, adminOnly: true },
       { label: "Configuración", href: "/settings", icon: Settings },
     ],
   },

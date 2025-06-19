@@ -1,10 +1,23 @@
 // app/(routes)/invoices/page.tsx
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 
 export default async function InvoicesPage() {
+    const session = await getServerAuthSession();
+  const userId = session?.user?.id;
+
+  const current = userId
+    ? await db.user.findUnique({ where: { id: userId } })
+    : null;
+
+  if (!current || current.role !== "TENANT_ADMIN" || !current.tenantId) {
+    redirect("/dashboard");
+  }
+
   const invoices = await db.invoice.findMany({
     include: { center: true },
     orderBy: { issuedAt: "desc" },

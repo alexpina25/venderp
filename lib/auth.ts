@@ -34,6 +34,7 @@ export const authOptions: NextAuthOptions = {
           where: { id: token.sub as string },
           include: { tenant: true },
         });
+        session.user.role = user?.role ?? null;
         if (user?.tenant) {
           session.user.tenant = {
             id: user.tenant.id,
