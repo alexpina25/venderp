@@ -12,6 +12,7 @@ export default async function RoutesPage() {
       replenishments: {
         include: { machine: true },
       },
+            stops: { include: { pos: true } },
     },
     orderBy: { date: "desc" },
   });
@@ -35,10 +36,11 @@ export default async function RoutesPage() {
                 key={route.id}
                 className="border rounded-md p-4 hover:bg-muted transition"
               >
-                <div className="flex justify-between items-center mb-1">
-                  <p className="font-semibold">
-                    {format(new Date(route.date), "PPP", { locale: es })}
-                  </p>
+                <Link href={`/routes/${route.id}`} className="block">
+                  <div className="flex justify-between items-center mb-1">
+                    <p className="font-semibold">
+                      {format(new Date(route.date), "PPP", { locale: es })}
+                    </p>
                   <span className="text-xs text-muted-foreground">
                     {route.replenishments.length} máquina
                     {route.replenishments.length !== 1 && "s"}
@@ -47,6 +49,17 @@ export default async function RoutesPage() {
                 <p className="text-sm text-muted-foreground">
                   Operador: {route.operator?.name ?? "Sin asignar"}
                 </p>
+                                {route.stops.length > 0 && (
+                  <ul className="mt-2 text-sm list-disc ml-4">
+                    {route.stops.map((stop) => (
+                      <li key={stop.id}>
+                        {stop.pos.name}: {stop.cashCollected ?? 0}€ cobrados,
+                        recarga {stop.walletReload ?? 0}€
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                </Link>
               </li>
             ))}
           </ul>

@@ -43,6 +43,8 @@ async function main() {
       include: { users: true },
     });
 
+    const posIds: string[] = [];
+
     for (let c = 0; c < 2; c++) {
       const parentCenter = await prisma.center.create({
         data: {
@@ -84,6 +86,7 @@ async function main() {
               active: faker.datatype.boolean(),
             },
           });
+          posIds.push(pos.id);
 
           await prisma.master.create({
             data: {
@@ -164,6 +167,33 @@ async function main() {
         }
       }
     }
+  }
+  const operator = tenant.users[0];
+  if (operator && posIds.length > 0) {
+    await prisma.route.create({
+      data: {
+        date: faker.date.recent(),
+        operatorId: operator.id,
+        stops: {
+          create: posIds.slice(0, 2).map((id) => ({
+            posId: id,
+            cashCollected: faker.number.float({
+              min: 0,
+              max: 100,
+              fractionDigits: 2,
+            }),
+            walletReload: faker.number.float({
+              min: 0,
+              max: 50,
+              fractionDigits: 2,
+            }),
+            maintenanceNotes: null,
+            priceChangeNotes: null,
+            notes: null,
+          })),
+        },
+      },
+    });
   }
 
   console.log("🌱 Seed complete.");

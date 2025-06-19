@@ -96,8 +96,8 @@ model Center {
 }
 
 model POS {
-  id           String    @id @default(uuid())
-  code         String    @unique
+  id           String      @id @default(uuid())
+  code         String      @unique
   name         String
   address      String
   city         String
@@ -109,15 +109,16 @@ model POS {
   contactEmail String?
   notes        String?
   centerId     String
-  center       Center    @relation(fields: [centerId], references: [id])
+  center       Center      @relation(fields: [centerId], references: [id])
   machine      Machine?
   users        POSUser[]
   master       Master?
-  coverage     Int       @default(0)
-  active       Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  coverage     Int         @default(0)
+  active       Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   Sale         Sale[]
+  RouteStop    RouteStop[]
 }
 
 model Master {
@@ -238,6 +239,7 @@ model ReplenishmentItem {
   replenishmentId String
   productId       String
   quantityAdded   Int
+  quantityExpired Int?
   stockBefore     Int
   stockAfter      Int
 
@@ -278,6 +280,21 @@ model Route {
 
   operator       User            @relation(fields: [operatorId], references: [id])
   replenishments Replenishment[]
+  stops          RouteStop[]
+}
+
+model RouteStop {
+  id               String  @id @default(uuid())
+  routeId          String
+  posId            String
+  cashCollected    Float?
+  walletReload     Float?
+  maintenanceNotes String?
+  priceChangeNotes String?
+  notes            String?
+
+  route Route @relation(fields: [routeId], references: [id])
+  pos   POS   @relation(fields: [posId], references: [id])
 }
 
 model Invoice {

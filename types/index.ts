@@ -6,3 +6,4 @@ export * from "./user.type";
 export * from "./center.type";
 export * from "./sale.type";
 export * from "./master.type";
+export * from "./route.type";

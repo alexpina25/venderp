@@ -109,7 +109,7 @@ export function NewUserForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <Label htmlFor="email">Usuario</Label>
+        <Label htmlFor="email">Correo electrónico</Label>
         <Input id="email" {...register("email")} />
         {errors.email && (
           <p className="text-xs text-red-500">{errors.email.message}</p>
