@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RouteWithStops } from "@/types";
 import { RouteInfo } from "@/components/routes/detail/RouteInfo";
+import { EditRouteModal } from "@/components/routes/forms/EditRouteModal";
 import {
   Accordion,
   AccordionContent,
@@ -38,6 +39,7 @@ export default function RouteDetailPage({
           </Link>
         </Button>
         <h2 className="text-2xl font-bold">Detalle de Ruta</h2>
+                {route && <EditRouteModal route={route} />}
       </div>
 
       {route && (

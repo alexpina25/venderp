@@ -2,7 +2,7 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { RouteTable } from "@/components/routes/RouteTable";
+import { RouteAccordion } from "@/components/routes/RouteAccordion";
 
 export default async function RoutesPage() {
   const routes = await db.route.findMany({
@@ -11,7 +11,7 @@ export default async function RoutesPage() {
       replenishments: {
         include: { machine: true },
       },
-            stops: { include: { pos: true } },
+      stops: { include: { pos: true } },
     },
     orderBy: { date: "desc" },
   });
@@ -29,7 +29,7 @@ export default async function RoutesPage() {
         {routes.length === 0 ? (
           <p className="text-muted-foreground">No hay rutas programadas aún.</p>
         ) : (
-          <RouteTable data={routes} />
+          <RouteAccordion data={routes} />
         )}
       </div>
     </div>
