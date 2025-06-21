@@ -24,22 +24,16 @@ export async function POST(req: NextRequest) {
   const tenantId = session?.user?.tenant?.id;
   if (!tenantId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { date, operatorId, notes, stops } = await req.json();
+  const { date, operatorId, stops } = await req.json();
 
   const route = await db.route.create({
     data: {
       date: new Date(date),
       operatorId,
-      notes: notes ?? null,
-            stops: {
+      stops: {
         create: Array.isArray(stops)
           ? stops.map((s: any) => ({
               posId: s.posId,
-              cashCollected: s.cashCollected ?? null,
-              walletReload: s.walletReload ?? null,
-              maintenanceNotes: s.maintenanceNotes ?? null,
-              priceChangeNotes: s.priceChangeNotes ?? null,
-              notes: s.notes ?? null,
             }))
           : [],
       },
