@@ -3,7 +3,7 @@
 import { ChevronsUp, ChevronsDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StopWithPOS } from "@/types";
-import { ManageStopModal } from "./ManageStopModal";
+import { ManageStopLink } from "./ManageStopLink";
 
 interface Props {
   stop: StopWithPOS;
@@ -39,7 +39,7 @@ export function StopItem({ stop, index, onMoveToStart, onMoveToEnd }: Props) {
         <Button variant="ghost" size="icon" onClick={onMoveToEnd}>
           <ChevronsDown className="w-4 h-4" />
         </Button>
-        <ManageStopModal stop={stop} />
+        <ManageStopLink stop={stop} />
       </div>
     </div>
   );
