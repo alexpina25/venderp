@@ -2,10 +2,22 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RouteCards } from "@/components/routes/RouteCards";
+import { RoutesToolbar } from "@/components/routes/RoutesToolbar";
 import { Separator } from "@/components/ui/separator";
 
-export default async function RoutesPage() {
+export default async function RoutesPage({
+  searchParams,
+}: {
+  searchParams?: { date?: string; operator?: string; pos?: string };
+}) {
+  const { date, operator, pos } = searchParams || {};
+
   const routes = await db.route.findMany({
+    where: {
+      ...(date ? { date: new Date(date) } : {}),
+      ...(operator ? { operatorId: operator } : {}),
+      ...(pos ? { stops: { some: { posId: pos } } } : {}),
+    },
     include: {
       operator: true,
       replenishments: { include: { machine: true } },
@@ -31,6 +43,8 @@ export default async function RoutesPage() {
       </div>
 
       <Separator />
+
+      <RoutesToolbar />
 
       {routes.length === 0 ? (
         <div className="text-muted-foreground text-center py-12">
