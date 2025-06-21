@@ -7,3 +7,4 @@ export * from "./center.type";
 export * from "./sale.type";
 export * from "./master.type";
 export * from "./route.type";
+export * from "./stop.type";
