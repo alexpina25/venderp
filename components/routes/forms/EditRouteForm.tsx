@@ -85,11 +85,13 @@ export function EditRouteForm({ route, onSuccess }: Props) {
             <SelectValue placeholder="Selecciona operador" />
           </SelectTrigger>
           <SelectContent>
-            {operators.map((op) => (
-              <SelectItem key={op.id} value={op.id}>
-                {op.name}
-              </SelectItem>
-            ))}
+            {operators
+              .filter((op) => op.id)
+              .map((op) => (
+                <SelectItem key={op.id} value={op.id}>
+                  {op.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
         {errors.operatorId && (

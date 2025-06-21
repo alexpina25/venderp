@@ -85,6 +85,16 @@ export function RouteAccordion({ data }: Props) {
                         Paradas: {route.stops.length} · Completadas:{" "}
                         {completedStops}
                       </p>
+                                            {route.stops.length > 0 && (
+                        <p className="text-sm">
+                          {route.stops.map((s) => s.pos.name).join(", ")}
+                        </p>
+                      )}
+                      {route.notes && (
+                        <p className="text-sm text-muted-foreground">
+                          {route.notes}
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant={variant}>{label}</Badge>

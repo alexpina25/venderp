@@ -1,37 +1,44 @@
-// app/(routes)/routes/page.tsx
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { RouteAccordion } from "@/components/routes/RouteAccordion";
+import { RouteCards } from "@/components/routes/RouteCards";
+import { Separator } from "@/components/ui/separator";
 
 export default async function RoutesPage() {
   const routes = await db.route.findMany({
     include: {
       operator: true,
-      replenishments: {
-        include: { machine: true },
-      },
+      replenishments: { include: { machine: true } },
       stops: { include: { pos: true } },
     },
     orderBy: { date: "desc" },
   });
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Rutas de Reposición</h2>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Gestión de Rutas
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Listado de rutas programadas por fecha.
+          </p>
+        </div>
         <Button asChild>
           <Link href="/routes/new">+ Nueva ruta</Link>
         </Button>
       </div>
 
-      <div className="border rounded-lg p-4 bg-background shadow">
-        {routes.length === 0 ? (
-          <p className="text-muted-foreground">No hay rutas programadas aún.</p>
-        ) : (
-          <RouteAccordion data={routes} />
-        )}
-      </div>
+      <Separator />
+
+      {routes.length === 0 ? (
+        <div className="text-muted-foreground text-center py-12">
+          No hay rutas programadas aún.
+        </div>
+      ) : (
+        <RouteCards data={routes} />
+      )}
     </div>
   );
 }
