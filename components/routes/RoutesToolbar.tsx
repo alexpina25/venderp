@@ -41,7 +41,7 @@ export function RoutesToolbar() {
 
   const updateParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set(key, value);
+    if (value && value !== "all") params.set(key, value);
     else params.delete(key);
     router.push(`/routes?${params.toString()}`);
   };
@@ -62,7 +62,7 @@ export function RoutesToolbar() {
           <SelectValue placeholder="Operador" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Todos</SelectItem>
+          <SelectItem value="all">Todos</SelectItem>
           {operators.map((op) => (
             <SelectItem key={op.id} value={op.id}>
               {op.name}
@@ -78,7 +78,7 @@ export function RoutesToolbar() {
           <SelectValue placeholder="POS" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Todos</SelectItem>
+          <SelectItem value="all">Todos</SelectItem>
           {posList.map((p) => (
             <SelectItem key={p.id} value={p.id}>
               {p.name}
@@ -86,9 +86,6 @@ export function RoutesToolbar() {
           ))}
         </SelectContent>
       </Select>
-      <Button asChild>
-        <Link href="/routes/new">+ Nueva ruta</Link>
-      </Button>
     </div>
   );
 }
