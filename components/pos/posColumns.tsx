@@ -27,8 +27,9 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
     },
   },
   {
-    accessorKey: "code",
-    header: "Código",
+    id: "customId",
+    header: "ID",
+    cell: ({ row }) => row.original.customId ?? row.original.id,
   },
   {
     id: "centerCustomId",
