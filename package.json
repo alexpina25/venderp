@@ -12,9 +12,7 @@
     "create-user": "tsx scripts/create-user.ts",
         "create-master": "tsx scripts/create-master.ts"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
+
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
     "@fullcalendar/core": "^6.1.11",
