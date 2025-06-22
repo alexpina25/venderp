@@ -93,7 +93,7 @@ export function NewProductForm() {
           <Input type="number" step="0.01" {...register("price")} />
         </div>
         <div>
-          <Label>Costo (€)</Label>
+          <Label>Coste (€)</Label>
           <Input type="number" step="0.01" {...register("cost")} />
         </div>
       </div>

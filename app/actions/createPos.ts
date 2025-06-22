@@ -27,11 +27,11 @@ export async function createPos(data: CreatePosInput) {
       name: data.name,
       address: data.address,
       notes: data.notes,
-      centerId: data.centerId,
       coverage: 0,
       customId: await generateCustomId("POS", center.tenantId),
-      ...(data.machineId ? { machine: { connect: { id: data.machineId } } } : {}),
-      ...(data.masterId ? { master: { connect: { id: data.masterId } } } : {}),
+      center: { connect: { id: data.centerId } },
+      ...(data.machineId && { machine: { connect: { id: data.machineId } } }),
+      ...(data.masterId && { master: { connect: { id: data.masterId } } }),
     },
   });
 

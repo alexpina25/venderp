@@ -34,7 +34,7 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "cost",
-    header: "Costo (€)",
+    header: "Coste (€)",
     cell: ({ row }) =>
       row.getValue("cost") !== null ? (
         <span>{Number(row.getValue("cost")).toFixed(2)}</span>
