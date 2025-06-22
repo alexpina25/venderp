@@ -12,7 +12,7 @@ export function MasterInfo({ master }: Props) {
         <p className="font-medium">{master.serialNumber}</p>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">POS asociado</p>
+        <p className="text-sm text-muted-foreground">PDV asociado</p>
         <p>{master.pos ? master.pos.name : "-"}</p>
       </div>
       <div>

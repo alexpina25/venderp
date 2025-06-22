@@ -44,7 +44,7 @@ const formSchema = z
     }
   )
   .refine((data) => data.role !== "POS_USER" || !!data.posId, {
-    message: "POS requerido",
+    message: "PDV requerido",
     path: ["posId"],
   });
 
@@ -143,7 +143,7 @@ export function NewUserForm() {
             <SelectItem value="TENANT_USER">Usuario</SelectItem>
             <SelectItem value="CENTER_MANAGER">Manager de centro</SelectItem>
             <SelectItem value="CENTER_USER">Usuario de centro</SelectItem>
-            <SelectItem value="POS_USER">Usuario POS</SelectItem>
+            <SelectItem value="POS_USER">Usuario PDV</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -173,10 +173,10 @@ export function NewUserForm() {
 
       {role === "POS_USER" && (
         <div>
-          <Label>POS</Label>
+          <Label>PDV</Label>
           <Select onValueChange={(v) => setValue("posId", v)}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecciona POS" />
+              <SelectValue placeholder="Selecciona PDV" />
             </SelectTrigger>
             <SelectContent>
               {posList.map((p) => (

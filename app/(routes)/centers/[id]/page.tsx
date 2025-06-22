@@ -77,7 +77,7 @@ export default function CenterDetailPage({
               </>
             ) : (
               <>
-                <h3 className="text-xl font-semibold">POS asignados</h3>
+                <h3 className="text-xl font-semibold">PDVs asignados</h3>
                 <PosTable
                   data={center.pos.map(
                     (p) =>

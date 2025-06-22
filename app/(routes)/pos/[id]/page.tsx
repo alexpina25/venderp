@@ -46,7 +46,7 @@ export default function PosDetailPage({ params }: { params: { id: string } }) {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h2 className="text-2xl font-bold">Detalle de POS</h2>
+        <h2 className="text-2xl font-bold">Detalle del Punto De Venta</h2>
       </div>
       {pos && (
         <>

@@ -149,13 +149,13 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
           </div>
 
           <div>
-          <Label htmlFor="posId">POS / Centro</Label>
+          <Label htmlFor="posId">PDV / Centro</Label>
           <Select
               defaultValue={machine.posId ?? undefined}
               onValueChange={(v) => setValue("posId", v)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona POS" />
+                <SelectValue placeholder="Selecciona PDV" />
               </SelectTrigger>
               <SelectContent>
                 {centers.map((center) => (

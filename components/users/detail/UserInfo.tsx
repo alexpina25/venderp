@@ -95,7 +95,7 @@ export function UserInfo({ user, onEdit }: Props) {
       )}
       {user.pos && (
         <div>
-          <p className="text-sm text-muted-foreground">POS</p>
+          <p className="text-sm text-muted-foreground">PDV</p>
           <p>{user.pos.name}</p>
         </div>
       )}

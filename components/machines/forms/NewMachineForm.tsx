@@ -172,7 +172,7 @@ export function NewMachineForm() {
 
       {selectedCenterId && (
         <div>
-          <Label>POS</Label>
+          <Label>PDV</Label>
           <Select onValueChange={(v) => setValue("posId", v)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecciona POS" />

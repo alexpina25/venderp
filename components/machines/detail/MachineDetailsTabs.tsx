@@ -30,7 +30,7 @@ export function MachineDetailsTabs({ machine }: Props) {
         return machine.pos ? (
           <MachineSalesTable posId={machine.pos.id} />
         ) : (
-          <div>No POS asociado</div>
+          <div>Sin PDV asociado</div>
         );
       default:
         return <div>Selecciona una sección.</div>;

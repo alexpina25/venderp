@@ -75,7 +75,7 @@ export function RoutesToolbar() {
         onValueChange={(v) => updateParam("pos", v)}
       >
         <SelectTrigger className="w-full sm:w-[200px]">
-          <SelectValue placeholder="POS" />
+          <SelectValue placeholder="PDV" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Todos</SelectItem>

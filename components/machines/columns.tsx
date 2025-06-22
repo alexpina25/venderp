@@ -73,7 +73,7 @@ export const columns: ColumnDef<Machine & { pos: { name: string } | null }>[] =
     },
     {
       accessorKey: "pos.name",
-      header: "POS",
+      header: "PDV",
       cell: ({ row }) =>
         row.original.pos?.name ?? (
           <span className="text-muted-foreground italic">Sin asignar</span>
