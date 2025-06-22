@@ -11,10 +11,9 @@ export async function GET(
     const tenantId = session?.user?.tenant?.id;
 
     const machine = await db.machine.findFirst({
-      where: { id: params.id, center: { tenantId } },
+      where: { id: params.id, tenantId },
       include: {
         pos: true,
-        center: true,
         products: {
           include: {
             product: true,

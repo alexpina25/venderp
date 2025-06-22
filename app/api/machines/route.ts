@@ -8,8 +8,8 @@ export async function GET(req: NextRequest) {
   if (!tenantId) return NextResponse.json([], { status: 401 });
 
   const machines = await db.machine.findMany({
-    where: { center: { tenantId } },
-    include: { pos: true, center: true },
+    where: { tenantId },
+    include: { pos: true },
     orderBy: { customId: "asc" },
   });
 

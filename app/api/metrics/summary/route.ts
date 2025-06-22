@@ -8,8 +8,8 @@ export async function GET() {
     const tenantId = session?.user?.tenant?.id;
 
     const [activeMachines, totalMachines, sales] = await Promise.all([
-      db.machine.count({ where: { status: "ACTIVE", center: { tenantId } } }),
-      db.machine.count({ where: { center: { tenantId } } }),
+      db.machine.count({ where: { status: "ACTIVE", tenantId } }),
+      db.machine.count({ where: { tenantId } }),
       db.sale.aggregate({
         _sum: { price: true },
         where: {

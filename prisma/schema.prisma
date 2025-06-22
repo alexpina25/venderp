@@ -153,8 +153,8 @@ model Machine {
   status       MachineStatus @default(ACTIVE)
   lastCheck    DateTime?
   installedAt  DateTime?
-  centerId     String?
-  center       Center?       @relation(fields: [centerId], references: [id])
+  tenantId     String
+  tenant       Tenant        @relation(fields: [tenantId], references: [id])
 
   posId String? @unique
   pos   POS?    @relation(fields: [posId], references: [id])
