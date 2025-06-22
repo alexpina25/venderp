@@ -15,7 +15,8 @@ export const columns: ColumnDef<Machine & { pos: { name: string } | null }>[] =
       header: "Máquina",
       cell: ({ row }) => {
         const machine = row.original;
-        const id = row.getValue("customId") || machine.id;
+        const customId = row.getValue("customId") as number | null;
+        const id = customId ?? machine.id;
         return (
           <div className="flex items-center gap-2 justify-between">
             <span className="font-medium">{id}</span>
