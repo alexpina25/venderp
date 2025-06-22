@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -16,7 +17,6 @@ export default function SignInPage() {
     const password = (form.elements.namedItem("password") as HTMLInputElement)
       .value;
 
-    await signIn("credentials", { email, password, callbackUrl: "/dashboard" });
     const res = await signIn("credentials", {
       email,
       password,
