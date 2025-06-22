@@ -24,6 +24,7 @@ const formSchema = z.object({
   code: z.string().min(2),
   name: z.string().min(2),
   address: z.string().min(2),
+  city: z.string().min(2),
   notes: z.string().optional(),
   centerId: z.string().min(1, "Selecciona un centro"),
   machineId: z.string().optional(),
@@ -84,6 +85,11 @@ export function NewPosForm() {
       <div>
         <Label htmlFor="address">Ubicación</Label>
         <Input id="address" {...register("address")} />
+      </div>
+
+      <div>
+        <Label htmlFor="city">Ciudad</Label>
+        <Input id="city" {...register("city")} />
       </div>
 
       <div>

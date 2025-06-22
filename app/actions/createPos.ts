@@ -8,6 +8,7 @@ interface CreatePosInput {
   code: string;
   name: string;
   address: string;
+  city: string;
   notes?: string;
   centerId: string;
   machineId?: string;
@@ -26,6 +27,7 @@ export async function createPos(data: CreatePosInput) {
       code: data.code,
       name: data.name,
       address: data.address,
+      city: data.city,
       notes: data.notes,
       coverage: 0,
       customId: await generateCustomId("POS", center.tenantId),
