@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+} from "@/components/ui/card";
 import { AdjustStockModal } from "@/components/machines/detail/stock/AdjustStockModal";
 
 interface Props {
@@ -72,46 +73,44 @@ export function StopProductsList({ posId }: Props) {
 
   return (
     <>
-    <Table className="bg-background rounded-md border">
-      <TableHeader>
-        <TableRow>
-          <TableHead>Línea</TableHead>
-          <TableHead>Selección</TableHead>
-          <TableHead>Producto</TableHead>
-          <TableHead>Ajustar Stock</TableHead>
-          <TableHead className="text-center">Stock</TableHead>
-          <TableHead className="text-right">Precio (€)</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((p) => (
-          <TableRow key={p.id}>
-            <TableCell>{p.line}</TableCell>
-            <TableCell>{p.selection}</TableCell>
-            <TableCell>{p.product.name}</TableCell>
-            <TableCell>
-              <Button size="sm" onClick={() => openAdjustStockModal(p.id, p.product.name)}>
-                Ajustar Stock
-              </Button>
-            </TableCell>
-            <TableCell className="text-center">{p.currentStock}</TableCell>
-            <TableCell className="text-right">
-              {p.product.price.toFixed(2)}€
-            </TableCell>
-          </TableRow>
+          <Card key={p.id}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">{p.product.name}</CardTitle>
+              <CardAction>
+                <Button
+                  size="sm"
+                  onClick={() => openAdjustStockModal(p.id, p.product.name)}
+                >
+                  Ajustar Stock
+                </Button>
+              </CardAction>
+              <CardDescription>
+                Línea {p.line} · Selección {p.selection}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-1">
+              <p>
+                <strong>Stock:</strong> {p.currentStock}
+              </p>
+              <p>
+                <strong>Precio:</strong> {p.product.price.toFixed(2)}€
+              </p>
+            </CardContent>
+          </Card>
         ))}
-      </TableBody>
-    </Table>
-    {adjustStockModalOpen && selectedProductId && machineId && (
-      <AdjustStockModal
-        open={adjustStockModalOpen}
-        onClose={() => setAdjustStockModalOpen(false)}
-        onSuccess={refreshProducts}
-        machineId={machineId}
-        machineProductId={selectedProductId}
-        productName={selectedProductName}
-      />
-    )}
+      </div>
+      {adjustStockModalOpen && selectedProductId && machineId && (
+        <AdjustStockModal
+          open={adjustStockModalOpen}
+          onClose={() => setAdjustStockModalOpen(false)}
+          onSuccess={refreshProducts}
+          machineId={machineId}
+          machineProductId={selectedProductId}
+          productName={selectedProductName}
+        />
+      )}
     </>
   );
 }
