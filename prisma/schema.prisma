@@ -40,6 +40,7 @@ model Tenant {
   masters  Master[]
   Product  Product[]
   Counter  Counter[]
+  Machine  Machine[]
 }
 
 model CenterUser {
@@ -166,6 +167,8 @@ model Machine {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Center    Center?  @relation(fields: [centerId], references: [id])
+  centerId  String?
 }
 
 enum MachineType {
