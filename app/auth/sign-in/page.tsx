@@ -1,11 +1,14 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function SignInPage() {
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -14,6 +17,17 @@ export default function SignInPage() {
       .value;
 
     await signIn("credentials", { email, password, callbackUrl: "/dashboard" });
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (res?.error) {
+      setError("Correo o contraseña incorrectos");
+    } else {
+      router.push("/dashboard");
+    }
   };
 
   return (
@@ -21,15 +35,15 @@ export default function SignInPage() {
       className="space-y-4 bg-card p-6 rounded-xl shadow-md border"
       onSubmit={handleSubmit}
     >
-      <h2 className="text-lg font-medium text-center text-foreground mb-2">Sign in</h2>
+      <h2 className="text-lg font-medium text-center text-foreground mb-2">
+        Sign in
+      </h2>
       <Input name="email" type="email" placeholder="Email" required />
-      <Input
-        name="password"
-        type="password"
-        placeholder="Password"
-        required
-      />
-      <Button type="submit" className="w-full">Enter</Button>
+      <Input name="password" type="password" placeholder="Password" required />
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      <Button type="submit" className="w-full">
+        Enter
+      </Button>
     </form>
   );
 }
