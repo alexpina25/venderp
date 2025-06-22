@@ -4,6 +4,7 @@ import { useState } from "react";
 import { StopProductsList } from "./StopProductsList";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { UploadButton } from "@/utils/uploadthing";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -54,9 +55,7 @@ export function StopDetailForm({
   const [priceChangeNotes, setPriceChangeNotes] = useState(
     initialData.priceChangeNotes || ""
   );
-  const [incidentNotes, setIncidentNotes] = useState(
-    initialData.incidentNotes || ""
-  );
+  const [incidentMedia, setIncidentMedia] = useState<string[]>([]);
 
   const handleNext = (e?: React.MouseEvent) => {
     e?.preventDefault();
@@ -81,12 +80,12 @@ export function StopDetailForm({
       maintenanceResolved,
       visitTime,
       priceChangeNotes,
-      incidentNotes,
+      incidentMedia,
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-6 mx-auto">
       {/* Step indicators */}
       <div className="text-sm text-muted-foreground mb-2">
         {/* Mobile: show only current step */}
@@ -201,10 +200,12 @@ export function StopDetailForm({
             value={priceChangeNotes}
             onChange={(e) => setPriceChangeNotes(e.target.value)}
           />
-          <Textarea
-            placeholder="Observaciones finales, fotos, etc."
-            value={incidentNotes}
-            onChange={(e) => setIncidentNotes(e.target.value)}
+          <UploadButton
+            endpoint="profileImage"
+            onClientUploadComplete={(res) =>
+              setIncidentMedia(res.map((f) => f.url))
+            }
+            onUploadError={(e) => alert(`Error al subir archivo: ${e.message}`)}
           />
         </div>
       )}
