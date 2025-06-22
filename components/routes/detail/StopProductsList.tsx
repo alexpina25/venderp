@@ -80,6 +80,7 @@ export function StopProductsList({ posId }: Props) {
               <CardTitle className="text-lg">{p.product.name}</CardTitle>
               <CardAction>
                 <Button
+                  type="button"
                   size="sm"
                   onClick={() => openAdjustStockModal(p.id, p.product.name)}
                 >
