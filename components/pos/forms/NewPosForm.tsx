@@ -17,27 +17,24 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-import { Center } from "@prisma/client";
+import { Center, Machine, Master } from "@prisma/client";
 import { createPos } from "@/app/actions/createPos"; // 🛠️ Asegúrate de tener este action
 
 const formSchema = z.object({
   code: z.string().min(2),
   name: z.string().min(2),
-  address: z.string().min(5),
-  city: z.string().min(2),
-  postalCode: z.string().optional(),
-  province: z.string().optional(),
-  country: z.string().optional(),
-  contactName: z.string().optional(),
-  contactPhone: z.string().optional(),
-  contactEmail: z.string().email().optional(),
+  address: z.string().min(2),
   notes: z.string().optional(),
   centerId: z.string().min(1, "Selecciona un centro"),
+  machineId: z.string().optional(),
+  masterId: z.string().optional(),
 });
 
 export function NewPosForm() {
   const router = useRouter();
   const [centers, setCenters] = useState<Center[]>([]);
+  const [machines, setMachines] = useState<Machine[]>([]);
+  const [masters, setMasters] = useState<Master[]>([]);
 
   const {
     register,
@@ -46,9 +43,7 @@ export function NewPosForm() {
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      country: "España",
-    },
+    defaultValues: {},
   });
 
   useEffect(() => {
@@ -57,8 +52,21 @@ export function NewPosForm() {
       .then(setCenters);
   }, []);
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-      await createPos(values);
+  useEffect(() => {
+    fetch("/api/machines")
+      .then((res) => res.json())
+      .then(setMachines);
+    fetch("/api/masters/auth")
+      .then((res) => res.json())
+      .then(setMasters);
+  }, []);
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await createPos({
+      ...values,
+      machineId: values.machineId || undefined,
+      masterId: values.masterId || undefined,
+    });
     router.refresh();
   };
 
@@ -74,45 +82,8 @@ export function NewPosForm() {
       </div>
 
       <div>
-        <Label htmlFor="address">Dirección</Label>
+        <Label htmlFor="address">Ubicación</Label>
         <Input id="address" {...register("address")} />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="city">Ciudad</Label>
-          <Input id="city" {...register("city")} />
-        </div>
-        <div>
-          <Label htmlFor="postalCode">Código Postal</Label>
-          <Input id="postalCode" {...register("postalCode")} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="province">Provincia</Label>
-          <Input id="province" {...register("province")} />
-        </div>
-        <div>
-          <Label htmlFor="country">País</Label>
-          <Input id="country" {...register("country")} />
-        </div>
-      </div>
-
-      <div>
-        <Label htmlFor="contactName">Nombre de contacto</Label>
-        <Input id="contactName" {...register("contactName")} />
-      </div>
-
-      <div>
-        <Label htmlFor="contactPhone">Teléfono</Label>
-        <Input id="contactPhone" {...register("contactPhone")} />
-      </div>
-
-      <div>
-        <Label htmlFor="contactEmail">Email</Label>
-        <Input id="contactEmail" {...register("contactEmail")} />
       </div>
 
       <div>
@@ -132,6 +103,38 @@ export function NewPosForm() {
         {errors.centerId && (
           <p className="text-xs text-red-500 mt-1">{errors.centerId.message}</p>
         )}
+      </div>
+
+      <div>
+        <Label>Máquina</Label>
+        <Select onValueChange={(v) => setValue("machineId", v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona máquina" />
+          </SelectTrigger>
+          <SelectContent>
+            {machines.map((m) => (
+              <SelectItem key={m.id} value={m.id}>
+                {m.code}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label>Master</Label>
+        <Select onValueChange={(v) => setValue("masterId", v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona master" />
+          </SelectTrigger>
+          <SelectContent>
+            {masters.map((m) => (
+              <SelectItem key={m.id} value={m.id}>
+                {m.serialNumber}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

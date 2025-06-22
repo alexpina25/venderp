@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { EditPosForm } from "./EditPosForm";
-import { POS, Center } from "@prisma/client";
+import { POS, Center, Machine, Master } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
@@ -17,6 +17,8 @@ import { useState } from "react";
 interface EditPosModalProps {
   pos: POS & {
     center: Center;
+    machine?: Machine | null;
+    master?: Master | null;
   };
   open?: boolean;
   onClose?: () => void;
