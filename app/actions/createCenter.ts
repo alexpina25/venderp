@@ -2,6 +2,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { generateCustomId } from "@/lib/customId";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 
@@ -39,6 +40,7 @@ export async function createCenter(
     parentCenterId: data.isParent ? null : data.parentCenterId ?? null,
     notes: data.notes ?? null,
     tenantId: input.tenantId,
+    customId: await generateCustomId("Center", input.tenantId),
   };
 
   await db.center.create({

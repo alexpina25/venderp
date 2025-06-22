@@ -2,6 +2,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { generateCustomId } from "@/lib/customId";
 import { z } from "zod";
 import { MachineStatus, MachineType } from "@prisma/client";
 
@@ -18,6 +19,13 @@ const schema = z.object({
 
 export async function createMachine(input: z.infer<typeof schema>) {
   const data = schema.parse(input);
+  const center = await db.center.findUnique({
+    where: { id: data.centerId },
+    select: { tenantId: true },
+  });
+  if (!center) throw new Error("Center not found");
+
+  const customId = await generateCustomId("Machine", center.tenantId);
 
   await db.machine.create({
     data: {
@@ -29,6 +37,7 @@ export async function createMachine(input: z.infer<typeof schema>) {
       posId: data.posId,
       centerId: data.centerId,
       installedAt: data.installedAt ? new Date(data.installedAt) : null,
+      customId,
     },
   });
 }
