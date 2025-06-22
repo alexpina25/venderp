@@ -10,7 +10,7 @@ export async function MachineConnections() {
     const tenantId = session?.user?.tenant?.id
 
     const machines = await db.machine.findMany({
-        where: { center: { tenantId } },
+        where: { tenantId },
         include: { pos: { select: { name: true } } },
         orderBy: { createdAt: "desc" },
         take: 5,

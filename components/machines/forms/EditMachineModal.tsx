@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Center, Machine, MachineStatus, MachineType } from "@prisma/client";
+import { POS, Machine, MachineStatus, MachineType } from "@prisma/client";
 import { updateMachine } from "@/app/actions/updateMachine";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,7 +41,7 @@ interface Props {
 }
 
 export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
-  const [centers, setCenters] = useState<Center[]>([]);
+  const [posList, setPosList] = useState<POS[]>([]);
 
   const {
     register,
@@ -64,9 +64,9 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
   });
 
   useEffect(() => {
-    fetch("/api/centers")
+    fetch("/api/pos")
       .then((res) => res.json())
-      .then(setCenters);
+      .then(setPosList);
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -141,7 +141,7 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
           </div>
 
           <div>
-          <Label htmlFor="posId">PDV / Centro</Label>
+          <Label htmlFor="posId">PDV</Label>
           <Select
               defaultValue={machine.posId ?? undefined}
               onValueChange={(v) => setValue("posId", v)}
@@ -150,9 +150,9 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
                 <SelectValue placeholder="Selecciona PDV" />
               </SelectTrigger>
               <SelectContent>
-                {centers.map((center) => (
-                  <SelectItem key={center.id} value={center.id}>
-                    {center.name}
+                {posList.map((pos) => (
+                  <SelectItem key={pos.id} value={pos.id}>
+                    {pos.name}
                   </SelectItem>
                 ))}
               </SelectContent>

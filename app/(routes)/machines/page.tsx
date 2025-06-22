@@ -8,7 +8,7 @@ export default async function MachinesPage() {
   const tenantId = session?.user?.tenant?.id;
 
   const machines = await db.machine.findMany({
-    where: { center: { tenantId } },
+    where: { tenantId },
     include: {
       pos: {
         select: {
