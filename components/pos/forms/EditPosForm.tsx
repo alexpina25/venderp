@@ -103,7 +103,7 @@ export function EditPosForm({ pos, onSuccess }: Props) {
           <SelectContent>
             {machines.map((m) => (
               <SelectItem key={m.id} value={m.id}>
-                {m.code}
+                {m.customId ?? m.id}
               </SelectItem>
             ))}
           </SelectContent>
