@@ -40,7 +40,7 @@ model Tenant {
   masters  Master[]
   Product  Product[]
   Counter  Counter[]
-  Machine  Machine[]
+  Machine  Machine[] @relation("TenantMachines")
 }
 
 model CenterUser {
@@ -99,7 +99,7 @@ model Center {
   parentCenterId String?
   parentCenter   Center?      @relation("CenterHierarchy", fields: [parentCenterId], references: [id])
   subCenters     Center[]     @relation("CenterHierarchy")
-  Machine        Machine[]
+  Machine        Machine[]    @relation("CenterMachines")
 }
 
 model POS {
@@ -155,7 +155,7 @@ model Machine {
   lastCheck    DateTime?
   installedAt  DateTime?
   tenantId     String
-  tenant       Tenant        @relation(fields: [tenantId], references: [id])
+  tenant       Tenant        @relation("TenantMachines", fields: [tenantId], references: [id])
 
   posId String? @unique
   pos   POS?    @relation(fields: [posId], references: [id])
@@ -167,7 +167,7 @@ model Machine {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Center    Center?  @relation(fields: [centerId], references: [id])
+  Center    Center?  @relation("CenterMachines", fields: [centerId], references: [id])
   centerId  String?
 }
 
