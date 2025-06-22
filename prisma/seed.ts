@@ -101,6 +101,7 @@ async function main() {
               model: "Basic Vender",
               serialNumber: faker.string.alphanumeric(10),
               type: "SNACK",
+              tenantId: tenant.id,
               centerId: subCenter.id,
               posId: pos.id,
               status: faker.helpers.arrayElement(Object.values(MachineStatus)),
