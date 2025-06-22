@@ -53,7 +53,11 @@ export default function ManageStopPage({ params }: { params: { id: string } }) {
         <h2 className="text-2xl font-bold">Gestionar parada</h2>
       </div>
       <div className="bg-background rounded-lg p-4 border">
-        <StopDetailForm onSubmit={handleSubmit} initialData={stop} />
+        <StopDetailForm
+          onSubmit={handleSubmit}
+          initialData={stop}
+          posId={stop.pos.id}
+        />
       </div>
     </div>
   );

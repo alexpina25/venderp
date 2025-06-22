@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { StopProductsList } from "./StopProductsList";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -11,11 +12,13 @@ import { Separator } from "@/components/ui/separator";
 interface StopDetailFormProps {
   onSubmit: (data: any) => void;
   initialData?: any;
+  posId: string;
 }
 
 export function StopDetailForm({
   onSubmit,
   initialData = {},
+  posId,
 }: StopDetailFormProps) {
   const [step, setStep] = useState(1);
 
@@ -55,8 +58,14 @@ export function StopDetailForm({
     initialData.incidentNotes || ""
   );
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, 4));
-  const handleBack = () => setStep((prev) => Math.max(prev - 1, 1));
+  const handleNext = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    setStep((prev) => Math.min(prev + 1, 4));
+  };
+  const handleBack = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    setStep((prev) => Math.max(prev - 1, 1));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,17 +88,28 @@ export function StopDetailForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
       {/* Step indicators */}
-      <div className="flex justify-between text-sm text-muted-foreground mb-2">
-        {["Recaudación", "Reposición", "Mantenimiento", "Finalizar"].map(
-          (label, i) => (
-            <span
-              key={i}
-              className={i + 1 === step ? "font-bold text-primary" : ""}
-            >
-              {label}
-            </span>
-          )
-        )}
+      <div className="text-sm text-muted-foreground mb-2">
+        {/* Mobile: show only current step */}
+        <div className="sm:hidden font-bold text-primary">
+          {
+            ["Recaudación", "Reposición", "Mantenimiento", "Finalizar"][
+              step - 1
+            ]
+          }
+        </div>
+        {/* Desktop: show all steps */}
+        <div className="hidden sm:flex justify-between">
+          {["Recaudación", "Reposición", "Mantenimiento", "Finalizar"].map(
+            (label, i) => (
+              <span
+                key={i}
+                className={i + 1 === step ? "font-bold text-primary" : ""}
+              >
+                {label}
+              </span>
+            )
+          )}
+        </div>
       </div>
 
       <Separator />
@@ -126,6 +146,7 @@ export function StopDetailForm({
       {step === 2 && (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Reposición</h3>
+          <StopProductsList posId={posId} />
           <div className="flex items-center space-x-3">
             <Label>¿Se repuso producto?</Label>
             <Switch checked={replenished} onCheckedChange={setReplenished} />
@@ -191,7 +212,11 @@ export function StopDetailForm({
       {/* Navigation buttons */}
       <div className="flex justify-between pt-4">
         {step > 1 ? (
-          <Button variant="outline" type="button" onClick={handleBack}>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={(e) => handleBack(e)}
+          >
             Atrás
           </Button>
         ) : (
@@ -199,7 +224,7 @@ export function StopDetailForm({
         )}
 
         {step < 4 ? (
-          <Button type="button" onClick={handleNext}>
+          <Button type="button" onClick={(e) => handleNext(e)}>
             Siguiente
           </Button>
         ) : (
