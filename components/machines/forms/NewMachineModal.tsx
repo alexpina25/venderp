@@ -10,10 +10,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { NewMachineForm } from "./NewMachineForm";
+import { useState } from "react";
 
 export function NewMachineModal() {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default" size="sm" className="gap-1">
           <Plus className="w-4 h-4" />
@@ -26,7 +28,7 @@ export function NewMachineModal() {
           <DialogTitle>Registrar nueva máquina</DialogTitle>
         </DialogHeader>
 
-        <NewMachineForm />
+        <NewMachineForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

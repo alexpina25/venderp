@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
 
 type PosWithCenter = {
   id: string;
@@ -40,7 +41,7 @@ const formSchema = z.object({
   installedAt: z.string().optional(),
 });
 
-export function NewMachineForm() {
+export function NewMachineForm({ onSuccess }: { onSuccess?: () => void }) {
   const router = useRouter();
   const [centers, setCenters] = useState<CenterBasic[]>([]);
   const [posList, setPosList] = useState<PosWithCenter[]>([]);
@@ -79,13 +80,22 @@ export function NewMachineForm() {
   );
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await createMachine(values);
-    router.refresh();
+    try {
+      await createMachine(values);
+      toast({ title: "Máquina creada" });
+      router.refresh();
+      onSuccess?.();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error al crear máquina",
+        description: "No se pudo crear la máquina.",
+      });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
       <div>
         <Label htmlFor="model">Modelo</Label>
         <Input id="model" {...register("model")} />
@@ -142,7 +152,7 @@ export function NewMachineForm() {
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Selecciona centro" />
+            <SelectValue placeholder="Selecciona centro (opcional)" />
           </SelectTrigger>
           <SelectContent>
             {centers.map((center) => (
@@ -161,9 +171,9 @@ export function NewMachineForm() {
         <div>
           <Label>PDV</Label>
           <Select onValueChange={(v) => setValue("posId", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecciona POS" />
-            </SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona PDV (opcional)" />
+          </SelectTrigger>
             <SelectContent>
               {filteredPos.map((pos) => (
                 <SelectItem key={pos.id} value={pos.id}>
