@@ -31,8 +31,9 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
     header: "Código",
   },
   {
-    accessorKey: "centerId",
-    header: "Center ID",
+    id: "centerCustomId",
+    header: "ID Centro",
+    cell: ({ row }) => row.original.center.customId ?? row.original.centerId,
   },
   {
     id: "centerName",
@@ -42,7 +43,10 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
   {
     id: "machineId",
     header: "Máquina",
-    cell: ({ row }) => row.original.machine ? row.original.machine.id : "-",
+    cell: ({ row }) =>
+      row.original.machine
+        ? row.original.machine.customId ?? row.original.machine.id
+        : "-",
   },
   {
     id: "masterSerial",
@@ -80,12 +84,18 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
     header: "Última venta",
     cell: ({ row }) => {
       const lastSale = row.original.lastSale;
-      if (!lastSale) return <span className="italic text-muted-foreground">–</span>;
+      if (!lastSale)
+        return <span className="italic text-muted-foreground">–</span>;
       const date = new Date(lastSale.timestamp);
       const diff = Date.now() - date.getTime();
       const hour = 60 * 60 * 1000;
       const day = 24 * hour;
-      const color = diff <= hour ? "bg-green-500" : diff <= day ? "bg-yellow-500" : "bg-red-500";
+      const color =
+        diff <= hour
+          ? "bg-green-500"
+          : diff <= day
+          ? "bg-yellow-500"
+          : "bg-red-500";
       return (
         <div className="flex items-center gap-2">
           {date.toLocaleString("es-ES")}
@@ -94,7 +104,7 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
       );
     },
   },
-/*   {
+  /*   {
     accessorKey: "createdAt",
     header: "Creado el",
     cell: ({ row }) => {
@@ -102,7 +112,7 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
       return date.toLocaleDateString("es-ES");
     },
   }, */
-/*   {
+  /*   {
     id: "acciones",
     header: "",
     cell: ({ row }) => {

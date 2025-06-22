@@ -32,13 +32,14 @@ model User {
 }
 
 model Tenant {
-  id      String    @id @default(uuid())
+  id       String    @id @default(uuid())
   customId Int?
-  name    String
-  users   User[]
-  centers Center[]
-  masters Master[]
-  Product Product[]
+  name     String
+  users    User[]
+  centers  Center[]
+  masters  Master[]
+  Product  Product[]
+  Counter  Counter[]
 }
 
 model CenterUser {
@@ -51,12 +52,12 @@ model CenterUser {
 }
 
 model POSUser {
-  id     String @id @default(uuid())
+  id       String @id @default(uuid())
   customId Int?
-  userId String
-  posId  String
-  user   User   @relation(fields: [userId], references: [id])
-  pos    POS    @relation(fields: [posId], references: [id])
+  userId   String
+  posId    String
+  user     User   @relation(fields: [userId], references: [id])
+  pos      POS    @relation(fields: [posId], references: [id])
 }
 
 enum Role {
@@ -380,10 +381,10 @@ model Sale {
 }
 
 model Counter {
-  id        String  @id @default(uuid())
+  id        String @id @default(uuid())
   tenantId  String
   model     String
-  lastValue Int     @default(0)
+  lastValue Int    @default(0)
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
 

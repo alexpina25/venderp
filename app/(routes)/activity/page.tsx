@@ -7,7 +7,7 @@ import { es } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 
 export default async function ActivityPage() {
-    const session = await getServerAuthSession();
+  const session = await getServerAuthSession();
   const userId = session?.user?.id;
 
   const current = userId
@@ -52,7 +52,7 @@ export default async function ActivityPage() {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  ID afectado: <code>{log.entityId}</code>
+                  ID afectado: <code>{log.customId ?? log.entityId}</code>
                 </p>
                 {log.changes && (
                   <pre className="text-xs mt-2 bg-muted rounded-md p-2 overflow-auto">
