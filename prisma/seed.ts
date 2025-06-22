@@ -98,7 +98,6 @@ async function main() {
 
           const machine = await prisma.machine.create({
             data: {
-              code: faker.string.uuid(),
               model: "Basic Vender",
               serialNumber: faker.string.alphanumeric(10),
               type: "SNACK",

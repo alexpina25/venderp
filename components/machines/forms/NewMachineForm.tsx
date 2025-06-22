@@ -31,15 +31,13 @@ type CenterBasic = {
 };
 
 const formSchema = z.object({
-  code: z.string().min(2),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  centerId: z.string(),
-  posId: z.string(),
+  centerId: z.string().optional(),
+  posId: z.string().optional(),
   installedAt: z.string().optional(),
-  customId: z.coerce.number().optional(),
 });
 
 export function NewMachineForm() {
@@ -87,18 +85,6 @@ export function NewMachineForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <Label htmlFor="code">Código</Label>
-        <Input id="code" {...register("code")} />
-        {errors.code && (
-          <p className="text-xs text-red-500">{errors.code.message}</p>
-        )}
-      </div>
-
-      <div>
-        <Label htmlFor="customId">ID</Label>
-        <Input id="customId" type="number" {...register("customId")} />
-      </div>
 
       <div>
         <Label htmlFor="model">Modelo</Label>
@@ -141,6 +127,7 @@ export function NewMachineForm() {
             <SelectItem value="ACTIVE">Activa</SelectItem>
             <SelectItem value="OUT_OF_SERVICE">Fuera de servicio</SelectItem>
             <SelectItem value="RETIRED">Retirada</SelectItem>
+            <SelectItem value="NOT_INSTALLED">Sin instalar</SelectItem>
           </SelectContent>
         </Select>
       </div>

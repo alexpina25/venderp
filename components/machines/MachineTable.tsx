@@ -13,8 +13,8 @@ export function MachineTable({ data }: MachineTableProps) {
     <DataTable
       columns={columns}
       data={data}
-      filterColumn="code"
-      searchPlaceholder="Buscar por código..."
+      filterColumn="customId"
+      searchPlaceholder="Buscar por ID..."
     />
   );
 }

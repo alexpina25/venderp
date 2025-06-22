@@ -11,13 +11,14 @@ import { EditMachineModal } from "./forms/EditMachineModal";
 export const columns: ColumnDef<Machine & { pos: { name: string } | null }>[] =
   [
     {
-      accessorKey: "code", // Columna de código
+      accessorKey: "customId",
       header: "Máquina",
       cell: ({ row }) => {
         const machine = row.original;
+        const id = row.getValue("customId") || machine.id;
         return (
           <div className="flex items-center gap-2 justify-between">
-            <span className="font-medium">{row.getValue("code")}</span>
+            <span className="font-medium">{id}</span>
             <Link href={`/machines/${machine.id}`}>
               <Button variant="ghost" size="icon">
                 <Eye className="w-4 h-4" />
@@ -61,13 +62,17 @@ export const columns: ColumnDef<Machine & { pos: { name: string } | null }>[] =
             ? "default"
             : status === "OUT_OF_SERVICE"
             ? "destructive"
-            : "secondary";
+            : status === "RETIRED"
+            ? "secondary"
+            : "outline";
         const label =
           status === "ACTIVE"
             ? "Activa"
             : status === "OUT_OF_SERVICE"
             ? "Fuera de servicio"
-            : "Retirada";
+            : status === "RETIRED"
+            ? "Retirada"
+            : "Sin instalar";
         return <Badge variant={variant}>{label}</Badge>;
       },
     },

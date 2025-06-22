@@ -87,7 +87,9 @@ export function AddProductModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Añadir producto a la máquina {machine.code}</DialogTitle>
+          <DialogTitle>
+            Añadir producto a la máquina {machine.customId ?? machine.id}
+          </DialogTitle>
         </DialogHeader>
 
         {/* Selección de producto */}

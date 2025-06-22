@@ -147,15 +147,14 @@ model Master {
 model Machine {
   id           String        @id @default(uuid())
   customId     Int?          @unique
-  code         String        @unique
   model        String?
   serialNumber String?       @unique
   type         MachineType
   status       MachineStatus @default(ACTIVE)
   lastCheck    DateTime?
   installedAt  DateTime?
-  centerId     String
-  center       Center        @relation(fields: [centerId], references: [id])
+  centerId     String?
+  center       Center?       @relation(fields: [centerId], references: [id])
 
   posId String? @unique
   pos   POS?    @relation(fields: [posId], references: [id])
@@ -181,6 +180,7 @@ enum MachineStatus {
   ACTIVE
   OUT_OF_SERVICE
   RETIRED
+  NOT_INSTALLED
 }
 
 model Product {

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { SaleMethod } from "@prisma/client";
 
 const saleSchema = z.object({
-  machineCode: z.string(),
+  machineCustomId: z.coerce.number(),
   line: z.string(),
   method: z.nativeEnum(SaleMethod),
   price: z.number(),
@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
   try {
     const data = saleSchema.parse(await req.json());
 
-    const machine = await db.machine.findUnique({
-      where: { code: data.machineCode },
+    const machine = await db.machine.findFirst({
+      where: { customId: data.machineCustomId },
     });
 
     if (!machine) {
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
   const posId = req.nextUrl.searchParams.get("posId");
   let where;
   if (machine) {
-    const m = await db.machine.findUnique({ where: { code: machine } });
+    const m = await db.machine.findFirst({ where: { customId: Number(machine) } });
     if (!m || !m.posId) {
       return NextResponse.json({ error: "Machine not found" }, { status: 404 });
     }
