@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const machines = await db.machine.findMany({
     where: { center: { tenantId } },
     include: { pos: true, center: true },
-    orderBy: { code: "asc" },
+    orderBy: { customId: "asc" },
   });
 
   return NextResponse.json(machines);

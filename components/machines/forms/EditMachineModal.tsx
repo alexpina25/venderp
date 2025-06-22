@@ -25,12 +25,11 @@ import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   id: z.string(),
-  code: z.string().min(2),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
   status: z.nativeEnum(MachineStatus),
-  posId: z.string(),
+  posId: z.string().optional(),
   installedAt: z.string().optional(),
 });
 
@@ -53,7 +52,6 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: machine.id,
-      code: machine.code,
       model: machine.model ?? "",
       serialNumber: machine.serialNumber ?? "",
       type: machine.type,
@@ -93,13 +91,6 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input type="hidden" {...register("id")} />
 
-          <div>
-            <Label htmlFor="code">Código</Label>
-            <Input id="code" {...register("code")} />
-            {errors.code && (
-              <p className="text-xs text-red-500">{errors.code.message}</p>
-            )}
-          </div>
 
           <div>
             <Label htmlFor="model">Modelo</Label>
@@ -144,6 +135,7 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
                   Fuera de servicio
                 </SelectItem>
                 <SelectItem value="RETIRED">Retirada</SelectItem>
+                <SelectItem value="NOT_INSTALLED">Sin instalar</SelectItem>
               </SelectContent>
             </Select>
           </div>

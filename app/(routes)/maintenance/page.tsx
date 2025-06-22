@@ -31,7 +31,7 @@ export default async function MaintenancePage() {
               >
                 <div className="flex justify-between items-center">
                   <p className="font-semibold">
-                    {log.machine.code} – {log.machine.model}
+                    {log.machine.customId ?? log.machine.id} – {log.machine.model}
                   </p>
                   <Badge
                     variant={

@@ -24,8 +24,8 @@ export function MachineInfo({ machine, onEdit }: Props) {
         </Button>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">Código</p>
-        <p className="font-medium">{machine.code}</p>
+        <p className="text-sm text-muted-foreground">ID</p>
+        <p className="font-medium">{machine.customId ?? machine.id}</p>
       </div>
 
       <div>
@@ -94,6 +94,8 @@ function getStatusLabel(status: MachineStatus) {
       return "Fuera de servicio";
     case "RETIRED":
       return "Retirada";
+    case "NOT_INSTALLED":
+      return "Sin instalar";
     default:
       return status;
   }
@@ -107,6 +109,8 @@ function getStatusVariant(status: MachineStatus) {
       return "destructive";
     case "RETIRED":
       return "secondary";
+    case "NOT_INSTALLED":
+      return "outline";
     default:
       return "outline";
   }
