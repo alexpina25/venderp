@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { generateCustomId } from "@/lib/customId";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 
@@ -47,6 +48,7 @@ export async function createTenantUser(
       role: data.role,
       active: true,
       tenantId: input.tenantId,
+      customId: await generateCustomId("User", input.tenantId),
     },
   });
 

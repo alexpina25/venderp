@@ -2,6 +2,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { generateCustomId } from "@/lib/customId";
 import { z } from "zod";
 import { ProductCategory } from "@prisma/client";
 
@@ -24,6 +25,7 @@ export async function createProduct(
     data: {
       ...data,
       tenantId: input.tenantId,
+      customId: await generateCustomId("Product", input.tenantId),
     },
   });
 }

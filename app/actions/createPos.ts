@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
+import { generateCustomId } from "@/lib/customId";
 
 interface CreatePosInput {
   code: string;
@@ -20,6 +21,12 @@ interface CreatePosInput {
 }
 
 export async function createPos(data: CreatePosInput) {
+  const center = await db.center.findUnique({
+    where: { id: data.centerId },
+    select: { tenantId: true },
+  });
+  if (!center) throw new Error("Center not found");
+
   await db.pOS.create({
     data: {
       code: data.code,
@@ -35,6 +42,7 @@ export async function createPos(data: CreatePosInput) {
       notes: data.notes,
       centerId: data.centerId,
       coverage: 0,
+      customId: await generateCustomId("POS", center.tenantId),
     },
   });
 

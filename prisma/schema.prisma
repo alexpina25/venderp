@@ -13,6 +13,7 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid())
+  customId  Int?
   email     String   @unique
   name      String
   password  String
@@ -32,6 +33,7 @@ model User {
 
 model Tenant {
   id      String    @id @default(uuid())
+  customId Int?
   name    String
   users   User[]
   centers Center[]
@@ -41,6 +43,7 @@ model Tenant {
 
 model CenterUser {
   id       String @id @default(uuid())
+  customId Int?
   userId   String
   centerId String
   user     User   @relation(fields: [userId], references: [id])
@@ -49,6 +52,7 @@ model CenterUser {
 
 model POSUser {
   id     String @id @default(uuid())
+  customId Int?
   userId String
   posId  String
   user   User   @relation(fields: [userId], references: [id])
@@ -70,6 +74,7 @@ enum Role {
 
 model Center {
   id             String       @id @default(uuid())
+  customId       Int?
   name           String
   address        String
   city           String
@@ -97,6 +102,7 @@ model Center {
 
 model POS {
   id           String      @id @default(uuid())
+  customId     Int?
   code         String      @unique
   name         String
   address      String
@@ -123,6 +129,7 @@ model POS {
 
 model Master {
   id           String   @id @default(uuid())
+  customId     Int?
   serialNumber String   @unique
   tenantId     String
   tenant       Tenant   @relation(fields: [tenantId], references: [id])
@@ -205,6 +212,7 @@ enum ProductCategory {
 
 model MachineProduct {
   id           String @id @default(uuid())
+  customId     Int?
   machineId    String
   productId    String
   currentStock Int
@@ -224,6 +232,7 @@ model MachineProduct {
 
 model Replenishment {
   id        String   @id @default(uuid())
+  customId  Int?
   machineId String
   routeId   String
   date      DateTime @default(now())
@@ -236,6 +245,7 @@ model Replenishment {
 
 model ReplenishmentItem {
   id              String @id @default(uuid())
+  customId        Int?
   replenishmentId String
   productId       String
   quantityAdded   Int
@@ -249,6 +259,7 @@ model ReplenishmentItem {
 
 model MaintenanceLog {
   id          String          @id @default(uuid())
+  customId    Int?
   machineId   String
   operatorId  String
   date        DateTime        @default(now())
@@ -274,6 +285,7 @@ enum MaintenanceType {
 
 model Route {
   id         String   @id @default(uuid())
+  customId   Int?
   date       DateTime
   operatorId String
   notes      String?
@@ -285,6 +297,7 @@ model Route {
 
 model RouteStop {
   id               String  @id @default(uuid())
+  customId         Int?
   routeId          String
   posId            String
   cashCollected    Float?
@@ -299,6 +312,7 @@ model RouteStop {
 
 model Invoice {
   id        String        @id @default(uuid())
+  customId  Int?
   centerId  String
   issuedAt  DateTime      @default(now())
   dueDate   DateTime?
@@ -326,6 +340,7 @@ enum InvoiceStatus {
 
 model ActivityLog {
   id        String   @id @default(uuid())
+  customId  Int?
   userId    String
   action    String
   entity    String
@@ -349,6 +364,7 @@ enum SaleMethod {
 
 model Sale {
   id        String     @id @default(uuid())
+  customId  Int?
   posId     String
   productId String
   method    SaleMethod
@@ -361,4 +377,15 @@ model Sale {
   product   Product  @relation(fields: [productId], references: [id])
   Machine   Machine? @relation(fields: [machineId], references: [id])
   machineId String?
+}
+
+model Counter {
+  id        String  @id @default(uuid())
+  tenantId  String
+  model     String
+  lastValue Int     @default(0)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, model])
 }
