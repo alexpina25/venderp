@@ -1,37 +1,42 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { POS } from "@prisma/client";
+import { POS, Machine, Master } from "@prisma/client";
 import { updatePos } from "@/app/actions/updatePos"; // Asegúrate de tener esta acción creada
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   id: z.string(),
   name: z.string().min(2),
-  address: z.string().min(5),
-  city: z.string().min(2),
-  postalCode: z.string().optional(),
-  province: z.string().optional(),
-  country: z.string().optional(),
-  contactName: z.string().optional(),
-  contactPhone: z.string().optional(),
-  contactEmail: z.string().email().optional(),
+  address: z.string().min(2),
   notes: z.string().optional(),
+  machineId: z.string().optional(),
+  masterId: z.string().optional(),
 });
 
 interface Props {
-  pos: POS;
+  pos: POS & { machine?: Machine | null; master?: Master | null };
   onSuccess?: () => void;
 }
 
 export function EditPosForm({ pos, onSuccess }: Props) {
   const router = useRouter();
+  const [machines, setMachines] = useState<Machine[]>([]);
+  const [masters, setMasters] = useState<Master[]>([]);
 
   const {
     register,
@@ -40,22 +45,30 @@ export function EditPosForm({ pos, onSuccess }: Props) {
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        id: pos.id,
-        name: pos.name,
-        address: pos.address,
-        city: pos.city,
-        postalCode: pos.postalCode ?? "",
-        province: pos.province ?? "",
-        country: pos.country ?? "España",
-        contactName: pos.contactName ?? "",
-        contactPhone: pos.contactPhone ?? "",
-        contactEmail: pos.contactEmail ?? "",
-        notes: pos.notes ?? "",
+      id: pos.id,
+      name: pos.name,
+      address: pos.address,
+      notes: pos.notes ?? "",
+      machineId: pos.machine ? pos.machine.id : "",
+      masterId: pos.master ? pos.master.id : "",
     },
   });
 
+  useEffect(() => {
+    fetch("/api/machines")
+      .then((res) => res.json())
+      .then(setMachines);
+    fetch("/api/masters/auth")
+      .then((res) => res.json())
+      .then(setMasters);
+  }, []);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await updatePos(values);
+    await updatePos({
+      ...values,
+      machineId: values.machineId || undefined,
+      masterId: values.masterId || undefined,
+    });
     router.refresh();
     onSuccess?.();
   };
@@ -73,45 +86,46 @@ export function EditPosForm({ pos, onSuccess }: Props) {
       </div>
 
       <div>
-        <Label htmlFor="address">Dirección</Label>
+        <Label htmlFor="address">Ubicación</Label>
         <Input id="address" {...register("address")} />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="city">Ciudad</Label>
-          <Input id="city" {...register("city")} />
-        </div>
-        <div>
-          <Label htmlFor="postalCode">Código postal</Label>
-          <Input id="postalCode" {...register("postalCode")} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="province">Provincia</Label>
-          <Input id="province" {...register("province")} />
-        </div>
-        <div>
-          <Label htmlFor="country">País</Label>
-          <Input id="country" {...register("country")} />
-        </div>
+      <div>
+        <Label>Máquina</Label>
+        <Select
+          defaultValue={pos.machine ? pos.machine.id : undefined}
+          onValueChange={(v) => setValue("machineId", v)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona máquina" />
+          </SelectTrigger>
+          <SelectContent>
+            {machines.map((m) => (
+              <SelectItem key={m.id} value={m.id}>
+                {m.code}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>
-        <Label htmlFor="contactName">Nombre de contacto</Label>
-        <Input id="contactName" {...register("contactName")} />
-      </div>
-
-      <div>
-        <Label htmlFor="contactPhone">Teléfono</Label>
-        <Input id="contactPhone" {...register("contactPhone")} />
-      </div>
-
-      <div>
-        <Label htmlFor="contactEmail">Email</Label>
-        <Input id="contactEmail" {...register("contactEmail")} />
+        <Label>Master</Label>
+        <Select
+          defaultValue={pos.master ? pos.master.id : undefined}
+          onValueChange={(v) => setValue("masterId", v)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecciona master" />
+          </SelectTrigger>
+          <SelectContent>
+            {masters.map((m) => (
+              <SelectItem key={m.id} value={m.id}>
+                {m.serialNumber}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

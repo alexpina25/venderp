@@ -25,17 +25,8 @@ export function PosInfo({ pos, onEdit }: Props) {
           <p>{pos.center.name}</p>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">Dirección</p>
-        <p>
-            {pos.address}, {pos.city}
-        </p>
-      </div>
-      <div>
-        <p className="text-sm text-muted-foreground">Contacto</p>
-        <p>
-            {pos.contactName || "-"}
-            {pos.contactPhone ? ` (${pos.contactPhone})` : ""}
-        </p>
+        <p className="text-sm text-muted-foreground">Ubicación</p>
+        <p>{pos.address}</p>
       </div>
       <div>
         <p className="text-sm text-muted-foreground">Master</p>
