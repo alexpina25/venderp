@@ -10,10 +10,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { NewPosForm } from "./NewPosForm";
+import { useState } from "react";
 
 export function NewPosModal() {
+    const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
           <Button variant="default" size="sm" className="gap-1">
             <Plus className="w-4 h-4" />
@@ -26,7 +28,7 @@ export function NewPosModal() {
           <DialogTitle>Registrar nuevo PDV</DialogTitle>
         </DialogHeader>
 
-          <NewPosForm />
+          <NewPosForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

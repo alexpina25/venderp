@@ -16,6 +16,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
 
 import { Center, Machine, Master } from "@prisma/client";
 import { createPos } from "@/app/actions/createPos"; // 🛠️ Asegúrate de tener este action
@@ -31,11 +32,14 @@ const formSchema = z.object({
   masterId: z.string().optional(),
 });
 
-export function NewPosForm() {
+export function NewPosForm({ onSuccess }: { onSuccess?: () => void }) {
   const router = useRouter();
   const [centers, setCenters] = useState<Center[]>([]);
   const [machines, setMachines] = useState<Machine[]>([]);
   const [masters, setMasters] = useState<Master[]>([]);
+  const [centerFilter, setCenterFilter] = useState("");
+  const [machineFilter, setMachineFilter] = useState("");
+  const [masterFilter, setMasterFilter] = useState("");
 
   const {
     register,
@@ -63,12 +67,22 @@ export function NewPosForm() {
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await createPos({
-      ...values,
-      machineId: values.machineId || undefined,
-      masterId: values.masterId || undefined,
-    });
-    router.refresh();
+    try {
+      await createPos({
+        ...values,
+        machineId: values.machineId || undefined,
+        masterId: values.masterId || undefined,
+      });
+      toast({ title: "PDV creado" });
+      router.refresh();
+      onSuccess?.();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error al crear PDV",
+        description: "No se pudo crear el punto de venta.",
+      });
+    }
   };
 
   return (
@@ -99,11 +113,27 @@ export function NewPosForm() {
             <SelectValue placeholder="Selecciona centro" />
           </SelectTrigger>
           <SelectContent>
-            {centers.map((center) => (
-              <SelectItem key={center.id} value={center.id}>
-                {center.name}
-              </SelectItem>
-            ))}
+            <div className="p-2">
+              <Input
+                placeholder="Buscar..."
+                value={centerFilter}
+                onChange={(e) => setCenterFilter(e.target.value)}
+              />
+            </div>
+            {centers
+              .filter(
+                (c) =>
+                  c.name.toLowerCase().includes(centerFilter.toLowerCase()) ||
+                  String(c.customId ?? "").includes(centerFilter) ||
+                  c.id.toLowerCase().includes(centerFilter.toLowerCase())
+              )
+              .map((center) => (
+                <SelectItem key={center.id} value={center.id}>
+                  {center.customId
+                    ? `${center.customId} - ${center.name}`
+                    : center.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
         {errors.centerId && (
@@ -118,11 +148,31 @@ export function NewPosForm() {
             <SelectValue placeholder="Selecciona máquina" />
           </SelectTrigger>
           <SelectContent>
-            {machines.map((m) => (
-              <SelectItem key={m.id} value={m.id}>
-                {m.customId ?? m.id}
-              </SelectItem>
-            ))}
+            <div className="p-2">
+              <Input
+                placeholder="Buscar..."
+                value={machineFilter}
+                onChange={(e) => setMachineFilter(e.target.value)}
+              />
+            </div>
+            {machines
+              .filter(
+                (m) =>
+                  String(m.customId ?? "").includes(machineFilter) ||
+                  (m.model ?? "")
+                    .toLowerCase()
+                    .includes(machineFilter.toLowerCase()) ||
+                  (m.serialNumber ?? "")
+                    .toLowerCase()
+                    .includes(machineFilter.toLowerCase()) ||
+                  m.id.toLowerCase().includes(machineFilter.toLowerCase())
+              )
+              .map((m) => (
+                <SelectItem key={m.id} value={m.id}>
+                  {(m.customId ? `${m.customId}` : m.id) +
+                    (m.model ? ` - ${m.model}` : "")}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </div>
@@ -134,11 +184,28 @@ export function NewPosForm() {
             <SelectValue placeholder="Selecciona master" />
           </SelectTrigger>
           <SelectContent>
-            {masters.map((m) => (
-              <SelectItem key={m.id} value={m.id}>
-                {m.serialNumber}
-              </SelectItem>
-            ))}
+            <div className="p-2">
+              <Input
+                placeholder="Buscar..."
+                value={masterFilter}
+                onChange={(e) => setMasterFilter(e.target.value)}
+              />
+            </div>
+            {masters
+              .filter(
+                (m) =>
+                  m.serialNumber
+                    .toLowerCase()
+                    .includes(masterFilter.toLowerCase()) ||
+                  String(m.customId ?? "").includes(masterFilter) ||
+                  m.id.toLowerCase().includes(masterFilter.toLowerCase())
+              )
+              .map((m) => (
+                <SelectItem key={m.id} value={m.id}>
+                  {(m.customId ? `${m.customId}` : m.id) +
+                    ` - ${m.serialNumber}`}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </div>

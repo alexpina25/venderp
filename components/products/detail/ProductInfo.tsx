@@ -1,4 +1,6 @@
-import { POS, Center, Master } from "@prisma/client";
+"use client";
+
+import { Product } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -6,24 +8,26 @@ import { toast } from "@/components/ui/use-toast";
 import * as Dialog from "@radix-ui/react-dialog";
 
 interface Props {
-  pos: POS & { center: Center; master?: Master | null };
-  onEdit: (pos: POS & { center: Center; master?: Master | null }) => void;
+  product: Product;
+  onEdit: (product: Product) => void;
 }
 
-export function PosInfo({ pos, onEdit }: Props) {
+export function ProductInfo({ product, onEdit }: Props) {
   const router = useRouter();
 
   const handleDelete = async () => {
-    const res = await fetch(`/api/pos/${pos.id}/delete`, { method: "POST" });
+    const res = await fetch(`/api/products/${product.id}/delete`, {
+      method: "POST",
+    });
 
     if (res.ok) {
-      toast({ title: "POS eliminado correctamente" });
-      router.push("/pos");
+      toast({ title: "Producto eliminado correctamente" });
+      router.push("/products");
       router.refresh();
     } else {
       const data = await res.json();
       toast({
-        title: "No se pudo eliminar el POS",
+        title: "No se pudo eliminar el producto",
         description: data.error ?? "Error desconocido",
         variant: "destructive",
       });
@@ -33,11 +37,11 @@ export function PosInfo({ pos, onEdit }: Props) {
   return (
     <div className="grid md:grid-cols-2 gap-6 bg-background rounded-lg p-4 border">
       <div className="col-span-2 mt-4 flex gap-2">
-        <Button size="sm" onClick={() => onEdit(pos)}>
+        <Button size="sm" onClick={() => onEdit(product)}>
           <Pencil className="w-4 h-4 mr-2" />
           Editar
         </Button>
-                <Dialog.Root>
+        <Dialog.Root>
           <Dialog.Trigger asChild>
             <Button size="sm" variant="destructive">
               <Trash className="w-4 h-4 mr-2" />
@@ -51,7 +55,7 @@ export function PosInfo({ pos, onEdit }: Props) {
                 Confirmar eliminación
               </Dialog.Title>
               <Dialog.Description className="mt-2 text-sm text-muted-foreground">
-                ¿Estás seguro de que quieres eliminar este POS? Esta acción no se puede deshacer.
+                ¿Estás seguro de que quieres eliminar este producto? Esta acción no se puede deshacer.
               </Dialog.Description>
               <div className="mt-4 flex justify-end gap-2">
                 <Dialog.Close asChild>
@@ -69,20 +73,32 @@ export function PosInfo({ pos, onEdit }: Props) {
       </div>
       <div>
         <p className="text-sm text-muted-foreground">Nombre</p>
-        <p className="font-medium">{pos.name}</p>
+        <p className="font-medium">{product.name}</p>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">Centro</p>
-        <p>{pos.center.name}</p>
+        <p className="text-sm text-muted-foreground">Categoría</p>
+        <p>{product.category}</p>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">Ubicación</p>
-        <p>{pos.address}</p>
+        <p className="text-sm text-muted-foreground">Precio (€)</p>
+        <p>{product.price.toFixed(2)}</p>
       </div>
       <div>
-        <p className="text-sm text-muted-foreground">Master</p>
-        <p>{pos.master ? pos.master.serialNumber : "-"}</p>
+        <p className="text-sm text-muted-foreground">Unidad</p>
+        <p>{product.unit}</p>
       </div>
+      {product.cost !== null && (
+        <div>
+          <p className="text-sm text-muted-foreground">Coste (€)</p>
+          <p>{product.cost?.toFixed(2)}</p>
+        </div>
+      )}
+      {product.stockMin !== null && (
+        <div>
+          <p className="text-sm text-muted-foreground">Stock mínimo</p>
+          <p>{product.stockMin}</p>
+        </div>
+      )}
     </div>
   );
 }
