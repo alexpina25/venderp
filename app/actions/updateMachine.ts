@@ -7,6 +7,7 @@ import { MachineStatus, MachineType } from "@prisma/client";
 
 const schema = z.object({
   id: z.string(),
+  brand: z.string().optional(),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
@@ -21,6 +22,7 @@ export async function updateMachine(input: z.infer<typeof schema>) {
   await db.machine.update({
     where: { id: data.id },
     data: {
+      brand: data.brand || null,
       model: data.model || null,
       serialNumber: data.serialNumber || null,
       type: data.type,

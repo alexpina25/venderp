@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   id: z.string(),
+  brand: z.string().optional(),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
@@ -52,6 +53,7 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: machine.id,
+      brand: machine.brand ?? "",
       model: machine.model ?? "",
       serialNumber: machine.serialNumber ?? "",
       type: machine.type,
@@ -91,6 +93,10 @@ export function EditMachineModal({ machine, open, onClose, onSuccess }: Props) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input type="hidden" {...register("id")} />
 
+          <div>
+            <Label htmlFor="brand">Marca</Label>
+            <Input id="brand" {...register("brand")} />
+          </div>
 
           <div>
             <Label htmlFor="model">Modelo</Label>

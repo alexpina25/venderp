@@ -30,6 +30,14 @@ export const columns: ColumnDef<Machine & { pos: { name: string } | null }>[] =
       },
     },
     {
+      accessorKey: "brand",
+      header: "Marca",
+      cell: ({ row }) =>
+        row.getValue("brand") || (
+          <span className="text-muted-foreground italic">–</span>
+        ),
+    },
+    {
       accessorKey: "model",
       header: "Modelo",
       cell: ({ row }) =>

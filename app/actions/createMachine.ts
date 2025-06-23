@@ -8,6 +8,7 @@ import { MachineStatus, MachineType } from "@prisma/client";
 import { getServerAuthSession } from "@/lib/auth";
 
 const schema = z.object({
+  brand: z.string().optional(),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
@@ -25,6 +26,7 @@ export async function createMachine(input: z.infer<typeof schema>) {
 
   await db.machine.create({
     data: {
+      brand: data.brand || null,
       model: data.model || null,
       serialNumber: data.serialNumber || null,
       type: data.type,

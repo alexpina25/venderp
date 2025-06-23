@@ -80,6 +80,15 @@ export function MachineInfo({ machine, onEdit }: Props) {
       </div>
 
       <div>
+        <p className="text-sm text-muted-foreground">Marca</p>
+        <p>
+          {machine.brand || (
+            <span className="italic text-muted-foreground">No especificada</span>
+          )}
+        </p>
+      </div>
+
+      <div>
         <p className="text-sm text-muted-foreground">Modelo</p>
         <p>
           {machine.model || (
