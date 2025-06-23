@@ -98,6 +98,7 @@ async function main() {
 
           const machine = await prisma.machine.create({
             data: {
+              brand: faker.company.name(),
               model: "Basic Vender",
               serialNumber: faker.string.alphanumeric(10),
               type: "SNACK",

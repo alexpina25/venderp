@@ -148,6 +148,7 @@ model Master {
 model Machine {
   id           String        @id @default(uuid())
   customId     Int?          @unique
+  brand        String?
   model        String?
   serialNumber String?       @unique
   type         MachineType

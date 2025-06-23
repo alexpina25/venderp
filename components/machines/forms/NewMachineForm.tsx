@@ -21,6 +21,7 @@ import { toast } from "@/components/ui/use-toast";
 
 
 const formSchema = z.object({
+  brand: z.string().optional(),
   model: z.string().optional(),
   serialNumber: z.string().optional(),
   type: z.nativeEnum(MachineType),
@@ -62,6 +63,10 @@ export function NewMachineForm({ onSuccess }: { onSuccess?: () => void }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <Label htmlFor="brand">Marca</Label>
+        <Input id="brand" {...register("brand")} />
+      </div>
       <div>
         <Label htmlFor="model">Modelo</Label>
         <Input id="model" {...register("model")} />
