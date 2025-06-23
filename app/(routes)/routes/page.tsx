@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { getServerAuthSession } from "@/lib/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RouteCards } from "@/components/routes/RouteCards";
@@ -12,11 +13,15 @@ export default async function RoutesPage({
 }) {
   const { date, operator, pos } = searchParams || {};
 
+    const session = await getServerAuthSession();
+  const tenantId = session?.user?.tenant?.id;
+
   const routes = await db.route.findMany({
     where: {
       ...(date ? { date: new Date(date) } : {}),
       ...(operator ? { operatorId: operator } : {}),
       ...(pos ? { stops: { some: { posId: pos } } } : {}),
+            operator: { tenantId },
     },
     include: {
       operator: true,
