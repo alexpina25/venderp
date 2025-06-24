@@ -27,6 +27,8 @@ interface AddProductModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  initialLine?: string;
+  initialSelection?: string;
 }
 
 export function AddProductModal({
@@ -34,13 +36,15 @@ export function AddProductModal({
   open,
   onClose,
   onSuccess,
+  initialLine,
+  initialSelection,
 }: AddProductModalProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState(0);
-  const [line, setLine] = useState("");
-  const [selection, setSelection] = useState("");
+  const [line, setLine] = useState(initialLine || "");
+  const [selection, setSelection] = useState(initialSelection || "");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -51,8 +55,10 @@ export function AddProductModal({
 
     if (open) {
       fetchProducts();
+      setLine(initialLine || "");
+      setSelection(initialSelection || "");
     }
-  }, [open]);
+  }, [open, initialLine, initialSelection]);
 
   const handleProductSelect = (productId: string) => {
     const product = products.find((p) => p.id === productId);

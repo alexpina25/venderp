@@ -1,5 +1,8 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import { MachineProduct, Product } from "@prisma/client";
+import { AddProductModal } from "./AddProductModal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MachineWithProducts } from "../MachineDetailsTabs";
@@ -11,6 +14,23 @@ interface Props {
 export function ChannelConfigurator({ machine }: Props) {
   const [rows, setRows] = useState<number>(3);
   const [cols, setCols] = useState<number>(3);
+  const [products, setProducts] = useState(machine.products);
+  const [addInfo, setAddInfo] = useState<{
+    line: string;
+    selection: string;
+  } | null>(null);
+
+  useEffect(() => {
+    setProducts(machine.products);
+  }, [machine.products]);
+
+  const refreshProducts = async () => {
+    const res = await fetch(`/api/machines/${machine.id}`);
+    if (res.ok) {
+      const updated = await res.json();
+      setProducts(updated.products);
+    }
+  };
 
   // Crear matriz vacía
   const grid: (MachineProduct & { product: Product })[][] = Array.from(
@@ -19,7 +39,7 @@ export function ChannelConfigurator({ machine }: Props) {
   );
 
   // Colocar productos en la matriz según línea y selección
-  machine.products.forEach((mp) => {
+  products.forEach((mp) => {
     const r = parseInt(mp.line) - 1;
     const c = parseInt(mp.selection) - 1;
     if (!isNaN(r) && !isNaN(c) && r >= 0 && c >= 0 && r < rows && c < cols) {
@@ -73,20 +93,44 @@ export function ChannelConfigurator({ machine }: Props) {
                       <span>L{cell.line}</span>
                       <span>S{cell.selection}</span>
                     </div>
-                    <div className="text-right font-semibold">
-                      {cell.price.toFixed(2)}€
+                    <div className="flex justify-between">
+                      <span>Stock: {cell.currentStock}</span>
+                      <span className="font-semibold">
+                        {cell.price.toFixed(2)}€
+                      </span>
                     </div>
                   </>
                 ) : (
-                  <div className="text-muted-foreground text-center py-6">
-                    Vacío
-                  </div>
+                  <button
+                    className="text-muted-foreground text-center py-6 w-full"
+                    onClick={() =>
+                      setAddInfo({
+                        line: String(rIdx + 1),
+                        selection: String(cIdx + 1),
+                      })
+                    }
+                  >
+                    Añadir
+                  </button>
                 )}
               </div>
             ))
           )}
         </div>
       </div>
+      {addInfo && (
+        <AddProductModal
+          machine={machine}
+          open={true}
+          initialLine={addInfo.line}
+          initialSelection={addInfo.selection}
+          onClose={() => setAddInfo(null)}
+          onSuccess={async () => {
+            setAddInfo(null);
+            await refreshProducts();
+          }}
+        />
+      )}
     </div>
   );
 }
