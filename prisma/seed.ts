@@ -172,14 +172,16 @@ async function main() {
                   price,
                   inserted,
                   change,
-                  timestamp: faker.date.between({ from: startDate, to: new Date() }),
+                  timestamp: faker.date.between({
+                    from: startDate,
+                    to: new Date(),
+                  }),
                 },
               });
             }
           }
         }
       }
-    }
     }
 
     // Crear rutas para este tenant
@@ -202,8 +204,9 @@ async function main() {
         });
       }
     }
+  }
 
-    console.log("🌱 Seed complete.");
+  console.log("🌱 Seed complete.");
 }
 
 main()
