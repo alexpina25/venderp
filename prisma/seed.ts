@@ -4,7 +4,7 @@ import {
   MachineStatus,
   SaleMethod,
 } from "@prisma/client";
-import { faker } from "@faker-js/faker";
+import { fakerES as faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
@@ -110,67 +110,99 @@ async function main() {
             },
           });
 
-          const product = await prisma.product.create({
-            data: {
-              tenantId: tenant.id,
-              name: faker.commerce.productName(),
-              price: parseFloat(
-                faker.number
-                  .float({ min: 1, max: 3, fractionDigits: 2 })
-                  .toFixed(2)
-              ),
-              category: ProductCategory.SNACK,
-              unit: "unit",
-            },
-          });
-
-          await prisma.machineProduct.create({
-            data: {
-              machineId: machine.id,
-              productId: product.id,
-              currentStock: 10,
-              maxCapacity: 20,
-              minThreshold: 5,
-              price: 1.5,
-              line: "A1",
-              selection: "101",
-            },
-          });
-
-          for (let v = 0; v < 5; v++) {
-            const method = faker.helpers.arrayElement(
-              Object.values(SaleMethod)
-            );
-            const price = product.price;
-            const inserted =
-              method === SaleMethod.CARD
-                ? price
-                : parseFloat(
-                    (
-                      price +
-                      faker.number.float({ min: 0, max: 2, fractionDigits: 2 })
-                    ).toFixed(2)
-                  );
-            const change = parseFloat((inserted - price).toFixed(2));
-            await prisma.sale.create({
+          const products = [];
+          for (let pr = 0; pr < 3; pr++) {
+            const product = await prisma.product.create({
               data: {
-                posId: pos.id,
-                productId: product.id,
-                machineId: machine.id,
-                method,
-                price,
-                inserted,
-                change,
-                timestamp: faker.date.recent(),
+                tenantId: tenant.id,
+                name: faker.commerce.productName(),
+                price: parseFloat(
+                  faker.number
+                    .float({ min: 1, max: 3, fractionDigits: 2 })
+                    .toFixed(2)
+                ),
+                category: ProductCategory.SNACK,
+                unit: "unidad",
               },
             });
+            products.push(product);
+          }
+
+          for (const [i, product] of products.entries()) {
+            await prisma.machineProduct.create({
+              data: {
+                machineId: machine.id,
+                productId: product.id,
+                currentStock: 10,
+                maxCapacity: 20,
+                minThreshold: 5,
+                price: product.price,
+                line: `A${i + 1}`,
+                selection: `10${i + 1}`,
+              },
+            });
+
+            const startDate = faker.date.past({ years: 1 });
+            for (let v = 0; v < 20; v++) {
+              const method = faker.helpers.arrayElement(
+                Object.values(SaleMethod)
+              );
+              const price = product.price;
+              const inserted =
+                method === SaleMethod.CARD
+                  ? price
+                  : parseFloat(
+                      (
+                        price +
+                        faker.number.float({
+                          min: 0,
+                          max: 2,
+                          fractionDigits: 2,
+                        })
+                      ).toFixed(2)
+                    );
+              const change = parseFloat((inserted - price).toFixed(2));
+              await prisma.sale.create({
+                data: {
+                  posId: pos.id,
+                  productId: product.id,
+                  machineId: machine.id,
+                  method,
+                  price,
+                  inserted,
+                  change,
+                  timestamp: faker.date.between({ from: startDate, to: new Date() }),
+                },
+              });
+            }
           }
         }
       }
     }
-  }
+    }
 
-  console.log("🌱 Seed complete.");
+    // Crear rutas para este tenant
+    for (let r = 0; r < 2; r++) {
+      const route = await prisma.route.create({
+        data: {
+          date: faker.date.recent({ days: 30 }),
+          operatorId: tenant.users[0].id,
+          notes: `Ruta ${r + 1}`,
+        },
+      });
+
+      for (const posId of posIds) {
+        await prisma.routeStop.create({
+          data: {
+            routeId: route.id,
+            posId,
+            notes: "Parada de ruta",
+          },
+        });
+      }
+    }
+
+    console.log("🌱 Seed complete.");
 }
 
 main()
