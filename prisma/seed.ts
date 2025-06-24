@@ -128,7 +128,8 @@ async function main() {
             products.push(product);
           }
 
-          for (const [i, product] of products.entries()) {
+          for (let i = 0; i < products.length; i++) {
+            const product = products[i];
             await prisma.machineProduct.create({
               data: {
                 machineId: machine.id,
