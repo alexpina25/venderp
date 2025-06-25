@@ -20,7 +20,7 @@ export const columns: ColumnDef<PosWithLastSale>[] = [
     cell: ({ row }) => {
       const pos = row.original;
       return (
-        <div className="flex items-center gap-2 justify-between">
+        <div className="flex items-center gap-2">
           <Link href={`/pos/${pos.id}`}>
             <Button variant="ghost" size="icon">
               <Eye className="w-4 h-4" />

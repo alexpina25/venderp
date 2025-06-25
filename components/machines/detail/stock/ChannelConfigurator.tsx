@@ -73,7 +73,7 @@ export function ChannelConfigurator({ machine }: Props) {
           />
         </div>
       </div>
-      <div className="overflow-auto">
+      <div className="overflow-auto bg-background p-4 rounded border">
         <div
           className="grid gap-2"
           style={{ gridTemplateColumns: `repeat(${cols}, minmax(120px,1fr))` }}
