@@ -5,7 +5,7 @@ import { EditMachineModal } from "@/components/machines/forms/EditMachineModal";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/use-toast";
 import { MachineWithDetails } from "@/types";
-//import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
+import { MachineDetailsTabs } from "@/components/machines/detail/MachineDetailsTabs";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -103,6 +103,8 @@ export default function MachineDetailPage({
           {/* Información básica de la máquina */}
           <MachineInfo machine={selectedMachine} onEdit={openEditModal} />
 
+          {/* Secciones de detalle: stock, mantenimiento, etc. */}
+          <MachineDetailsTabs machine={selectedMachine} />
 
           {/* Modal de edición */}
           <EditMachineModal
