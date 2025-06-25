@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AddProductModal } from "@/components/machines/detail/stock/AddProductModal";
 import { AdjustStockModal } from "@/components/machines/detail/stock/AdjustStockModal";
-import { ChannelConfiguratorModal } from "@/components/machines/detail/stock/ChannelConfiguratorModal";
+import Link from "next/link";
 
 interface Props {
   machine: MachineWithProducts;
@@ -29,7 +29,6 @@ export function MachineStockTable({ machine }: Props) {
     null
   );
   const [selectedProductName, setSelectedProductName] = useState<string>("");
-  const [configOpen, setConfigOpen] = useState(false);
 
   useEffect(() => {
     setProducts(machine.products);
@@ -89,8 +88,8 @@ export function MachineStockTable({ machine }: Props) {
         >
           {deleteMode ? "Cancelar eliminar" : "Eliminar producto"}
         </Button>
-        <Button variant="secondary" onClick={() => setConfigOpen(true)}>
-          Configurar canales
+        <Button asChild variant="secondary">
+          <Link href={`/machines/${machine.id}/channels`}>Configurar canales</Link>
         </Button>
       </div>
 
@@ -184,13 +183,6 @@ export function MachineStockTable({ machine }: Props) {
         />
       )}
 
-      {configOpen && (
-        <ChannelConfiguratorModal
-          machine={{ ...machine, products }}
-          open={configOpen}
-          onClose={() => setConfigOpen(false)}
-        />
-      )}
     </div>
   );
 }
