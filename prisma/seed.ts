@@ -6,6 +6,8 @@ import {
 } from "@prisma/client";
 import { fakerES as faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
+import { generateCustomId } from "../lib/customId";
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -16,32 +18,37 @@ async function main() {
     const tenant = await prisma.tenant.create({
       data: {
         name: `Tenant ${faker.company.name()}`,
-        users: {
-          create: [
-            {
-              name: faker.person.fullName(),
-              email: faker.internet.email(),
-              password: passwordHash,
-              role: "TENANT_ADMIN",
-            },
-
-            {
-              name: faker.person.fullName(),
-              email: faker.internet.email(),
-              password: passwordHash,
-              role: "TENANT_USER",
-            },
-            {
-              name: faker.person.fullName(),
-              email: faker.internet.email(),
-              password: passwordHash,
-              role: "TENANT_USER",
-            },
-          ],
-        },
+        customId: t + 1,
       },
-      include: { users: true },
     });
+
+    const users = [] as { id: string }[];
+
+    const admin = await prisma.user.create({
+      data: {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: passwordHash,
+        role: "TENANT_ADMIN",
+        tenantId: tenant.id,
+        customId: await generateCustomId("User", tenant.id),
+      },
+    });
+    users.push(admin);
+
+    for (let u = 0; u < 2; u++) {
+      const user = await prisma.user.create({
+        data: {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          password: passwordHash,
+          role: "TENANT_USER",
+          tenantId: tenant.id,
+          customId: await generateCustomId("User", tenant.id),
+        },
+      });
+      users.push(user);
+    }
 
     const posIds: string[] = [];
 
@@ -56,6 +63,7 @@ async function main() {
           tenantId: tenant.id,
           country: "España",
           active: faker.datatype.boolean(),
+          customId: await generateCustomId("Center", tenant.id),
         },
       });
 
@@ -71,6 +79,7 @@ async function main() {
             parentCenterId: parentCenter.id,
             country: "España",
             active: faker.datatype.boolean(),
+            customId: await generateCustomId("Center", tenant.id),
           },
         });
 
@@ -84,6 +93,7 @@ async function main() {
               centerId: subCenter.id,
               coverage: faker.number.int({ min: 0, max: 31 }),
               active: faker.datatype.boolean(),
+              customId: await generateCustomId("POS", tenant.id),
             },
           });
           posIds.push(pos.id);
@@ -93,6 +103,7 @@ async function main() {
               serialNumber: faker.string.alphanumeric(12),
               tenantId: tenant.id,
               posId: pos.id,
+              customId: await generateCustomId("Master", tenant.id),
             },
           });
 
@@ -107,6 +118,7 @@ async function main() {
               posId: pos.id,
               status: faker.helpers.arrayElement(Object.values(MachineStatus)),
               installedAt: faker.date.past(),
+              customId: await generateCustomId("Machine", tenant.id),
             },
           });
 
@@ -123,6 +135,7 @@ async function main() {
                 ),
                 category: ProductCategory.SNACK,
                 unit: "unidad",
+                customId: await generateCustomId("Product", tenant.id),
               },
             });
             products.push(product);
@@ -140,6 +153,7 @@ async function main() {
                 price: product.price,
                 line: `A${i + 1}`,
                 selection: `10${i + 1}`,
+                customId: await generateCustomId("MachineProduct", tenant.id),
               },
             });
 
@@ -176,6 +190,7 @@ async function main() {
                     from: startDate,
                     to: new Date(),
                   }),
+                  customId: await generateCustomId("Sale", tenant.id),
                 },
               });
             }
@@ -189,8 +204,9 @@ async function main() {
       const route = await prisma.route.create({
         data: {
           date: faker.date.recent({ days: 30 }),
-          operatorId: tenant.users[0].id,
+          operatorId: users[0].id,
           notes: `Ruta ${r + 1}`,
+          customId: await generateCustomId("Route", tenant.id),
         },
       });
 
@@ -200,6 +216,7 @@ async function main() {
             routeId: route.id,
             posId,
             notes: "Parada de ruta",
+            customId: await generateCustomId("RouteStop", tenant.id),
           },
         });
       }

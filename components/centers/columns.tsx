@@ -32,6 +32,11 @@ export const columns: ColumnDef<CenterChild>[] = [
     },
   },
   {
+    accessorKey: "customId",
+    header: "ID",
+    cell: ({ row }) => row.original.customId ?? row.original.id,
+  },
+  {
     accessorKey: "parentCenter.name",
     header: "Centro padre",
     cell: ({ row }) => row.original.parentCenter?.name ?? "-",
