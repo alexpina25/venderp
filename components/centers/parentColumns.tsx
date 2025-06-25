@@ -31,6 +31,11 @@ export const parentColumns: ColumnDef<ParentCenter>[] = [
     },
   },
   {
+    accessorKey: "customId",
+    header: "ID",
+    cell: ({ row }) => row.original.customId ?? row.original.id,
+  },
+  {
     accessorKey: "city",
     header: "Ciudad",
   },
