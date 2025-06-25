@@ -147,7 +147,7 @@ model Master {
 
 model Machine {
   id           String        @id @default(uuid())
-  customId     Int?          @unique
+  customId     Int?          
   brand        String?
   model        String?
   serialNumber String?       @unique
@@ -189,7 +189,7 @@ enum MachineStatus {
 
 model Product {
   id        String          @id @default(uuid())
-  customId  Int?            @unique
+  customId  Int?            
   name      String
   tenantId  String
   tenant    Tenant          @relation(fields: [tenantId], references: [id])
