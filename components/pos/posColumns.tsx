@@ -10,27 +10,28 @@ import { PosWithLastSale } from "@/types";
 
 export const columns: ColumnDef<PosWithLastSale>[] = [
   {
+    id: "customId",
+    header: "ID",
+    cell: ({ row }) => row.original.customId ?? row.original.id,
+  },
+  {
     accessorKey: "name",
     header: "Nombre",
     cell: ({ row }) => {
       const pos = row.original;
       return (
-        <div className="flex items-center gap-2 justify-between">
-          <span className="font-medium">{row.getValue("name")}</span>
+        <div className="flex items-center gap-2">
           <Link href={`/pos/${pos.id}`}>
             <Button variant="ghost" size="icon">
               <Eye className="w-4 h-4" />
             </Button>
           </Link>
+          <span className="font-medium">{row.getValue("name")}</span>
         </div>
       );
     },
   },
-  {
-    id: "customId",
-    header: "ID",
-    cell: ({ row }) => row.original.customId ?? row.original.id,
-  },
+
   {
     id: "centerCustomId",
     header: "ID Centro",
