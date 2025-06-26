@@ -34,13 +34,6 @@ export function StopDetailForm({
   );
   const [moneyNotes, setMoneyNotes] = useState(initialData.moneyNotes || "");
 
-  const [replenished, setReplenished] = useState(
-    initialData.replenished || false
-  );
-  const [replenishmentNotes, setReplenishmentNotes] = useState(
-    initialData.replenishmentNotes || ""
-  );
-
   const [maintenance, setMaintenance] = useState(
     initialData.maintenance || false
   );
@@ -73,8 +66,6 @@ export function StopDetailForm({
       walletReload,
       manualDownload,
       moneyNotes,
-      replenished,
-      replenishmentNotes,
       maintenance,
       maintenanceNotes,
       maintenanceResolved,
@@ -144,19 +135,7 @@ export function StopDetailForm({
 
       {step === 2 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Reposición</h3>
           <StopProductsList posId={posId} />
-          <div className="flex items-center space-x-3">
-            <Label>¿Se repuso producto?</Label>
-            <Switch checked={replenished} onCheckedChange={setReplenished} />
-          </div>
-          {replenished && (
-            <Textarea
-              placeholder="Notas sobre productos repuestos, retirados, etc."
-              value={replenishmentNotes}
-              onChange={(e) => setReplenishmentNotes(e.target.value)}
-            />
-          )}
         </div>
       )}
 
